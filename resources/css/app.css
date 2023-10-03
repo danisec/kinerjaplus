@@ -1,3 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    /* Scroll chrome */
+    ::-webkit-scrollbar {
+        @apply w-2;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-slate-200 rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-300;
+    }
+
+    body {
+        @apply bg-white font-inter
+    }
+
+    .layout {
+        @apply px-4 xs:px-4 sm:px-8 lg:px-16 2xl:px-20;
+    }
+
+    [x-cloak] { display: none !important; }
+
+    .notify {
+        @apply z-50;
+    }
+
+    .field-input-slate {
+        @apply block rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-base text-gray-900 focus:border-indigo-600 focus:ring-indigo-600
+    }
+
+    .invalid-feedback {
+        @apply text-sm font-normal tracking-wide text-red-500;
+    }
+}

@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // if APP_ENV == local, Debugbar is enabled
+        if (env('APP_ENV') == 'local') {
+            \Debugbar::enable();
+        } else {
+            \Debugbar::disable();
+        }
     }
 }
