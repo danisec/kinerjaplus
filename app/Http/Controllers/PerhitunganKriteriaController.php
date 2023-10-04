@@ -9,6 +9,18 @@ use Illuminate\Http\Request;
 
 class PerhitunganKriteriaController extends Controller
 {
+    /* 
+     * Constructor
+     */
+    private $kriteria;
+    private $perhitunganKriteria;
+
+    public function __construct()
+    {
+        $this->kriteria = Kriteria::orderBy('kode_kriteria', 'asc')->get();
+        $this->perhitunganKriteria = PerhitunganKriteria::with('kriteriaPertama', 'kriteriaKedua')->orderBy('kriteria_pertama', 'asc')->get();
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -16,8 +28,8 @@ class PerhitunganKriteriaController extends Controller
     {
         return view('pages.dashboard.perhitungan-kriteria.index', [
             'title' => 'Perhitungan Kriteria',
-            'kriteria' => Kriteria::orderBy('kode_kriteria', 'asc')->get(),
-            'perhitunganKriteria' => PerhitunganKriteria::with('kriteriaPertama', 'kriteriaKedua')->orderBy('kriteria_pertama', 'asc')->get(),
+            'kriteria' => $this->kriteria,
+            'perhitunganKriteria' => $this->perhitunganKriteria,
         ]);
     }
 
@@ -66,11 +78,9 @@ class PerhitunganKriteriaController extends Controller
     public function hasil()
     {
         $ratioIndex = RatioIndex::orderBy('ordo_matriks', 'asc')->get();
-        $perhitunganKriteria = PerhitunganKriteria::with('kriteriaPertama', 'kriteriaKedua')
-            ->orderBy('kriteria_pertama', 'asc')
-            ->get();
+        $perhitunganKriteria = $this->perhitunganKriteria;
 
-        // Menghitung total per kolom kriteria
+        /* Menghitung total per kolom kriteria */
         $columnTotals = [];
         foreach ($perhitunganKriteria as $item) {
             $kriteriaKedua = $item->kriteriaKedua->id_kriteria;
@@ -85,8 +95,8 @@ class PerhitunganKriteriaController extends Controller
             $columnTotals[$kriteriaKedua] += $nilaiKriteria;
         }
 
-        // Normalisasi matriks kriteria
-        // Rumus = nilai kriteria / total kolom
+        /* Normalisasi matriks kriteria
+        Rumus = nilai kriteria / total kolom */
         $normalizedMatrix = [];
         foreach ($perhitunganKriteria as $item) {
             $kriteriaPertama = $item->kriteriaPertama->id_kriteria;
@@ -103,7 +113,7 @@ class PerhitunganKriteriaController extends Controller
             $normalizedMatrix[$item->kriteriaPertama->id_kriteria][$kriteriaKedua] = round($normalizedMatrix[$item->kriteriaPertama->id_kriteria][$kriteriaKedua], 4);
         }
 
-        // Menjumlahkan nilai per baris kriteria dari matriks normalisasi
+        /* Menjumlahkan nilai per baris kriteria dari matriks normalisasi */
         $rowTotals = [];
         foreach ($normalizedMatrix as $kriteriaPertama => $kriteriaKedua) {
             foreach ($kriteriaKedua as $kriteria => $nilai) {
@@ -117,17 +127,17 @@ class PerhitunganKriteriaController extends Controller
             }
         }
 
-        // Menghitung jumlah kriteria (banyaknya kriteria)
-        $jumlahKriteria = count($rowTotals); // Perbaiki kode ini, dapatkan jumlah kriteria dari database
+        /* Menghitung jumlah kriteria (banyaknya kriteria) */
+        $jumlahKriteria = Kriteria::count();
 
-        // Menghitung bobot prioritas per kriteria
+        /* Menghitung bobot prioritas per kriteria */
         $bobotPrioritas = [];
         foreach ($rowTotals as $kriteriaPertama => $total) {
             $bobotPrioritas[$kriteriaPertama] = $total / $jumlahKriteria;
         }
 
-        // Menghitung Consistency Measure (CM)
-        // Rumus = (Angka kriteriaPerhitungan per setiap baris * bobot prioritas per setiap kolom) + (Angka kriteriaPerhitungan per setiap baris * bobot prioritas per setiap kolom) + ...
+        /* Menghitung Consistency Measure (CM)
+        Rumus = (Angka kriteriaPerhitungan per setiap baris * bobot prioritas per setiap kolom) + (Angka kriteriaPerhitungan per setiap baris * bobot prioritas per setiap kolom) + ... */
         $consistencyMeasures = [];
         foreach ($perhitunganKriteria as $item) {
             $kriteriaPertama = $item->kriteriaPertama->id_kriteria;
@@ -146,26 +156,26 @@ class PerhitunganKriteriaController extends Controller
             $consistencyMeasures[$kriteriaPertama] = round($consistencyMeasures[$kriteriaPertama], 4);
         }
 
-        // Menghitung total jumlah Consistency Measure (CM)
-        // Rumus = total jumlah kolom CM / jumlah kriteria
+        /* Menghitung total jumlah Consistency Measure (CM)
+        Rumus = total jumlah kolom CM / jumlah kriteria */
         $totalConsistencyMeasures = array_sum($consistencyMeasures) / $jumlahKriteria;
 
-        // Menghitung Consistency Index (CI)
-        // Rumus = (total jumlah kolom CM - jumlah kriteria) / (jumlah kriteria - 1)
+        /* Menghitung Consistency Index (CI)
+        Rumus = (total jumlah kolom CM - jumlah kriteria) / (jumlah kriteria - 1) */
         $consistencyIndex = ($totalConsistencyMeasures - $jumlahKriteria) / ($jumlahKriteria - 1);
 
-        // Mendapatkan Ratio Index (RI) dari database
+        /* Mendapatkan Ratio Index (RI) dari database */
         $ratioIndexByKriteria = $ratioIndex[$jumlahKriteria - 1]->nilai_ratio_index;
 
-        // Menghitung Consistency Ratio (CR)
-        // Rumus = Consistency Index (CI) / Ratio Index (RI)
+        /* Menghitung Consistency Ratio (CR)
+        Rumus = Consistency Index (CI) / Ratio Index (RI) */
         $consistencyRatio = $consistencyIndex / $ratioIndexByKriteria;
 
-        // Menghitung Hasil Dinyatakan Konsisten atau Tidak
-        // Rumus = Consistency Ratio (CR) <= 0.1 ? 'Konsisten' : 'Tidak Konsisten'
+        /* Menghitung Hasil Dinyatakan Konsisten atau Tidak
+        Rumus = Consistency Ratio (CR) <= 0.1 ? 'Konsisten' : 'Tidak Konsisten' */
         $consistencyResult = $consistencyRatio <= 0.1 ? 'Konsisten' : 'Tidak Konsisten';
 
-        // Menyimpan variabel-variabel dalam bentuk array
+        /* Menyimpan variabel-variabel dalam bentuk array */
         $consistencyData = [
             'Consistency Index (CI)' => round($consistencyIndex, 4),
             'Ratio Index (RI)' => $ratioIndexByKriteria,
@@ -174,7 +184,7 @@ class PerhitunganKriteriaController extends Controller
 
         return view('pages.dashboard.perhitungan-kriteria.hasil', [
             'title' => 'Hasil Perhitungan Kriteria',
-            'kriteria' => Kriteria::orderBy('kode_kriteria', 'asc')->get(),
+            'kriteria' => $this->kriteria,
             'perhitunganKriteria' => $perhitunganKriteria,
             'columnTotals' => $columnTotals,
             'normalizedMatrix' => $normalizedMatrix,
