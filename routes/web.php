@@ -34,12 +34,12 @@ Route::controller(RegisterController::class)->name('register.')->middleware('gue
     Route::post('/register', 'store')->name('store');
 });
 
-Route::controller(DashboardController::class)->name('dashboard.')->middleware('auth')->group(function () {
+Route::controller(DashboardController::class)->name('dashboard.')->middleware('auth', 'user-role:manajer,pimpinan')->group(function () {
     Route::get('/dashboard', 'index')->name('index');
     Route::post('/dashboard', 'store')->name('store');
 });
 
-Route::controller(KriteriaController::class)->name('kriteria.')->middleware('auth')->group(function () {
+Route::controller(KriteriaController::class)->name('kriteria.')->middleware('auth', 'user-role:manajer,pimpinan')->group(function () {
     Route::get('/dashboard/data-kriteria', 'index')->name('index');
     Route::get('/dashboard/data-kriteria/view-kriteria/{id}', 'show')->name('show');
 
@@ -52,7 +52,7 @@ Route::controller(KriteriaController::class)->name('kriteria.')->middleware('aut
     Route::delete('/dashboard/data-kriteria/{id}', 'destroy')->name('destroy');
 });
 
-Route::controller(AlternatifController::class)->name('alternatif.')->middleware('auth')->group(function () {
+Route::controller(AlternatifController::class)->name('alternatif.')->middleware('auth', 'user-role:manajer,pimpinan')->group(function () {
     Route::get('/dashboard/data-alternatif', 'index')->name('index');
     Route::get('/dashboard/data-alternatif/view-alternatif/{id}', 'show')->name('show');
 
@@ -65,7 +65,7 @@ Route::controller(AlternatifController::class)->name('alternatif.')->middleware(
     Route::delete('/dashboard/data-alternatif/{id}', 'destroy')->name('destroy');
 });
 
-Route::controller(PerhitunganKriteriaController::class)->name('perhitunganKriteria.')->middleware('auth')->group(function () {
+Route::controller(PerhitunganKriteriaController::class)->name('perhitunganKriteria.')->middleware('auth', 'user-role:manajer')->group(function () {
     Route::get('/dashboard/perhitungan-perbandingan-kriteria', 'index')->name('index');
     Route::get('/dashboard/perhitungan-perbandingan-kriteria/hasil-perbandingan-kriteria', 'hasil')->name('hasil');
 
