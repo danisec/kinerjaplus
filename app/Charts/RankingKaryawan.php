@@ -2,6 +2,7 @@
 
 namespace App\Charts;
 
+use App\Models\Ranking;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
 
 class RankingKaryawan
@@ -15,39 +16,111 @@ class RankingKaryawan
 
     public function build(): \ArielMejiaDev\LarapexCharts\BarChart
     {
-        $dataTahun2022 = [
-            ['nama_karyawan' => 'John Doe, S.Pd.', 'total_prioritas' => 0.85],
-            ['nama_karyawan' => 'Agnes, S.Pd.', 'total_prioritas' => 0.92],
-            ['nama_karyawan' => 'Narenda, S.Pd.', 'total_prioritas' => 0.78],
-        ];
+        $ranking = Ranking::with('alternatif')->orderBy('created_at', 'DESC')->get();
 
-        $dataTahun2023 = [
-            ['nama_karyawan' => 'John Doe, S.Pd.', 'total_prioritas' => 0.91],
-            ['nama_karyawan' => 'Agnes, S.Pd.', 'total_prioritas' => 0.49],
-            ['nama_karyawan' => 'Narenda, S.Pd.', 'total_prioritas' => 0.79],
-        ];
-
-        // Mengurutkan data berdasarkan total prioritas
-        usort($dataTahun2022, function ($a, $b) {
-            return $b['total_prioritas'] <=> $a['total_prioritas'];
+        $rankingByDate = $ranking->groupBy(function ($item) {
+            return \Carbon\Carbon::parse($item->created_at)->format('d-m-Y');
         });
 
-        usort($dataTahun2023, function ($a, $b) {
-            return $b['total_prioritas'] <=> $a['total_prioritas'];
+        // Inisialisasi array untuk menyimpan data
+        $dataByDate = [];
+
+        // Loop melalui data yang dikelompokkan
+        foreach ($rankingByDate as $date => $rankings) {
+            // Dapatkan nama alternatif
+            $namaKaryawan = $rankings->pluck('alternatif.nama_alternatif')->toArray();
+
+            // Dapatkan nilai setiap alternatif
+            $nilai = $rankings->pluck('nilai')->toArray();
+
+            // Dapatkan rank setiap alternatif
+            $rank = $rankings->pluck('rank')->toArray();
+
+            // Tambahkan data ke array
+            $dataByDate[] = [
+                'TanggalTahun' => $date,
+                'nama_alternatif' => $namaKaryawan,
+                'nilai' => $nilai,
+                'rank' => $rank,
+            ];
+        }
+
+        // Mengurutkan data berdasarkan tanggal
+        usort($dataByDate, function ($a, $b) {
+            return strtotime($a['TanggalTahun']) - strtotime($b['TanggalTahun']);
         });
 
-        // Mengambil nama karyawan dan total prioritas untuk grafik
-        $karyawanTahun2022 = array_column($dataTahun2022, 'nama_karyawan');
-        $totalPrioritasTahun2022 = array_column($dataTahun2022, 'total_prioritas');
+        
+        // Dapatkan nama alternatif unik
+        $uniqueAlternatives = [];
 
-        $karyawanTahun2023 = array_column($dataTahun2023, 'nama_karyawan');
-        $totalPrioritasTahun2023 = array_column($dataTahun2023, 'total_prioritas');
+        foreach ($dataByDate as $data) {
+            $namaAlternatif = $data['nama_alternatif'];
 
-        return $this->chart->barChart()
-            ->setTitle('Top Ranking Karyawan 2023')
-            ->addData('Tahun 2022', $totalPrioritasTahun2022)
-            ->addData('Tahun 2023', $totalPrioritasTahun2023)
-            ->setColors(['#00e396', '#46b284'])
-            ->setXAxis($karyawanTahun2023);
+            foreach ($namaAlternatif as $nama) {
+                if (!in_array($nama, $uniqueAlternatives)) {
+                    $uniqueAlternatives[] = $nama;
+                }
+            }
+        }
+
+        // Inisialisasi array untuk data chart
+        $chartData = [];
+
+        // Loop melalui data yang sudah diurutkan
+        foreach ($dataByDate as $data) {
+            // Dapatkan tanggal
+            $tanggal = $data['TanggalTahun'];
+
+            $namaAlternatif = $uniqueAlternatives;
+            $nilai = $data['nilai'];
+            $rank = $data['rank'];
+
+            // Tambahkan data ke array
+            $chartData[] = [
+                'tanggal' => $tanggal,
+                'nama_alternatif' => $namaAlternatif,
+                'nilai' => $nilai,
+                'rank' => $rank,
+            ];
+        }
+
+        $chart = $this->chart->barChart()
+            ->setTitle('Top Ranking');
+
+        // Inisialisasi array untuk menyimpan data
+        $chartDataByAlternatives = [];
+
+        // Loop melalui data yang sudah diurutkan
+        foreach ($dataByDate as $data) {
+            // Dapatkan tanggal
+            $tanggal = $data['TanggalTahun'];
+
+            $namaAlternatif = $data['nama_alternatif'];
+            $nilai = $data['nilai'];
+            $rank = $data['rank'];
+
+            // Loop melalui setiap nama alternatif
+            foreach ($namaAlternatif as $index => $nama) {
+                $chartDataByAlternatives[$nama][] = [
+                    'tanggal' => $tanggal,
+                    'nilai' => $nilai[$index], // Ambil nilai sesuai dengan indeks nama
+                    'rank' => $rank[$index], // Ambil rank sesuai dengan indeks nama
+                ];
+            }
+        }
+
+        // Loop melalui data alternatif yang telah dikelompokkan
+        foreach ($chartDataByAlternatives as $namaAlternatif => $dataAlternatif) {
+            // Tambahkan data dinamis berdasarkan tanggal
+            $chart->addData($namaAlternatif, collect($dataAlternatif)->pluck('nilai')->toArray());
+        }
+
+        // Set label sumbu X dengan nama alternatif dari data pertama
+        $chart->setXAxis(collect($dataByDate)->pluck('TanggalTahun')->toArray());
+
+        // $chart->setColors(['#00e396', '#46b284']);
+
+        return $chart;
     }
 }
