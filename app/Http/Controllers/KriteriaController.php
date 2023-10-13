@@ -47,18 +47,12 @@ class KriteriaController extends Controller
             'deskripsi.required' => 'Deskripsi kriteria harus diisi',
         ]);
 
-        DB::beginTransaction();
-
         try {
             Kriteria::create($validatedData);
-            DB::commit();
 
             $notif = notify()->success('Data kriteria berhasil ditambahkan');
             return redirect()->route('kriteria.index')->withInput()->with('notif', $notif);
-
         } catch (\Throwable $th) {
-            DB::rollback();
-
             $notif = notify()->error('Terjadi kesalahan saat menyimpan data kriteria');
             return back();
         }
@@ -102,18 +96,12 @@ class KriteriaController extends Controller
             'deskripsi.required' => 'Deskripsi kriteria harus diisi',
         ]);
 
-        DB::beginTransaction();
-
         try {
             Kriteria::where('id_kriteria', $id)->update($validatedData);
-            DB::commit();
 
             $notif = notify()->success('Data kriteria berhasil diubah');
             return redirect()->route('kriteria.index')->withInput()->with('notif', $notif);
-
         } catch (\Throwable $th) {
-            DB::rollback();
-
             $notif = notify()->error('Terjadi kesalahan saat mengubah data kriteria');
             return back();
         }
