@@ -147,7 +147,7 @@
                         </th>
 
                         <th class="px-3 py-3 text-center" scope="col">
-                            Prioritas
+                            Bobot Prioritas
                         </th>
 
                         <th class="px-3 py-3 text-center" scope="col">
@@ -166,14 +166,12 @@
 
                             <td class="px-3 py-3 text-center">
                                 <input class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
-                                    type="text" value="{{ number_format($prioritas[$kriteria1->id_kriteria], 4) }}"
-                                    readonly>
+                                    type="text" value="{{ $prioritas[$kriteria1->id_kriteria] }}" readonly>
                             </td>
 
                             <td class="px-3 py-3 text-center">
                                 <input class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
-                                    type="text"
-                                    value="{{ number_format($consistencyMeasures[$kriteria1->id_kriteria], 4) }}"
+                                    type="text" value="{{ $consistencyMeasures[$kriteria1->id_kriteria] }}"
                                     readonly>
                             </td>
 
@@ -235,6 +233,20 @@
 
             </table>
         </div>
+
+        @if ($consistencyData['Consistency Ratio (CR)'] <= 0.1)
+            <div class="flex justify-end">
+                <a href="{{ route('perhitunganAlternatif.index') }}">
+                    <x-atoms.button.button-primary :customClass="'h-12 w-80 rounded-md'" :type="'button'" :name="'Lanjutkan ke Perbandingan Alternatif'" />
+                </a>
+            </div>
+        @else
+            <div class="flex justify-start">
+                <a href="{{ route('perhitunganKriteria.index') }}">
+                    <x-atoms.button.button-primary :customClass="'h-12 w-80 rounded-md'" :type="'button'" :name="'Kembali ke Perbandingan Kriteria'" />
+                </a>
+            </div>
+        @endif
 
     </div>
 
