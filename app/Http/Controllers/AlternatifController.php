@@ -63,18 +63,12 @@ class AlternatifController extends Controller
             'pendidikan.max' => 'Pendidikan maksimal 3 karakter',
         ]);
 
-        DB::beginTransaction();
-
         try {
             Alternatif::create($validatedData);
-            DB::commit();
 
             $notif = notify()->success('Data karyawan berhasil ditambahkan');
             return redirect()->route('alternatif.index')->withInput()->with('notif', $notif);
-
         } catch (\Throwable $th) {
-            DB::rollback();
-
             $notif = notify()->error('Terjadi kesalahan saat menyimpan data karyawan');
             return back();
         }
@@ -133,18 +127,13 @@ class AlternatifController extends Controller
             'pendidikan.max' => 'Pendidikan maksimal 3 karakter',
         ]);
 
-        DB::beginTransaction();
-
         try {
             Alternatif::where('id_alternatif', $id)->update($validatedData);
             DB::commit();
 
             $notif = notify()->success('Data karyawan berhasil diubah');
             return redirect()->route('alternatif.index')->withInput()->with('notif', $notif);
-
         } catch (\Throwable $th) {
-            DB::rollback();
-
             $notif = notify()->error('Terjadi kesalahan saat mengubah data karyawan');
             return back();
         }
