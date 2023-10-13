@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('perhitungan_kriteria', function (Blueprint $table) {
-            $table->foreign('kriteria_pertama', 'fk_kriteria_pertama')
+            $table->foreign('kriteria_pertama', 'fk_perhitungan_kriteria_kriteria_pertama')
                 ->references('kode_kriteria')
                 ->on('kriteria')
                 ->cascadeOnDelete()
@@ -20,7 +20,7 @@ return new class extends Migration
         });
 
         Schema::table('perhitungan_kriteria', function (Blueprint $table) {
-            $table->foreign('kriteria_kedua', 'fk_kriteria_kedua')
+            $table->foreign('kriteria_kedua', 'fk_perhitungan_kriteria_kriteria_kedua')
                 ->references('kode_kriteria')
                 ->on('kriteria')
                 ->cascadeOnDelete()
@@ -33,12 +33,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('nilai', function (Blueprint $table) {
-            $table->dropForeign('fk_kriteria_pertama');
+        Schema::table('perhitungan_kriteria', function (Blueprint $table) {
+            $table->dropForeign('fk_perhitungan_kriteria_kriteria_pertama');
         });
 
-        Schema::table('nilai', function (Blueprint $table) {
-            $table->dropForeign('fk_kriteria_kedua');
+        Schema::table('perhitungan_kriteria', function (Blueprint $table) {
+            $table->dropForeign('fk_perhitungan_kriteria_kriteria_kedua');
         });
     }
 };
