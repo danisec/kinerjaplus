@@ -43,17 +43,18 @@
                                 @foreach ($kriteria as $comparison)
                                     <td class="border px-3 py-4 text-center">
                                         @if ($item->kode_kriteria == $comparison->kode_kriteria)
-                                            <input class="w-20 rounded-md border-none bg-slate-100 text-center"
+                                            <input
+                                                class="w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
                                                 name="matriks[{{ $item->kode_kriteria }}][{{ $comparison->kode_kriteria }}]"
                                                 type="text" value="1" @readonly(true)>
                                         @else
                                             @if ($item->kode_kriteria < $comparison->kode_kriteria)
                                                 <select
-                                                    class="w-20 rounded-md border border-slate-300 focus:bg-slate-100"
+                                                    class="w-20 rounded-md border border-slate-300 focus:bg-slate-100 focus:ring-slate-100"
                                                     id="matriks[{{ $item->kode_kriteria }}][{{ $comparison->kode_kriteria }}]"
                                                     name="matriks[{{ $item->kode_kriteria }}][{{ $comparison->kode_kriteria }}]"
                                                     data-row="{{ $item->kode_kriteria }}"
-                                                    data-col="{{ $comparison->kode_kriteria }}">
+                                                    data-col="{{ $comparison->kode_kriteria }}" @required(true)>
 
                                                     <option selected disabled></option>
                                                     @for ($i = 1; $i <= 9; $i++)
@@ -63,7 +64,7 @@
                                                 </select>
                                             @else
                                                 <input
-                                                    class="matriksHasil w-20 rounded-md border-none bg-slate-100 text-center"
+                                                    class="matriksHasil w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
                                                     name="matriks[{{ $item->kode_kriteria }}][{{ $comparison->kode_kriteria }}]"
                                                     data-row="{{ $item->kode_kriteria }}"
                                                     data-col="{{ $comparison->kode_kriteria }}" type="text"
