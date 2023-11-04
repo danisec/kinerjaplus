@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AlternatifController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KelolaAkunController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PenilaianController;
@@ -110,4 +111,16 @@ Route::controller(PerhitunganAlternatifController::class)->name('perhitunganAlte
 Route::controller(RankingController::class)->name('ranking.')->middleware('auth', 'user-role:manajer')->group(function () {
     Route::get('/dashboard/perankingan', 'index')->name('index');
     Route::post('/dashboard/perankingan', 'store')->name('store');
+});
+
+Route::controller(KelolaAkunController::class)->name('kelolaAkun.')->middleware('auth', 'user-role:manajer')->group(function () {
+    Route::get('/dashboard/kelola-akun', 'index')->name('index');
+    Route::get('/dashboard/kelola-akun/tambah-akun', 'create')->name('create');
+    Route::get('/dashboard/kelola-akun/view-akun/{id}', 'show')->name('show');
+
+    Route::post('/dashboard/kelola-akun/tambah-akun', 'store')->name('store');
+    Route::delete('/dashboard/kelola-akun/{id}', 'destroy')->name('destroy');
+
+    Route::get('/dashboard/kelola-akun/ubah-akun/{id}/edit', 'edit')->name('edit');
+    Route::put('/dashboard/kelola-akun/{id}', 'update')->name('update');
 });

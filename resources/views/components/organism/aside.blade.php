@@ -112,20 +112,41 @@
             </ul>
         </div>
 
-        <form action="{{ route('login.logout') }}" method="post">
-            @csrf
+        <div>
+            @if (Auth::user()->role === 'manajer')
+                <li class="flex flex-col gap-2.5">
+                    @foreach ($sideNavUser as $name => $data)
+                        <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-gray-200/80 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100' }} flex flex-row gap-2 text-base"
+                            href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
 
-            <button
-                class="flex w-56 flex-row items-center justify-start gap-2 px-2 py-2 text-lg font-semibold text-gray-900 hover:rounded-md hover:bg-slate-100 focus:outline-none"
-                type="submit">
-                <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
-                </svg>
+                            <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }} h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="{{ $data['viewBox'] }}"
+                                stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="{{ $data['path'] }}" />
+                            </svg>
 
-                <p class="ml-0.5 text-lg font-medium text-gray-800">Keluar</p>
-            </button>
-        </form>
+                            <span>{{ $name }}</span>
+                        </a>
+                    @endforeach
+                </li>
+            @endif
+
+            <form action="{{ route('login.logout') }}" method="post">
+                @csrf
+
+                <button
+                    class="flex w-56 flex-row items-center justify-start gap-2 px-2 py-2 text-lg font-semibold text-gray-900 hover:rounded-md hover:bg-slate-100 focus:outline-none"
+                    type="submit">
+                    <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                    </svg>
+
+                    <p class="ml-0.5 text-lg font-medium text-gray-800">Keluar</p>
+                </button>
+            </form>
+        </div>
+
     </div>
 </aside>
