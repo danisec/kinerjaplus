@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bobot_prioritas_kriteria', function (Blueprint $table) {
-            $table->id('id_bobot_prioritas_kriteria');
+        Schema::create('subkriteria', function (Blueprint $table) {
+            $table->id('id_subkriteria');
             $table->unsignedBigInteger('id_kriteria');
-            $table->double('bobot_prioritas');
+            $table->string('kode_subkriteria', 4);
+            $table->string('nama_subkriteria', 255);
+            $table->string('deskripsi_subkriteria', 2000);
+            $table->double('bobot_subkriteria');
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bobot_prioritas_kriteria');
+        Schema::dropIfExists('subkriteria');
     }
 };

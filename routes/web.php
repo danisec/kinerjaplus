@@ -4,10 +4,12 @@ use App\Http\Controllers\AlternatifController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\PerhitunganAlternatifController;
 use App\Http\Controllers\PerhitunganKriteriaController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SubkriteriaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,35 +36,61 @@ Route::controller(RegisterController::class)->name('register.')->middleware('gue
     Route::post('/register', 'store')->name('store');
 });
 
-Route::controller(DashboardController::class)->name('dashboard.')->middleware('auth', 'user-role:manajer,pimpinan')->group(function () {
+Route::controller(DashboardController::class)->name('dashboard.')->middleware('auth', 'user-role:manajer,pimpinan,guru')->group(function () {
     Route::get('/dashboard', 'index')->name('index');
     Route::post('/dashboard', 'store')->name('store');
 });
 
-Route::controller(KriteriaController::class)->name('kriteria.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/data-kriteria', 'index')->name('index')->middleware('user-role:manajer,pimpinan');
-    Route::get('/dashboard/data-kriteria/view-kriteria/{id}', 'show')->name('show')->middleware('user-role:manajer,pimpinan');
+Route::controller(AlternatifController::class)->name('alternatif.')->middleware('auth', 'user-role:manajer')->group(function () {
+    Route::get('/dashboard/data-alternatif', 'index')->name('index');
+    Route::get('/dashboard/data-alternatif/view-alternatif/{id}', 'show')->name('show');
 
-    Route::get('/dashboard/data-kriteria/tambah-kriteria', 'create')->name('create')->middleware('user-role:manajer');
-    Route::post('/dashboard/data-kriteria', 'store')->name('store')->middleware('user-role:manajer');
+    Route::get('/dashboard/data-alternatif/tambah-alternatif', 'create')->name('create');
+    Route::post('/dashboard/data-alternatif', 'store')->name('store');
 
-    Route::get('/dashboard/data-kriteria/ubah-kriteria/{id}/edit', 'edit')->name('edit')->middleware('user-role:manajer');
-    Route::put('/dashboard/data-kriteria/{id}', 'update')->name('update')->middleware('user-role:manajer');
+    Route::get('/dashboard/data-alternatif/ubah-alternatif/{id}/edit', 'edit')->name('edit');
+    Route::put('/dashboard/data-alternatif/{id}', 'update')->name('update');
 
-    Route::delete('/dashboard/data-kriteria/{id}', 'destroy')->name('destroy')->middleware('user-role:manajer');
+    Route::delete('/dashboard/data-alternatif/{id}', 'destroy')->name('destroy');
 });
 
-Route::controller(AlternatifController::class)->name('alternatif.')->middleware('auth', 'user-role:manajer,pimpinan')->group(function () {
-    Route::get('/dashboard/data-alternatif', 'index')->name('index')->middleware('user-role:manajer,pimpinan');
-    Route::get('/dashboard/data-alternatif/view-alternatif/{id}', 'show')->name('show')->middleware('user-role:manajer,pimpinan');
+Route::controller(KriteriaController::class)->name('kriteria.')->middleware('auth', 'user-role:manajer')->group(function () {
+    Route::get('/dashboard/data-kriteria', 'index')->name('index');
+    Route::get('/dashboard/data-kriteria/view-kriteria/{id}', 'show')->name('show');
 
-    Route::get('/dashboard/data-alternatif/tambah-alternatif', 'create')->name('create')->middleware('user-role:manajer');
-    Route::post('/dashboard/data-alternatif', 'store')->name('store')->middleware('user-role:manajer');
+    Route::get('/dashboard/data-kriteria/tambah-kriteria', 'create')->name('create');
+    Route::post('/dashboard/data-kriteria', 'store')->name('store');
 
-    Route::get('/dashboard/data-alternatif/ubah-alternatif/{id}/edit', 'edit')->name('edit')->middleware('user-role:manajer');
-    Route::put('/dashboard/data-alternatif/{id}', 'update')->name('update')->middleware('user-role:manajer');
+    Route::get('/dashboard/data-kriteria/ubah-kriteria/{id}/edit', 'edit')->name('edit');
+    Route::put('/dashboard/data-kriteria/{id}', 'update')->name('update');
 
-    Route::delete('/dashboard/data-alternatif/{id}', 'destroy')->name('destroy')->middleware('user-role:manajer');
+    Route::delete('/dashboard/data-kriteria/{id}', 'destroy')->name('destroy');
+});
+
+Route::controller(SubkriteriaController::class)->name('subkriteria.')->middleware('auth', 'user-role:manajer')->group(function () {
+    Route::get('/dashboard/data-subkriteria', 'index')->name('index');
+    Route::get('/dashboard/data-subkriteria/view-subkriteria/{id}', 'show')->name('show');
+
+    Route::get('/dashboard/data-subkriteria/tambah-subkriteria', 'create')->name('create');
+    Route::post('/dashboard/data-subkriteria', 'store')->name('store');
+
+    Route::get('/dashboard/data-subkriteria/ubah-subkriteria/{id}/edit', 'edit')->name('edit');
+    Route::put('/dashboard/data-subkriteria/{id}', 'update')->name('update');
+
+    Route::delete('/dashboard/data-subkriteria/{id}', 'destroy')->name('destroy');
+});
+
+Route::controller(PenilaianController::class)->name('penilaian.')->middleware('auth', 'user-role:manajer,pimpinan,guru')->group(function () {
+    Route::get('/dashboard/data-penilaian', 'index')->name('index');
+    Route::get('/dashboard/data-penilaian/view-penilaian/{id}', 'show')->name('show');
+
+    Route::get('/dashboard/data-penilaian/tambah-penilaian', 'create')->name('create');
+    Route::post('/dashboard/data-penilaian', 'store')->name('store');
+
+    Route::get('/dashboard/data-penilaian/ubah-penilaian/{id}/edit', 'edit')->name('edit');
+    Route::put('/dashboard/data-penilaian/{id}', 'update')->name('update');
+
+    Route::delete('/dashboard/data-penilaian/{id}', 'destroy')->name('destroy');
 });
 
 Route::controller(PerhitunganKriteriaController::class)->name('perhitunganKriteria.')->middleware('auth', 'user-role:manajer')->group(function () {
@@ -79,7 +107,7 @@ Route::controller(PerhitunganAlternatifController::class)->name('perhitunganAlte
     Route::post('/dashboard/perhitungan-perbandingan-alternatif', 'store')->name('store');
 });
 
-Route::controller(RankingController::class)->name('ranking.')->middleware('auth', 'user-role:manajer,pimpinan')->group(function () {
+Route::controller(RankingController::class)->name('ranking.')->middleware('auth', 'user-role:manajer')->group(function () {
     Route::get('/dashboard/perankingan', 'index')->name('index');
     Route::post('/dashboard/perankingan', 'store')->name('store');
 });

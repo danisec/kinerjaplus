@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Kriteria;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class KriteriaController extends Controller
 {
@@ -35,16 +34,17 @@ class KriteriaController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'kode_kriteria' => 'required|unique:kriteria,kode_kriteria|max:2',
-            'nama_kriteria' => 'required|unique:kriteria,nama_kriteria',
-            'deskripsi' => 'required',
+            'kode_kriteria' => 'required|unique:kriteria,kode_kriteria|max:3',
+            'nama_kriteria' => 'required|max:255',
+            'bobot_kriteria' => 'required|numeric',
         ], [
             'kode_kriteria.required' => 'Kode kriteria harus diisi',
             'kode_kriteria.unique' => 'Kode kriteria sudah ada',
-            'kode_kriteria.max' => 'Kode kriteria maksimal 2 karakter',
+            'kode_kriteria.max' => 'Kode kriteria maksimal 3 karakter',
             'nama_kriteria.required' => 'Nama kriteria harus diisi',
-            'nama_kriteria.unique' => 'Nama kriteria sudah ada',
-            'deskripsi.required' => 'Deskripsi kriteria harus diisi',
+            'nama_kriteria.max' => 'Nama kriteria maksimal 255 karakter',
+            'bobot_kriteria.required' => 'Bobot kriteria harus diisi',
+            'bobot_kriteria.numeric' => 'Bobot kriteria harus berupa angka',
         ]);
 
         try {
@@ -86,14 +86,16 @@ class KriteriaController extends Controller
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'kode_kriteria' => 'required|max:2',
-            'nama_kriteria' => 'required',
-            'deskripsi' => 'required',
+            'kode_kriteria' => 'required|max:3',
+            'nama_kriteria' => 'required|max:255',
+            'bobot_kriteria' => 'required|numeric',
         ], [
             'kode_kriteria.required' => 'Kode kriteria harus diisi',
-            'kode_kriteria.max' => 'Kode kriteria maksimal 2 karakter',
+            'kode_kriteria.max' => 'Kode kriteria maksimal 3 karakter',
             'nama_kriteria.required' => 'Nama kriteria harus diisi',
-            'deskripsi.required' => 'Deskripsi kriteria harus diisi',
+            'nama_kriteria.max' => 'Nama kriteria maksimal 255 karakter',
+            'bobot_kriteria.required' => 'Bobot kriteria harus diisi',
+            'bobot_kriteria.numeric' => 'Bobot kriteria harus berupa angka',
         ]);
 
         try {
@@ -112,9 +114,14 @@ class KriteriaController extends Controller
      */
     public function destroy($id)
     {
-        Kriteria::where('id_kriteria', $id)->delete();
+        try {
+            Kriteria::where('id_kriteria', $id)->delete();
 
-        $notif = notify()->success('Data kriteria berhasil dihapus');
-        return back()->with('notif', $notif);
+            $notif = notify()->success('Data kriteria berhasil dihapus');
+            return back()->with('notif', $notif);
+        } catch (\Throwable $th) {
+            $notif = notify()->error('Terjadi kesalahan saat menghapus data kriteria');
+            return back();
+        }
     }
 }

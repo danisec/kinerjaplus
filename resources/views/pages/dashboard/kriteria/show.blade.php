@@ -22,24 +22,30 @@
 
         <div class="mt-8 space-y-6">
             <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="kode_kriteria">
+                <label class="mb-2 block text-base font-medium text-gray-900" for="kode kriteria">
                     Kode Kriteria</label>
                 <input class="field-input-slate w-full" name="kode_kriteria" type="text"
                     value="{{ $kriteria->kode_kriteria }}" @disabled(true) @readonly(true)>
             </div>
 
             <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama_kriteria">
+                <label class="mb-2 block text-base font-medium text-gray-900" for="nama kriteria">
                     Nama Kriteria</label>
                 <input class="field-input-slate w-full" name="nama_kriteria" type="text"
                     value="{{ $kriteria->nama_kriteria }}" @disabled(true) @readonly(true)>
             </div>
 
             <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="deskripsi">
-                    Deskripsi Kriteria</label>
-                <textarea class="field-input-slate w-full" name="deskripsi" rows="5" @disabled(true)
-                    @readonly(true)>{{ $kriteria->deskripsi }}</textarea>
+                <label class="mb-2 block text-base font-medium text-gray-900" for="bobot kriteria">
+                    Bobot Kriteria</label>
+
+                <div class="flex flex-row justify-between gap-4">
+                    <input class="field-input-slate w-full" name="bobot_kriteria" type="number"
+                        value="{{ $kriteria->bobot_kriteria }}" @disabled(true) @readonly(true)>
+
+                    <input class="field-input-slate w-10 text-center" type="text" value="%"
+                        @disabled(true) @readonly(true)>
+                </div>
             </div>
 
             <div class="flex justify-center">

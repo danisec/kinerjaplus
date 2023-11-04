@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::table('bobot_prioritas_kriteria', function (Blueprint $table) {
-            $table->foreign('id_kriteria', 'fk_bobot_prioritas_kriteria_kriteria')
+        Schema::table('subkriteria', function (Blueprint $table) {
+            $table->foreign('id_kriteria', 'fk_subkriteria_id_kriteria')
                 ->references('id_kriteria')
                 ->on('kriteria')
                 ->cascadeOnDelete()
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('bobot_prioritas_kriteria', function (Blueprint $table) {
-            $table->dropForeign('fk_bobot_prioritas_kriteria_kriteria');
+        Schema::table('subkriteria', function (Blueprint $table) {
+            $table->dropForeign('fk_subkriteria_id_kriteria');
         });
     }
 };

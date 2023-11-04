@@ -29,14 +29,14 @@
         <div class="container mt-6">
 
             <div class="rounded-md bg-white p-4 shadow-md shadow-slate-100">
-                {!! $chart->container() !!}
+                {{-- {!! $chart->container() !!} --}}
             </div>
 
         </div>
 
     </div>
 
-    <script src="{{ $chart->cdn() }}"></script>
-    {{ $chart->script() }}
+    {{--     <script src="{{ $chart->cdn() }}"></script>
+    {{ $chart->script() }} --}}
 
 </x-layouts.app-dashboard>

@@ -17,6 +17,7 @@
         </li>
     </x-molecules.breadcrumb>
 
+
     <div class="mx-auto my-8 w-8/12">
         <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Data Kriteria</h4>
 
@@ -24,11 +25,11 @@
             @csrf
 
             <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="kode_kriteria">
+                <label class="mb-2 block text-base font-medium text-gray-900" for="kode kriteria">
                     Kode Kriteria</label>
                 <input class="@error('kode_kriteria') border-red-500 @enderror field-input-slate w-full"
-                    name="kode_kriteria" type="text" value="{{ old('kode_kriteria') }}" autofocus placeholder="K1"
-                    required>
+                    name="kode_kriteria" type="text" value="{{ old('kode_kriteria') }}" autofocus
+                    placeholder="Contoh: K1" required>
 
                 @error('kode_kriteria')
                     <p class="invalid-feedback">
@@ -38,7 +39,7 @@
             </div>
 
             <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama_kriteria">
+                <label class="mb-2 block text-base font-medium text-gray-900" for="nama kriteria">
                     Nama Kriteria</label>
                 <input class="@error('nama_kriteria') border-red-500 @enderror field-input-slate w-full"
                     name="nama_kriteria" type="text" value="{{ old('nama_kriteria') }}" placeholder="Nama Kriteria"
@@ -52,12 +53,19 @@
             </div>
 
             <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="deskripsi">
-                    Deskripsi Kriteria</label>
-                <textarea class="@error('deskripsi') border-red-500 @enderror field-input-slate w-full" name="deskripsi"
-                    placeholder="Deskripsi Kriteria" rows="5"></textarea>
+                <label class="mb-2 block text-base font-medium text-gray-900" for="bobot kriteria">
+                    Bobot Kriteria</label>
 
-                @error('deskripsi')
+                <div class="flex flex-row justify-between gap-4">
+                    <input class="@error('bobot_kriteria') border-red-500 @enderror field-input-slate w-full"
+                        name="bobot_kriteria" type="number" value="{{ old('bobot_kriteria') }}" min="1"
+                        maxlength="3" minlength="1" max="100" placeholder="1 - 100">
+
+                    <input class="field-input-slate w-10 text-center" type="text" value="%"
+                        @disabled(true) @readonly(true)>
+                </div>
+
+                @error('bobot_kriteria')
                     <p class="invalid-feedback">
                         {{ $message }}
                     </p>
@@ -70,7 +78,9 @@
                 </a>
                 <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Simpan'" />
             </div>
+
         </form>
     </div>
+
 
 </x-layouts.app-dashboard>

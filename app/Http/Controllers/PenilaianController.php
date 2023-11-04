@@ -2,26 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Charts\RankingKaryawan;
-use App\Models\Alternatif;
-use App\Models\Dashboard;
-use App\Models\Kriteria;
-use App\Models\User;
+use App\Models\Penilaian;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class PenilaianController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(RankingKaryawan $chart)
+    public function index()
     {
-        return view('pages.dashboard.home.index', [
-            'title' => 'Dashboard',
-            'countUser' => User::count(),
-            'countAlternatif' => Alternatif::count(),
-            'countKriteria' => Kriteria::count(),
-            // 'chart' => $chart->build(),
+        return view('pages.dashboard.penilaian.index', [
+            'title' => 'Data Penilaian',
         ]);
     }
 
@@ -44,7 +36,7 @@ class DashboardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Dashboard $dashboard)
+    public function show(Penilaian $penilaian)
     {
         //
     }
@@ -52,7 +44,7 @@ class DashboardController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Dashboard $dashboard)
+    public function edit(Penilaian $penilaian)
     {
         //
     }
@@ -60,7 +52,7 @@ class DashboardController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Dashboard $dashboard)
+    public function update(Request $request, Penilaian $penilaian)
     {
         //
     }
@@ -68,7 +60,7 @@ class DashboardController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Dashboard $dashboard)
+    public function destroy(Penilaian $penilaian)
     {
         //
     }

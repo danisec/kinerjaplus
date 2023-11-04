@@ -25,7 +25,7 @@
             @csrf
 
             <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="kode_kriteria">
+                <label class="mb-2 block text-base font-medium text-gray-900" for="kode kriteria">
                     Kode Kriteria</label>
                 <input class="@error('kode_kriteria') border-red-500 @enderror field-input-slate w-full"
                     name="kode_kriteria" type="text" value="{{ $kriteria->kode_kriteria }}" required>
@@ -38,11 +38,10 @@
             </div>
 
             <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama_kriteria">
+                <label class="mb-2 block text-base font-medium text-gray-900" for="nama kriteria">
                     Nama Kriteria</label>
                 <input class="@error('kode_kriteria') border-red-500 @enderror field-input-slate w-full"
-                    name="nama_kriteria" type="text" value="{{ $kriteria->nama_kriteria }}"
-                    placeholder="Nama Kriteria" required>
+                    name="nama_kriteria" type="text" value="{{ $kriteria->nama_kriteria }}" required>
 
                 @error('nama_kriteria')
                     <p class="invalid-feedback">
@@ -52,12 +51,19 @@
             </div>
 
             <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="deskripsi">
-                    Deskripsi Kriteria</label>
-                <textarea class="@error('deskripsi') border-red-500 @enderror field-input-slate w-full" name="deskripsi"
-                    placeholder="Deskripsi Kriteria" rows="5">{{ $kriteria->deskripsi }}</textarea>
+                <label class="mb-2 block text-base font-medium text-gray-900" for="bobot kriteria">
+                    Bobot Kriteria</label>
 
-                @error('deskripsi')
+                <div class="flex flex-row justify-between gap-4">
+                    <input class="@error('bobot_kriteria') border-red-500 @enderror field-input-slate w-full"
+                        name="bobot_kriteria" type="number" value="{{ $kriteria->bobot_kriteria }}" min="1"
+                        maxlength="3" minlength="1" max="100" required>
+
+                    <input class="field-input-slate w-10 text-center" type="text" value="%"
+                        @disabled(true) @readonly(true)>
+                </div>
+
+                @error('bobot_kriteria')
                     <p class="invalid-feedback">
                         {{ $message }}
                     </p>

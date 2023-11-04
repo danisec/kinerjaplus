@@ -19,4 +19,9 @@ class Kriteria extends Model
                 ->orWhere('kode_kriteria', 'like', '%' . $search . '%')
         );
     }
+
+    public function subkriteria()
+    {
+        return $this->hasMany(Subkriteria::class, 'id_kriteria', 'id_kriteria');
+    }
 }
