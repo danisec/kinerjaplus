@@ -19,4 +19,14 @@ class Alternatif extends Model
                 ->orWhere('kode_alternatif', 'like', '%' . $search . '%')
         );
     }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'fullname', 'nama_alternatif');
+    }
+
+    public function penilaian()
+    {
+        return $this->hasMany(Penilaian::class, 'alternatif_pertama', 'kode_alternatif');
+    }
 }
