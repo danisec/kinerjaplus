@@ -14,7 +14,7 @@ class KelolaAkunController extends Controller
 
     public function __construct()
     {
-        $this->role = ['0' => 'manajer','1' => 'pimpinan','2' => 'guru'];
+        $this->role = ['0' => 'superadmin','1' => 'yayasan','2' => 'kepala sekolah', '3' => 'atasan langsung', '4' => 'guru', '5' => 'IT'];
     }
 
     /**
@@ -46,7 +46,7 @@ class KelolaAkunController extends Controller
     {
         $validatedData = $request->validate([
             'fullname' => 'required|max:255',
-            'username' => ['required', 'min:4', 'max:255', 'unique:users'],
+            'username' => 'required', 'min:4', 'max:255', 'unique:users',
             'email' => 'required|email:dns|unique:users',
             'role' => 'required',
             'password' => 'required|min:8|max:255',
@@ -79,7 +79,7 @@ class KelolaAkunController extends Controller
             return redirect()->route('kelolaAkun.index')->withInput()->with('notif', $notif);
         } catch (\Throwable $th) {
             $notif = notify()->error('Terjadi kesalahan saat menambahkan akun');
-            return back();
+            return back()->withInput();
         }
     }
 
@@ -113,10 +113,10 @@ class KelolaAkunController extends Controller
     {
         $validatedData = $request->validate([
             'fullname' => 'max:255',
-            'username' => ['min:4', 'max:255'],
+            'username' => 'min:4', 'max:255',
             'email' => 'email:dns',
             'role' => 'required',
-            'password' => 'min:8|max:255',
+            'password' => 'nullable|min:8|max:255',
         ],[
             'fullname.max' => 'Nama lengkap maksimal 255 karakter',
             'username.min' => 'Nama pengguna minimal 4 karakter',
@@ -128,13 +128,23 @@ class KelolaAkunController extends Controller
         
         try {
             $user = User::findOrFail($id);
-            $user->update([
-                'fullname' => $validatedData['fullname'],
-                'username' => $validatedData['username'],
-                'email' => $validatedData['email'],
-                'role' => $validatedData['role'],
-                'password' => bcrypt($validatedData['password']),
-            ]);
+
+            if ($validatedData['password']) {
+                $user->update([
+                    'fullname' => $validatedData['fullname'],
+                    'username' => $validatedData['username'],
+                    'email' => $validatedData['email'],
+                    'role' => $validatedData['role'],
+                    'password' => bcrypt($validatedData['password']),
+                ]);
+            } else {
+                $user->update([
+                    'fullname' => $validatedData['fullname'],
+                    'username' => $validatedData['username'],
+                    'email' => $validatedData['email'],
+                    'role' => $validatedData['role'],
+                ]);
+            }
 
             $notif = notify()->success('Akun berhasil diubah');
             return redirect()->route('kelolaAkun.index')->withInput()->with('notif', $notif);
