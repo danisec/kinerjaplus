@@ -31,41 +31,74 @@ class aside extends Component
         ];
 
         $sideNavData = [
-            'Data Karyawan' => [
+            'Karyawan' => [
                 'url' => 'data-alternatif',
                 'viewBox' => '0 0 24 24',
                 'path' => 'M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z',
             ],
 
-            'Data Kriteria' => [
+            'Kriteria' => [
                 'url' => 'data-kriteria',
                 'viewBox' => '0 0 24 24',
                 'path' => 'M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z',
             ],
 
-            'Data Subkriteria' => [
+            'Subkriteria' => [
                 'url' => 'data-subkriteria',
                 'viewBox' => '0 0 24 24',
                 'path' => 'M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 006.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0015 2.25h-1.5a2.251 2.251 0 00-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 00-9-9z',
             ],
+
+            'Skala Indikator' => [
+                'url' => 'data-skala-indikator',
+                'viewBox' => '0 0 24 24',
+                'path' => 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
+            ],
         ];
 
         $sideNavPenilaian = [
-            'Data Penilaian' => [
+            'Penilaian' => [
                 'url' => 'data-penilaian',
                 'viewBox' => '0 0 24 24',
                 'path' => 'M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008z',
             ],
         ];
 
+        if (in_array(Auth::user()->role, ['kepala sekolah', 'atasan langsung', 'guru'])) {
+            $sideNavPenilaian = [
+                'Penilaian' => [
+                    'url' => 'data-penilaian/introduction',
+                    'viewBox' => '0 0 24 24',
+                    'path' => 'M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008z',
+                ],
+            ];
+        }
+
         $sideNavPerhitungan = [
-            'Perbandingan Kriteria' => [
+            'Kriteria' => [
                 'url' => 'perhitungan-perbandingan-kriteria'
             ],
-            'Perbandingan Alternatif' => [
+            'Subkriteria' => [
+                'url' => 'perhitungan-perbandingan-subkriteria'
+            ],
+            'Alternatif' => [
                 'url' => 'perhitungan-perbandingan-alternatif'
             ],
         ];
+
+        if (Auth::user()->role == 'atasan langsung') {
+            $sideNavPerhitungan = [
+                'Kriteria' => [
+                    'url' => 'perhitungan-perbandingan-kriteria/hasil-perbandingan-kriteria'
+                ],
+                'Subkriteria' => [
+                    'url' => 'perhitungan-perbandingan-subkriteria/hasil-perbandingan-subkriteria'
+                ],
+                'Alternatif' => [
+                    'url' => 'perhitungan-perbandingan-alternatif/hasil-perbandingan-alternatif'
+                ],
+            ];
+        }
 
         $sideNavPerankingan = [
             'Perankingan' => [
