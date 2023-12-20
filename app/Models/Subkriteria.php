@@ -22,11 +22,11 @@ class Subkriteria extends Model
 
     public function kriteria()
     {
-        return $this->belongsTo(Kriteria::class, 'id_kriteria', 'id_kriteria');
+        return $this->belongsTo(Kriteria::class, 'kode_kriteria', 'kode_kriteria');
     }
 
     public function indikatorSubkriteria()
     {
-        return $this->hasMany(IndikatorSubkriteria::class, 'id_subkriteria', 'id_subkriteria');
+        return $this->hasMany(IndikatorSubkriteria::class, 'kode_subkriteria', 'kode_subkriteria');
     }
 }
