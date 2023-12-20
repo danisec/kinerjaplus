@@ -82,5 +82,75 @@ class RatioIndexSeeder extends Seeder
                 'nilai_ratio_index' => 1.49,
             ]
         )->create();
+
+        RatioIndex::factory(
+            [
+                'ordo_matriks' => 11,
+                'nilai_ratio_index' => 1.51,
+            ]
+        )->create();
+
+        RatioIndex::factory(
+            [
+                'ordo_matriks' => 12,
+                'nilai_ratio_index' => 1.48,
+            ]
+        )->create();
+
+        RatioIndex::factory(
+            [
+                'ordo_matriks' => 13,
+                'nilai_ratio_index' => 1.56,
+            ]
+        )->create();
+
+        RatioIndex::factory(
+            [
+                'ordo_matriks' => 14,
+                'nilai_ratio_index' => 1.57,
+            ]
+        )->create();
+
+        RatioIndex::factory(
+            [
+                'ordo_matriks' => 15,
+                'nilai_ratio_index' => 1.59,
+            ]
+        )->create();
+
+        RatioIndex::factory(
+            [
+                'ordo_matriks' => 16,
+                'nilai_ratio_index' => 1.605,
+            ]
+        )->create();
+
+        RatioIndex::factory(
+            [
+                'ordo_matriks' => 17,
+                'nilai_ratio_index' => 1.61,
+            ]
+        )->create();
+
+        RatioIndex::factory(
+            [
+                'ordo_matriks' => 18,
+                'nilai_ratio_index' => 1.615,
+            ]
+        )->create();
+
+        RatioIndex::factory(
+            [
+                'ordo_matriks' => 19,
+                'nilai_ratio_index' => 1.62,
+            ]
+        )->create();
+
+        RatioIndex::factory(
+            [
+                'ordo_matriks' => 20,
+                'nilai_ratio_index' => 1.625,
+            ]
+        )->create();
     }
 }
