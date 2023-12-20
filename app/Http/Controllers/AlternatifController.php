@@ -3,11 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alternatif;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AlternatifController extends Controller
 {
+    /* 
+     * Constructor
+     */
+    private $namaKaryawan;
+
+    public function __construct()
+    {
+        $this->namaKaryawan = User::where('role', '!=', 'superadmin')->orderBy('fullname', 'ASC')->get();
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -15,7 +26,7 @@ class AlternatifController extends Controller
     {
         return view('pages.dashboard.alternatif.index', [
             'title' => 'Karyawan',
-            'alternatif' => Alternatif::orderBy('kode_alternatif', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
+            'alternatif' => Alternatif::orderBy('id_alternatif', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
         ]);
     }
 
@@ -24,11 +35,14 @@ class AlternatifController extends Controller
      */
     public function create()
     {
+        $alternatif = Alternatif::get();
         $enumJenisKelamin = DB::select("SHOW COLUMNS FROM alternatif WHERE Field = 'jenis_kelamin'")[0]->Type;
        
         return view('pages.dashboard.alternatif.create', [
             'title' => 'Tambah Karyawan',
+            'pluckAlternatif' => $alternatif->pluck('nama_alternatif')->toArray(),
             'jenisKelamin' => explode("','", substr($enumJenisKelamin, 6, (strlen($enumJenisKelamin)-8))),
+            'namaKaryawan' => $this->namaKaryawan,
         ]);
     }
 
@@ -38,17 +52,17 @@ class AlternatifController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'kode_alternatif' => 'required|unique:alternatif,kode_alternatif|max:2',
+            'kode_alternatif' => 'required|unique:alternatif,kode_alternatif|max:3',
             'nama_alternatif' => 'required|unique:alternatif,nama_alternatif',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tanggal_masuk_kerja' => 'required|date',
-            'nip' => 'required|unique:alternatif,nip|max:10',
+            'nip' => 'required|numeric|unique:alternatif,nip|digits:10',
             'jabatan' => 'required',
             'pendidikan' => 'required|max:3',
         ], [
             'kode_alternatif.required' => 'Kode alternatif harus diisi',
             'kode_alternatif.unique' => 'Kode alternatif sudah ada',
-            'kode_alternatif.max' => 'Kode alternatif maksimal 2 karakter',
+            'kode_alternatif.max' => 'Kode alternatif maksimal 3 karakter',
             'nama_alternatif.required' => 'Nama karyawan harus diisi',
             'nama_alternatif.unique' => 'Nama karyawan sudah ada',
             'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
@@ -56,8 +70,9 @@ class AlternatifController extends Controller
             'tanggal_masuk_kerja.required' => 'Tanggal masuk kerja harus diisi',
             'tanggal_masuk_kerja.date' => 'Tanggal masuk kerja harus berupa tanggal',
             'nip.required' => 'Nomor induk pegawai harus diisi',
+            'nip.numeric' => 'Nomor induk pegawai harus berupa angka',
             'nip.unique' => 'Nomor induk pegawai sudah ada',
-            'nip.max' => 'Nomor induk pegawai maksimal 10 karakter',
+            'nip.digits' => 'Nomor induk pegawai harus 10 digit',
             'jabatan.required' => 'Jabatan harus diisi',
             'pendidikan.required' => 'Pendidikan harus diisi',
             'pendidikan.max' => 'Pendidikan maksimal 3 karakter',
@@ -70,7 +85,7 @@ class AlternatifController extends Controller
             return redirect()->route('alternatif.index')->withInput()->with('notif', $notif);
         } catch (\Throwable $th) {
             $notif = notify()->error('Terjadi kesalahan saat menyimpan data karyawan');
-            return back();
+            return back()->withInput()->with('notif', $notif);
         }
     }
 
@@ -96,6 +111,7 @@ class AlternatifController extends Controller
             'title' => 'Ubah Karyawan',
             'alternatif' => Alternatif::where('id_alternatif', $id)->first(),
             'jenisKelamin' => explode("','", substr($enumJenisKelamin, 6, (strlen($enumJenisKelamin)-8))),
+            'namaKaryawan' => $this->namaKaryawan,
         ]);
     }
 
@@ -105,23 +121,24 @@ class AlternatifController extends Controller
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'kode_alternatif' => 'required|max:2',
+            'kode_alternatif' => 'required|max:3',
             'nama_alternatif' => 'required',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tanggal_masuk_kerja' => 'required|date',
-            'nip' => 'required|max:10',
+            'nip' => 'required|numeric|digits:10',
             'jabatan' => 'required',
             'pendidikan' => 'required|max:3',
         ], [
             'kode_alternatif.required' => 'Kode alternatif harus diisi',
-            'kode_alternatif.max' => 'Kode alternatif maksimal 2 karakter',
+            'kode_alternatif.max' => 'Kode alternatif maksimal 3 karakter',
             'nama_alternatif.required' => 'Nama karyawan harus diisi',
             'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
             'jenis_kelamin.in' => 'Jenis kelamin harus Laki-laki atau Perempuan',
             'tanggal_masuk_kerja.required' => 'Tanggal masuk kerja harus diisi',
             'tanggal_masuk_kerja.date' => 'Tanggal masuk kerja harus berupa tanggal',
             'nip.required' => 'Nomor induk pegawai harus diisi',
-            'nip.max' => 'Nomor induk pegawai maksimal 10 karakter',
+            'nip.numeric' => 'Nomor induk pegawai harus berupa angka',
+            'nip.digits' => 'Nomor induk pegawai harus 10 digit',
             'jabatan.required' => 'Jabatan harus diisi',
             'pendidikan.required' => 'Pendidikan harus diisi',
             'pendidikan.max' => 'Pendidikan maksimal 3 karakter',
@@ -135,7 +152,7 @@ class AlternatifController extends Controller
             return redirect()->route('alternatif.index')->withInput()->with('notif', $notif);
         } catch (\Throwable $th) {
             $notif = notify()->error('Terjadi kesalahan saat mengubah data karyawan');
-            return back();
+            return back()->withInput()->with('notif', $notif);
         }
     }
 
