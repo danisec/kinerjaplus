@@ -29,6 +29,11 @@ class User extends Authenticatable
         );
     }
 
+    public function alternatif()
+    {
+        return $this->belongsTo(Alternatif::class, 'fullname', 'nama_alternatif');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -56,7 +61,7 @@ class User extends Authenticatable
     protected function role(): Attribute
     {
         return new Attribute(
-            get: fn ($value) =>  ['manajer', 'pimpinan', 'guru'][$value],
+            get: fn ($value) =>  ['superadmin', 'yayasan', 'kepala sekolah', 'atasan langsung', 'guru', 'IT'][$value],
         );
     }
 }
