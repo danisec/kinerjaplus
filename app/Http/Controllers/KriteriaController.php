@@ -14,7 +14,7 @@ class KriteriaController extends Controller
     {
         return view('pages.dashboard.kriteria.index', [
             'title' => 'Kriteria',
-            'kriteria' => Kriteria::orderBy('kode_kriteria', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
+            'kriteria' => Kriteria::orderBy('id_kriteria', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
         ]);
     }
 
