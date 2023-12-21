@@ -41,11 +41,6 @@
                         </div>
 
                         <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Masuk'" />
-
-                        <div class="text-sm font-medium text-gray-500">
-                            Belum terdaftar? <a class="text-indigo-500 hover:underline"
-                                href="{{ route('register.index') }}">Buat Akun</a>
-                        </div>
                     </form>
 
                 </div>
