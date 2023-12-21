@@ -12,7 +12,7 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Tambah Data Subkriteria</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Tambah Subkriteria</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
@@ -21,25 +21,25 @@
         @csrf
 
         <div class="mt-8 space-y-6">
-            <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Data Subkriteria</h4>
+            <h4 class="mb-6 text-2xl font-semibold text-gray-900">Subkriteria</h4>
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="nama kriteria">
                     Nama Kriteria</label>
 
                 <select class="@error('nama_kriteria') border-red-500 @enderror field-input-slate w-full"
-                    name="id_kriteria" autofocus required>
+                    name="kode_kriteria" autofocus required>
 
                     <option selected disabled hidden>Pilih Kriteria</option>
                     @foreach ($kriteria as $item)
-                        <option value="{{ $item->id_kriteria }}"
+                        <option value="{{ $item->kode_kriteria }}"
                             {{ old('nama_kriteria') == $item->nama_kriteria ? 'selected' : '' }}>
                             {{ $item->nama_kriteria }}
                         </option>
                     @endforeach
                 </select>
 
-                @error('id_kriteria')
+                @error('kode_kriteria')
                     <p class="invalid-feedback">
                         {{ $message }}
                     </p>
@@ -79,29 +79,9 @@
                     Deskripsi Subkriteria</label>
                 <textarea class="@error('deskripsi_subkriteria') border-red-500 @enderror field-input-slate w-full"
                     name="deskripsi_subkriteria" type="text" value="{{ old('deskripsi_subkriteria') }}"
-                    placeholder="Deskripsi Subkriteria" rows="3" required></textarea>
+                    placeholder="Deskripsi Subkriteria" rows="3"></textarea>
 
                 @error('deskripsi_subkriteria')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="bobot subkriteria">
-                    Bobot Subkriteria</label>
-
-                <div class="flex flex-row justify-between gap-4">
-                    <input class="@error('bobot_subkriteria') border-red-500 @enderror field-input-slate w-full"
-                        name="bobot_subkriteria" type="number" value="{{ old('bobot_subkriteria') }}" min="1"
-                        maxlength="3" minlength="1" max="100" placeholder="1 - 100">
-
-                    <input class="field-input-slate w-10 text-center" type="text" value="%"
-                        @disabled(true) @readonly(true)>
-                </div>
-
-                @error('bobot_subkriteria')
                     <p class="invalid-feedback">
                         {{ $message }}
                     </p>
@@ -112,7 +92,7 @@
 
         <div class="mt-12 space-y-6">
             <div class="flex flex-row items-center justify-between">
-                <h4 class="text-2xl font-semibold text-gray-900">Tambah Data Indikator</h4>
+                <h4 class="text-2xl font-semibold text-gray-900">Indikator</h4>
 
                 <x-atoms.button.button-emerald id="add-subkriteria-btn" :customClass="'w-auto text-center rounded-lg px-5 py-3 add-subkriteria-btn'" :type="'button'"
                     :name="'Tambah Kolom Indikator'" />
@@ -151,28 +131,5 @@
 
         </div>
     </form>
-
-    <script type="module">
-        let i = 1;
-
-        $("#add-subkriteria-btn").click(function() {
-            i++;
-
-            $("#kolom-subkriteria").append(`
-                <div class="flex flex-row kolom-subkriteria items-center justify-between gap-4 my-4">
-                    <textarea class="field-input-slate w-full" name="indikator_subkriteria[]"
-                        placeholder="Indikator Subkriteria" rows="3" required></textarea>
-
-                    <button class="text-red-600 focus:outline-none delete-subkriteria-btn" type="button">
-                        <x-atoms.svg.trash />
-                    </button>
-                </div>
-            `);
-        });
-
-        $(document).on("click", ".delete-subkriteria-btn", function() {
-            $(this).parents(".kolom-subkriteria").remove();
-        });
-    </script>
 
 </x-layouts.app-dashboard>
