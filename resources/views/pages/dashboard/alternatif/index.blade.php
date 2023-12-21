@@ -17,7 +17,7 @@
                 <x-molecules.search :placeholder="'Cari Karyawan'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
             </div>
 
-            @if (Auth::user()->role === 'manajer')
+            @if (Auth::user()->role === 'superadmin')
                 <div>
                     <a href="{{ route('alternatif.create') }}">
                         <x-atoms.button.button-primary :customClass="'h-12 w-40 rounded-md'" :type="'button'" :name="'Tambah Karyawan'" />
@@ -67,7 +67,7 @@
                                     </div>
                                 </div>
 
-                                @if (Auth::user()->role === 'manajer')
+                                @if (Auth::user()->role === 'superadmin')
                                     <div x-data="{ showTooltip: false }">
                                         <a class="font-medium text-blue-600"
                                             href="{{ route('alternatif.edit', $item->id_alternatif) }}"
@@ -89,7 +89,7 @@
 
                                         <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama karyawan : ' .
                                             $item->nama_alternatif .
-                                            '?'" :action="route('alternatif.destroy', $item->id_alternatif)" />
+                                            ' ?'" :action="route('alternatif.destroy', $item->id_alternatif)" />
                                     </div>
                                 @endif
                             </td>
