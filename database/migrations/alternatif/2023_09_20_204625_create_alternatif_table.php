@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nama_alternatif', 255);
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
             $table->date('tanggal_masuk_kerja');
-            $table->integer('nip');
+            $table->bigInteger('nip');
             $table->string('jabatan', 50);
             $table->string('pendidikan', 3);
             $table->timestamps();
