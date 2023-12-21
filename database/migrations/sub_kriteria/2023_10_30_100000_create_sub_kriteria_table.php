@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('subkriteria', function (Blueprint $table) {
             $table->id('id_subkriteria');
-            $table->unsignedBigInteger('id_kriteria');
-            $table->string('kode_subkriteria', 4);
+            $table->string('kode_kriteria', 3);
+            $table->string('kode_subkriteria', 4)->index();
             $table->string('nama_subkriteria', 255);
             $table->string('deskripsi_subkriteria', 2000);
             $table->double('bobot_subkriteria');
