@@ -12,13 +12,13 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Ubah Data Kriteria</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Ubah Kriteria</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Ubah Data Kriteria</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Ubah Kriteria</h4>
 
         <form class="mt-8 space-y-6" action="{{ route('kriteria.update', $kriteria->id_kriteria) }}" method="POST">
             @method('PUT')
