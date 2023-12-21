@@ -1,8 +1,12 @@
 <nav class="sticky top-0 z-40 bg-white px-4 py-8 shadow-md shadow-slate-100">
 
     <div class="flex flex-row justify-end">
-        <div class="flex flex-row items-center gap-2">
-            <p class="text-base font-normal text-gray-900">{{ Auth::user()->fullname }}</p>
+        <div class="flex flex-row items-center gap-4">
+            <div class="flex flex-row gap-2">
+                <p class="text-base font-normal text-gray-900">{{ Auth::user()->fullname }}</p>
+                <span
+                    class="rounded-md bg-emerald-400 p-1 text-xs font-normal text-white">{{ Auth::user()->role }}</span>
+            </div>
 
             <svg class="h-10 w-10" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                 stroke="currentColor">
