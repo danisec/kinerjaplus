@@ -12,7 +12,7 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Ubah Data Subkriteria</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Ubah Subkriteria</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
@@ -23,25 +23,25 @@
         @csrf
 
         <div class="mt-8 space-y-6">
-            <h4 class="mb-6 text-2xl font-semibold text-gray-900">Ubah Data Subkriteria</h4>
+            <h4 class="mb-6 text-2xl font-semibold text-gray-900">Ubah Subkriteria</h4>
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="nama kriteria">
                     Nama Kriteria</label>
 
                 <select class="@error('nama_kriteria') border-red-500 @enderror field-input-slate w-full"
-                    name="id_kriteria" required>
+                    name="kode_kriteria" required>
 
                     <option selected disabled hidden>Pilih Kriteria</option>
                     @foreach ($kriteria as $item)
-                        <option value="{{ $item->id_kriteria }}"
+                        <option value="{{ $item->kode_kriteria }}"
                             {{ $subkriteria->kriteria->nama_kriteria == $item->nama_kriteria ? 'selected' : '' }}>
                             {{ $item->nama_kriteria }}
                         </option>
                     @endforeach
                 </select>
 
-                @error('id_kriteria')
+                @error('kode_kriteria')
                     <p class="invalid-feedback">
                         {{ $message }}
                     </p>
@@ -77,30 +77,10 @@
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="deskripsi subkriteria">
                     Deskripsi Subkriteria</label>
-                <textarea class="@error('deskripsi_subkriteria') border-red-500 @enderror field-input-slate w-full"
-                    name="deskripsi_subkriteria" type="text" rows="3" required>{{ $subkriteria->deskripsi_subkriteria }}</textarea>
+                <textarea class="@error('deskripsi_subkriteria') border-red-500 @enderror textAreaHeight field-input-slate w-full"
+                    name="deskripsi_subkriteria" type="text" rows="3">{{ $subkriteria->deskripsi_subkriteria }}</textarea>
 
                 @error('deskripsi_subkriteria')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="bobot subkriteria">
-                    Bobot Subkriteria</label>
-
-                <div class="flex flex-row justify-between gap-4">
-                    <input class="@error('bobot_subkriteria') border-red-500 @enderror field-input-slate w-full"
-                        name="bobot_subkriteria" type="number" value="{{ $subkriteria->bobot_subkriteria }}"
-                        min="1" maxlength="3" minlength="1" max="100" required>
-
-                    <input class="field-input-slate w-10 text-center" type="text" value="%"
-                        @disabled(true) @readonly(true)>
-                </div>
-
-                @error('bobot_subkriteria')
                     <p class="invalid-feedback">
                         {{ $message }}
                     </p>
@@ -110,7 +90,7 @@
         </div>
 
         <div class="mt-12 space-y-6">
-            <h4 class="text-2xl font-semibold text-gray-900">Ubah Data Indikator</h4>
+            <h4 class="text-2xl font-semibold text-gray-900">Ubah Indikator</h4>
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="indikator subkriteria">
@@ -118,8 +98,8 @@
 
                 <div id="kolom-subkriteria">
                     @foreach ($subkriteria->indikatorSubkriteria as $item)
-                        <textarea class="field-input-slate mb-4 w-full" name="indikator_subkriteria[]" placeholder="Indikator Subkriteria"
-                            rows="3" required>{{ $item->indikator_subkriteria }}</textarea>
+                        <textarea class="textAreaHeight field-input-slate mb-4 w-full" name="indikator_subkriteria[]"
+                            placeholder="Indikator Subkriteria" rows="auto" required>{{ $item->indikator_subkriteria }}</textarea>
 
                         @error('indikator_subkriteria')
                             <p class="invalid-feedback">
