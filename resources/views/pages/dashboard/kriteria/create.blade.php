@@ -12,14 +12,14 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Tambah Data Kriteria</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Tambah Kriteria</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
 
     <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Data Kriteria</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Kriteria</h4>
 
         <form class="mt-8 space-y-6" action="{{ route('kriteria.store') }}" method="POST">
             @csrf
