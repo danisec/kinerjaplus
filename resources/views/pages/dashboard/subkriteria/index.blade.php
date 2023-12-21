@@ -17,7 +17,7 @@
                 <x-molecules.search :placeholder="'Cari Subkriteria'" :request="request('nama_subkriteria')" :name="'nama_subkriteria'" :value="request('nama_subkriteria')" />
             </div>
 
-            @if (Auth::user()->role === 'manajer')
+            @if (Auth::user()->role === 'superadmin')
                 <div>
                     <a href="{{ route('subkriteria.create') }}">
                         <x-atoms.button.button-primary :customClass="'h-12 w-44 rounded-md'" :type="'button'" :name="'Tambah Subkriteria'" />
@@ -33,9 +33,6 @@
                 <tr>
                     <th class="px-6 py-3" scope="col">
                         Kode Subkriteria
-                    </th>
-                    <th class="px-6 py-3" scope="col">
-                        Nama Kriteria
                     </th>
                     <th class="px-6 py-3" scope="col">
                         Nama Subkriteria
@@ -54,9 +51,6 @@
                                 {{ $item->kode_subkriteria }}
                             </th>
                             <td class="px-6 py-4">
-                                {{ $item->kriteria->nama_kriteria }}
-                            </td>
-                            <td class="px-6 py-4">
                                 {{ $item->nama_subkriteria }}
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
@@ -73,7 +67,7 @@
                                     </div>
                                 </div>
 
-                                @if (Auth::user()->role === 'manajer')
+                                @if (Auth::user()->role === 'superadmin')
                                     <div x-data="{ showTooltip: false }">
                                         <a class="font-medium text-blue-600"
                                             href="{{ route('subkriteria.edit', $item->id_subkriteria) }}"
@@ -95,7 +89,7 @@
 
                                         <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama subkriteria : ' .
                                             $item->nama_subkriteria .
-                                            '?'" :action="route('subkriteria.destroy', $item->id_subkriteria)" />
+                                            ' ?'" :action="route('subkriteria.destroy', $item->id_subkriteria)" />
                                     </div>
                                 @endif
                             </td>
