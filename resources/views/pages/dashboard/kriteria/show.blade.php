@@ -12,13 +12,13 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Detail Data Kriteria</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Detail Kriteria</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Detail Data Kriteria</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Detail Kriteria</h4>
 
         <div class="mt-8 space-y-6">
             <div>
