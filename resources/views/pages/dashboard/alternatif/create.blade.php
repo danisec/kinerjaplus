@@ -12,13 +12,13 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Tambah Data Karyawan</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Tambah Karyawan</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Data Karyawan</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Karyawan</h4>
 
         <form class="mt-8 space-y-6" action="{{ route('alternatif.store') }}" method="POST">
             @csrf
@@ -38,11 +38,22 @@
             </div>
 
             <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama_alternatif">
+                <label class="mb-2 block text-base font-medium text-gray-900" for="nama karyawan">
                     Nama Karyawan</label>
-                <input class="@error('nama_alternatif') border-red-500 @enderror field-input-slate w-full"
-                    name="nama_alternatif" type="text" value="{{ old('nama_alternatif') }}" placeholder="John Doe"
-                    required>
+                <select class="@error('nama_alternatif') border-red-500 @enderror field-input-slate w-full"
+                    name="nama_alternatif" required>
+
+                    <option selected disabled hidden>Pilih Nama Karyawan</option>
+                    @foreach ($namaKaryawan as $item)
+                        @if (in_array($item->role, ['kepala sekolah', 'atasan langsung', 'guru']) &&
+                                !in_array($item->fullname, $pluckAlternatif))
+                            <option value="{{ $item->fullname }}"
+                                {{ old('nama_alternatif') == $item->fullname ? 'selected' : '' }}>
+                                {{ $item->fullname }}
+                            </option>
+                        @endif
+                    @endforeach
+                </select>
 
                 @error('nama_alternatif')
                     <p class="invalid-feedback">
@@ -113,7 +124,7 @@
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="pendidikan">
-                    Pendidikan</label>
+                    Pendidikan Terakhir</label>
                 <input class="@error('pendidikan') border-red-500 @enderror field-input-slate w-full" name="pendidikan"
                     type="text" value="{{ old('pendidikan') }}" placeholder="Pendidikan" required>
 
