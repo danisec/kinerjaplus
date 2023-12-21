@@ -12,13 +12,13 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Detail Data Karyawan</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Detail Karyawan</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Detail Data Karyawan</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Detail Karyawan</h4>
 
         <div class="mt-8 space-y-6">
             <div>
@@ -65,7 +65,7 @@
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="pendidikan">
-                    Pendidikan</label>
+                    Pendidikan Terakhir</label>
                 <input class="field-input-slate w-full" name="pendidikan" type="text"
                     value="{{ $alternatif->pendidikan }}" @disabled(true) @readonly(true)>
             </div>
