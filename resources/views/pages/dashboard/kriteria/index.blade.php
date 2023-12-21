@@ -17,7 +17,7 @@
                 <x-molecules.search :placeholder="'Cari Kriteria'" :request="request('nama_kriteria')" :name="'nama_kriteria'" :value="request('nama_kriteria')" />
             </div>
 
-            @if (Auth::user()->role === 'manajer')
+            @if (Auth::user()->role === 'superadmin')
                 <div>
                     <a href="{{ route('kriteria.create') }}">
                         <x-atoms.button.button-primary :customClass="'h-12 w-36 rounded-md'" :type="'button'" :name="'Tambah Kriteria'" />
@@ -67,7 +67,7 @@
                                     </div>
                                 </div>
 
-                                @if (Auth::user()->role === 'manajer')
+                                @if (Auth::user()->role === 'superadmin')
                                     <div x-data="{ showTooltip: false }">
                                         <a class="font-medium text-blue-600"
                                             href="{{ route('kriteria.edit', $item->id_kriteria) }}"
@@ -89,7 +89,7 @@
 
                                         <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama kriteria : ' .
                                             $item->nama_kriteria .
-                                            '?'" :action="route('kriteria.destroy', $item->id_kriteria)" />
+                                            ' ?'" :action="route('kriteria.destroy', $item->id_kriteria)" />
                                     </div>
                                 @endif
                             </td>
