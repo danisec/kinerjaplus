@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('subkriteria', function (Blueprint $table) {
-            $table->foreign('id_kriteria', 'fk_subkriteria_id_kriteria')
-                ->references('id_kriteria')
+            $table->foreign('kode_kriteria', 'fk_subkriteria_kode_kriteria')
+                ->references('kode_kriteria')
                 ->on('kriteria')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
