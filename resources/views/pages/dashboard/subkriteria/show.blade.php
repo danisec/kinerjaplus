@@ -12,7 +12,7 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Detail Data Subkriteria</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Detail Subkriteria</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
@@ -20,7 +20,7 @@
     <div class="mx-auto my-8 w-8/12">
 
         <div class="mt-8 space-y-6">
-            <h4 class="mb-6 text-2xl font-semibold text-gray-900">Data Subkriteria</h4>
+            <h4 class="mb-6 text-2xl font-semibold text-gray-900">Subkriteria</h4>
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="nama kriteria">
@@ -47,27 +47,14 @@
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="deskripsi subkriteria">
                     Deskripsi Subkriteria</label>
-                <textarea class="field-input-slate w-full" name="deskripsi_subkriteria" type="text" rows="3"
+                <textarea class="textAreaHeight field-input-slate w-full" name="deskripsi_subkriteria" type="text" rows="3"
                     @disabled(true) @readonly(true)>{{ $subkriteria->deskripsi_subkriteria }}</textarea>
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="bobot subkriteria">
-                    Bobot Subkriteria</label>
-
-                <div class="flex flex-row justify-between gap-4">
-                    <input class="field-input-slate w-full" name="bobot_subkriteria" type="number"
-                        value="{{ $subkriteria->bobot_subkriteria }}" @disabled(true) @readonly(true)>
-
-                    <input class="field-input-slate w-10 text-center" type="text" value="%"
-                        @disabled(true) @readonly(true)>
-                </div>
             </div>
 
         </div>
 
         <div class="mt-12 space-y-6">
-            <h4 class="text-2xl font-semibold text-gray-900">Data Indikator</h4>
+            <h4 class="text-2xl font-semibold text-gray-900">Indikator</h4>
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="indikator subkriteria">
@@ -75,7 +62,7 @@
 
                 <div id="kolom-subkriteria">
                     @foreach ($subkriteria->indikatorSubkriteria as $item)
-                        <textarea class="field-input-slate mb-4 w-full" name="indikator_subkriteria[]" rows="3"
+                        <textarea class="textAreaHeight field-input-slate mb-4 w-full" name="indikator_subkriteria[]" rows="3"
                             @disabled(true) @readonly(true)>{{ $item->indikator_subkriteria }}</textarea>
                     @endforeach
                 </div>
