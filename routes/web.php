@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KelolaAkunController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\NilaiSkalaController;
 use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\PerhitunganAlternatifController;
 use App\Http\Controllers\PerhitunganKriteriaController;
@@ -96,6 +97,14 @@ Route::controller(SkalaIndikatorController::class)->name('skalaIndikator.')->mid
     Route::delete('/dashboard/data-skala-indikator/{id}', 'destroy')->name('destroy')->middleware('user-role:superadmin');
 
     Route::get('/dashboard/data-skala-indikator/tambah-skala-indikator/{kodeSubkriteria}/getIndikatorSubkriteria', 'getIndikatorSubkriteria')->name('getIndikatorSubkriteria');
+});
+
+Route::controller(NilaiSkalaController::class)->name('nilaiSkala.')->middleware('auth')->group(function () {
+    Route::get('/dashboard/data-skala-indikator/tambah-nilai-skala', 'create')->name('create')->middleware('user-role:superadmin');
+    Route::post('/dashboard/data-skala-indikator/tambah-nilai-skala', 'store')->name('store')->middleware('user-role:superadmin');
+
+    Route::get('/dashboard/data-skala-indikator/ubah-nilai-skala/edit', 'edit')->name('edit')->middleware('user-role:superadmin');
+    Route::put('/dashboard/data-skala-indikator/ubah-nilai-skala/edit', 'update')->name('update')->middleware('user-role:superadmin');
 });
 
 Route::controller(PenilaianController::class)->name('penilaian.')->middleware('auth')->group(function () {
