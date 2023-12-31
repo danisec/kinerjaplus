@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NilaiSkala;
 use App\Models\SkalaIndikator;
 use App\Models\SkalaIndikatorDetail;
 use App\Models\Subkriteria;
@@ -18,6 +19,7 @@ class SkalaIndikatorController extends Controller
         return view('pages.dashboard.skala-indikator.index', [
             'title' => 'Skala Indikator',
             'skalaIndikator' => SkalaIndikator::with(['indikatorSubkriteria', 'skalaIndikatorDetail'])->orderBy('id_skala_indikator', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
+            'nilaiSkala' => NilaiSkala::orderBy('id_nilai_skala', 'ASC')->get(),
         ]);
     }
 
