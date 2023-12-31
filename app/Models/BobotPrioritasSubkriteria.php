@@ -12,8 +12,8 @@ class BobotPrioritasSubkriteria extends Model
     protected $table = 'bobot_prioritas_subkriteria';
     protected $guarded = ['id_bobot_prioritas_subkriteria'];
 
-    public function subkriteria()
+    public function kriteria()
     {
-        return $this->belongsTo(Subkriteria::class, 'id_subkriteria', 'id_subkriteria');
+        return $this->belongsTo(Kriteria::class, 'kode_kriteria', 'kode_kriteria');
     }
 }
