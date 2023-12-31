@@ -19,7 +19,7 @@
                             <label class="mb-2 block text-base font-medium text-gray-900" for="login">
                                 Email atau Username</label>
                             <input class="field-input-slate w-full" name="login" type="text"
-                                value="{{ old('login') }}" autofocus placeholder="name@hotmail.com" required>
+                                value="{{ old('login') }}" autofocus placeholder="name@mail.com" required>
                         </div>
 
                         <div>
