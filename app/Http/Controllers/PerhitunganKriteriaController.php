@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BobotPrioritasKriteria;
 use App\Models\Kriteria;
 use App\Models\PerhitunganKriteria;
 use App\Models\RatioIndex;
+use App\Services\PerhitunganKriteriaService;
 use Illuminate\Http\Request;
 
 class PerhitunganKriteriaController extends Controller
@@ -15,11 +15,13 @@ class PerhitunganKriteriaController extends Controller
      */
     private $kriteria;
     private $perhitunganKriteria;
+    private $perhitunganKriteriaService;
 
-    public function __construct()
+    public function __construct(PerhitunganKriteriaService $perhitunganKriteriaService)
     {
         $this->kriteria = Kriteria::orderBy('kode_kriteria', 'asc')->get();
         $this->perhitunganKriteria = PerhitunganKriteria::with('kriteriaPertama', 'kriteriaKedua')->orderBy('kriteria_pertama', 'asc')->get();
+        $this->perhitunganKriteriaService = $perhitunganKriteriaService;
     }
 
     /**
@@ -54,7 +56,6 @@ class PerhitunganKriteriaController extends Controller
         $matriks = $validatedData['matriks'];
 
         try {
-            // Clear the existing records
             PerhitunganKriteria::truncate();
 
             foreach ($matriks as $key => $value) {
@@ -62,7 +63,6 @@ class PerhitunganKriteriaController extends Controller
                 foreach ($value as $key => $nilaiKriteria) {
                     $kriteriaKedua = $key;
 
-                    // Create or update the record
                     PerhitunganKriteria::updateOrCreate(
                         ['kriteria_pertama' => $kriteriaPertama, 'kriteria_kedua' => $kriteriaKedua],
                         ['nilai_kriteria' => $nilaiKriteria]
@@ -85,134 +85,27 @@ class PerhitunganKriteriaController extends Controller
     {
         $ratioIndex = RatioIndex::orderBy('ordo_matriks', 'asc')->get();
         $perhitunganKriteria = $this->perhitunganKriteria;
-
-        /* Menghitung total per kolom kriteria */
-        $columnTotals = [];
-        foreach ($perhitunganKriteria as $item) {
-            $kriteriaKedua = $item->kriteriaKedua->id_kriteria;
-            $nilaiKriteria = $item->nilai_kriteria;
-
-            // Inisialisasi total kolom jika belum ada
-            if (!isset($columnTotals[$kriteriaKedua])) {
-                $columnTotals[$kriteriaKedua] = 0;
-            }
-
-            // Tambahkan nilai ke total kolom
-            $columnTotals[$kriteriaKedua] += $nilaiKriteria;
-        }
-
-        /* Normalisasi matriks kriteria
-        Rumus = nilai kriteria / total kolom */
-        $normalizedMatrix = [];
-        foreach ($perhitunganKriteria as $item) {
-            $kriteriaPertama = $item->kriteriaPertama->id_kriteria;
-            $kriteriaKedua = $item->kriteriaKedua->id_kriteria;
-            $nilaiKriteria = $item->nilai_kriteria;
-
-            // Normalisasi nilai
-            $normalizedValue = $nilaiKriteria / $columnTotals[$kriteriaKedua];
-
-            // Simpan nilai normalisasi dalam matriks
-            $normalizedMatrix[$item->kriteriaPertama->id_kriteria][$kriteriaKedua] = $normalizedValue;
-
-            // Dapatkan 4 angka di belakang koma
-            $normalizedMatrix[$item->kriteriaPertama->id_kriteria][$kriteriaKedua] = substr($normalizedMatrix[$item->kriteriaPertama->id_kriteria][$kriteriaKedua], 0, 6);
-        }
-
-        /* Menjumlahkan nilai per baris kriteria dari matriks normalisasi */
-        $rowTotals = [];
-        foreach ($normalizedMatrix as $kriteriaPertama => $kriteriaKedua) {
-            foreach ($kriteriaKedua as $kriteria => $nilai) {
-                // Inisialisasi total baris jika belum ada
-                if (!isset($rowTotals[$kriteriaPertama])) {
-                    $rowTotals[$kriteriaPertama] = 0;
-                }
-
-                // Tambahkan nilai ke total baris
-                $rowTotals[$kriteriaPertama] += $nilai;
-            }
-        }
-
-        /* Menghitung jumlah kriteria (banyaknya kriteria) */
         $jumlahKriteria = Kriteria::count();
 
-        /* Menghitung bobot prioritas per kriteria */
-        $bobotPrioritas = [];
-        foreach ($rowTotals as $kriteriaPertama => $total) {
-            $bobotPrioritas[$kriteriaPertama] = $total / $jumlahKriteria;
-        }
-
-        // Simpan atau ubah data bobot prioritas kriteria ke database
-        try {
-            BobotPrioritasKriteria::truncate();
-            
-            foreach ($bobotPrioritas as $kriteriaPertama => $bobot) {
-                BobotPrioritasKriteria::updateOrCreate(
-                    ['id_kriteria' => $kriteriaPertama],
-                    ['bobot_prioritas' => $bobot]
-                );
-            }
-        } catch (\Throwable $th) {
-            $notif = notify()->error('Terjadi kesalahan saat menyimpan data bobot prioritas kriteria');
-            return back()->with('notif', $notif);
-        }
-
-        /* Menghitung Consistency Measure (CM)
-        Rumus = (Angka kriteriaPerhitungan per setiap baris * bobot prioritas per setiap kolom) + (Angka kriteriaPerhitungan per setiap baris * bobot prioritas per setiap kolom) + ... */
-        $consistencyMeasures = [];
-        foreach ($perhitunganKriteria as $item) {
-            $kriteriaPertama = $item->kriteriaPertama->id_kriteria;
-            $kriteriaKedua = $item->kriteriaKedua->id_kriteria;
-            $nilaiKriteria = $item->nilai_kriteria;
-
-            // Inisialisasi CM jika belum ada
-            if (!isset($consistencyMeasures[$kriteriaPertama])) {
-                $consistencyMeasures[$kriteriaPertama] = 0;
-            }
-
-            // Hitung CM
-            $consistencyMeasures[$kriteriaPertama] += $nilaiKriteria * $bobotPrioritas[$kriteriaKedua];
-
-            // Dapatkan 4 angka di belakang koma
-            $consistencyMeasures[$kriteriaPertama] = substr($consistencyMeasures[$kriteriaPertama], 0, 6);
-        }
-
-        /* Menghitung total jumlah Consistency Measure (CM)
-        Rumus = total jumlah kolom CM / jumlah kriteria */
-        $totalConsistencyMeasures = array_sum($consistencyMeasures) / $jumlahKriteria;
-
-        /* Menghitung Consistency Index (CI)
-        Rumus = (total jumlah kolom CM - jumlah kriteria) / (jumlah kriteria - 1) */
-        $consistencyIndex = ($totalConsistencyMeasures - $jumlahKriteria) / ($jumlahKriteria - 1);
-
-        /* Mendapatkan Ratio Index (RI) dari database */
-        $ratioIndexByKriteria = $ratioIndex[$jumlahKriteria - 1]->nilai_ratio_index;
-
-        /* Menghitung Consistency Ratio (CR)
-        Rumus = Consistency Index (CI) / Ratio Index (RI) */
-        $consistencyRatio = $consistencyIndex / $ratioIndexByKriteria;
-
-        /* Menghitung Hasil Dinyatakan Konsisten atau Tidak
-        Rumus = Consistency Ratio (CR) <= 0.1 ? 'Konsisten' : 'Tidak Konsisten' */
-        $consistencyResult = $consistencyRatio <= 0.1 ? 'Konsisten' : 'Tidak Konsisten';
-
-        /* Menyimpan variabel-variabel dalam bentuk array */
-        $consistencyData = [
-            'Consistency Index (CI)' => substr($consistencyIndex, 0, 6),
-            'Ratio Index (RI)' => $ratioIndexByKriteria,
-            'Consistency Ratio (CR)' => substr($consistencyRatio, 0, 6),
-        ];
+        $totalKolomKriteria = $this->perhitunganKriteriaService->totalKolomKriteria($perhitunganKriteria);
+        $normalisasiMatriks = $this->perhitunganKriteriaService->normalisasiMatriks($perhitunganKriteria, $totalKolomKriteria);
+        $totalBarisNormalisasiMatriks = $this->perhitunganKriteriaService->totalBarisNormalisasiMatriks($normalisasiMatriks);
+        $bobotPrioritasKriteria= $this->perhitunganKriteriaService->bobotPrioritasKriteria($totalBarisNormalisasiMatriks, $jumlahKriteria);
+        $consistencyMeasures= $this->perhitunganKriteriaService->consistencyMeasure($perhitunganKriteria, $bobotPrioritasKriteria);
+        $totalConsistencyMeasures= $this->perhitunganKriteriaService->totalConsistencyMeasures($consistencyMeasures, $jumlahKriteria);
+        $consistencyRatio= $this->perhitunganKriteriaService->consistencyRatio($totalConsistencyMeasures, $jumlahKriteria, $ratioIndex);
+        $consistencyResult= $this->perhitunganKriteriaService->consistencyResult($consistencyRatio);
 
         return view('pages.dashboard.perhitungan-kriteria.hasil', [
             'title' => 'Hasil Perhitungan Kriteria',
             'kriteria' => $this->kriteria,
             'perhitunganKriteria' => $perhitunganKriteria,
-            'columnTotals' => $columnTotals,
-            'normalizedMatrix' => $normalizedMatrix,
-            'prioritas' => $bobotPrioritas,
+            'totalKolomKriteria' => $totalKolomKriteria,
+            'normalisasiMatriks' => $normalisasiMatriks,
+            'bobotPrioritasKriteria' => $bobotPrioritasKriteria,
             'consistencyMeasures' => $consistencyMeasures,
             'totalConsistencyMeasures' => $totalConsistencyMeasures,
-            'consistencyData' => $consistencyData,
+            'consistencyData' => $consistencyRatio,
             'consistencyResult' => $consistencyResult,
         ]);
     }
