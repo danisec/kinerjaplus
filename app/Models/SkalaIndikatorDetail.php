@@ -17,4 +17,9 @@ class SkalaIndikatorDetail extends Model
     {
         return $this->belongsTo(SkalaIndikator::class, 'id_skala_indikator', 'id_skala_indikator');
     }
+
+    public function nilaiSkala()
+    {
+        return $this->belongsTo(NilaiSkala::class, 'skala', 'skala');
+    }
 }
