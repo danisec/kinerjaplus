@@ -97,7 +97,7 @@
             </div>
 
             <div class="flex flex-row gap-4">
-                <a href="{{ route('subkriteria.index') }}">
+                <a href="{{ route('skalaIndikator.index') }}">
                     <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
                 </a>
                 <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Simpan'" />
