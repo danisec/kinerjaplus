@@ -18,7 +18,17 @@
             </div>
 
             @if (Auth::user()->role === 'superadmin')
-                <div>
+                <div class="flex flex-row gap-4">
+                    @if ($nilaiSkala->isEmpty())
+                        <a href="{{ route('nilaiSkala.create') }}">
+                            <x-atoms.button.button-primary :customClass="'h-12 w-32 rounded-md'" :type="'button'" :name="'Nilai Skala'" />
+                        </a>
+                    @else
+                        <a href="{{ route('nilaiSkala.edit') }}">
+                            <x-atoms.button.button-primary :customClass="'h-12 w-32 rounded-md'" :type="'button'" :name="'Nilai Skala'" />
+                        </a>
+                    @endif
+
                     <a href="{{ route('skalaIndikator.create') }}">
                         <x-atoms.button.button-primary :customClass="'h-12 w-52 rounded-md'" :type="'button'" :name="'Tambah Skala Indikator'" />
                     </a>
