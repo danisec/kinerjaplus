@@ -1,4 +1,4 @@
-if (window.location.pathname.includes("data-subkriteria/")) {
+if (window.location.pathname.includes("/dashboard/data-subkriteria/")) {
     import("./tambahIndikatorSubkriteria")
         .then((module) => {})
         .catch((error) => {
