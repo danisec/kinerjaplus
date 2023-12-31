@@ -14,20 +14,26 @@
 
         <div class="flex flex-row items-center justify-between">
             <div>
-                <x-molecules.search :placeholder="'Cari Karyawan'" :request="request('nama_penilaian')" :name="'nama_penilaian'" :value="request('nama_penilaian')" />
+                <x-molecules.search :placeholder="'Cari Penilaian'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
             </div>
         </div>
     </div>
 
-    {{-- <div class="relative overflow-x-auto rounded-lg shadow-sm">
+    <div class="relative overflow-x-auto rounded-lg shadow-sm">
         <table class="w-full text-left text-base text-gray-900">
             <thead class="bg-slate-100 text-sm uppercase text-gray-900">
                 <tr>
                     <th class="px-6 py-3" scope="col">
-                        Kode Kriteria
+                        No.
                     </th>
                     <th class="px-6 py-3" scope="col">
-                        Nama Kriteria
+                        Tahun Ajaran
+                    </th>
+                    <th class="px-6 py-3" scope="col">
+                        Nama Pemberi Nilai
+                    </th>
+                    <th class="px-6 py-3" scope="col">
+                        Kepada
                     </th>
                     <th class="flex justify-center px-6 py-3" scope="col">
                         Aksi
@@ -35,20 +41,26 @@
                 </tr>
             </thead>
 
-            @if ($kriteria != null && $kriteria->count() > 0)
-                @foreach ($kriteria as $item)
+            @if ($penilaian != null && $penilaian->count() > 0)
+                @foreach ($penilaian as $item)
                     <tbody>
                         <tr class="border-b bg-white hover:bg-slate-100">
                             <th class="whitespace-nowrap px-6 py-4 font-medium text-gray-900" scope="row">
-                                {{ $item->kode_kriteria }}
+                                {{ ($penilaian->currentPage() - 1) * $penilaian->perPage() + $loop->iteration }}
                             </th>
                             <td class="px-6 py-4">
-                                {{ $item->nama_kriteria }}
+                                {{ $item->tahun_ajaran }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $item->alternatifPertama->nama_alternatif }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $item->alternatifKedua->nama_alternatif }}
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
                                     <a class="font-medium text-gray-600"
-                                        href="{{ route('kriteria.show', $item->id_kriteria) }}"
+                                        href="{{ route('penilaian.show', $item->id_penilaian) }}"
                                         @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
                                         <x-atoms.svg.eye />
                                     </a>
@@ -59,10 +71,10 @@
                                     </div>
                                 </div>
 
-                                @if (Auth::user()->role === 'manajer')
-                                    <div x-data="{ showTooltip: false }">
+                                @if (Auth::user()->role === 'superadmin')
+                                    {{-- <div x-data="{ showTooltip: false }">
                                         <a class="font-medium text-blue-600"
-                                            href="{{ route('kriteria.edit', $item->id_kriteria) }}"
+                                            href="{{ route('penilaian.edit', $item->id_penilaian) }}"
                                             @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
                                             <x-atoms.svg.pen />
                                         </a>
@@ -71,9 +83,9 @@
                                             x-show="showTooltip">
                                             <span>Ubah</span>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
-                                    <div x-data="{ isOpen: false }">
+                                    {{-- <div x-data="{ isOpen: false }">
                                         <button class="text-red-600 focus:outline-none" type="button"
                                             @click="isOpen = true">
                                             <x-atoms.svg.trash />
@@ -81,8 +93,8 @@
 
                                         <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama kriteria : ' .
                                             $item->nama_kriteria .
-                                            '?'" :action="route('kriteria.destroy', $item->id_kriteria)" />
-                                    </div>
+                                            '?'" :action="route('penilaian.destroy', $item->id_penilaian)" />
+                                    </div> --}}
                                 @endif
                             </td>
                         </tr>
@@ -101,7 +113,7 @@
     </div>
 
     <div class="bg-white p-6">
-        {{ $kriteria->links('vendor.pagination.tailwind') }}
-    </div> --}}
+        {{ $penilaian->links('vendor.pagination.tailwind') }}
+    </div>
 
 </x-layouts.app-dashboard>
