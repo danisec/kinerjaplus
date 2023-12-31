@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('perhitungan_subkriteria', function (Blueprint $table) {
             $table->id('id_perhitungan_subkriteria');
+            $table->string('kode_kriteria', 3);
             $table->string('subkriteria_pertama', 4);
             $table->string('subkriteria_kedua', 4);
             $table->double('nilai_subkriteria');
