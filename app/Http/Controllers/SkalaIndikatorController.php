@@ -16,7 +16,7 @@ class SkalaIndikatorController extends Controller
      */
     public function index()
     {       
-        return view('pages.dashboard.skala-indikator.index', [
+        return view('pages.superadmin.skala-indikator.index', [
             'title' => 'Skala Indikator',
             'skalaIndikator' => SkalaIndikator::with(['indikatorSubkriteria', 'skalaIndikatorDetail'])->orderBy('id_skala_indikator', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
             'nilaiSkala' => NilaiSkala::orderBy('id_nilai_skala', 'ASC')->get(),
@@ -28,7 +28,7 @@ class SkalaIndikatorController extends Controller
      */
     public function create()
     {
-        return view('pages.dashboard.skala-indikator.create', [
+        return view('pages.superadmin.skala-indikator.create', [
             'title' => 'Tambah Skala Indikator',
             'subkriteria' => Subkriteria::with('indikatorSubkriteria')->orderBy('id_subkriteria', 'ASC')->get(),
         ]);
@@ -88,7 +88,7 @@ class SkalaIndikatorController extends Controller
      */
     public function show($id)
     {
-        return view('pages.dashboard.skala-indikator.show', [
+        return view('pages.superadmin.skala-indikator.show', [
             'title' => 'Detail Skala Indikator',
             'skalaIndikator' => SkalaIndikator::with(['indikatorSubkriteria', 'indikatorSubkriteria.subkriteria'])->where('id_skala_indikator', $id)->first(),
         ]);
@@ -99,7 +99,7 @@ class SkalaIndikatorController extends Controller
      */
     public function edit($id)
     {
-        return view('pages.dashboard.skala-indikator.edit', [
+        return view('pages.superadmin.skala-indikator.edit', [
             'title' => 'Ubah Skala Indikator',
             'skalaIndikator' => SkalaIndikator::with(['indikatorSubkriteria', 'indikatorSubkriteria.subkriteria'])->where('id_skala_indikator', $id)->first()
         ]);
