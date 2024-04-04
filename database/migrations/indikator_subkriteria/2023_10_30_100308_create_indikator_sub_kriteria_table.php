@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('indikator_subkriteria', function (Blueprint $table) {
             $table->id('id_indikator_subkriteria');
             $table->string('kode_kriteria', 3);
-            $table->string('kode_subkriteria', 4);
+            $table->string('kode_subkriteria', 6);
             $table->string('indikator_subkriteria', 2000);
             $table->timestamps();
         });
