@@ -149,11 +149,11 @@
                     <x-atoms.button.button-primary :customClass="'h-12 w-72 rounded-md'" :type="'button'" :name="'Hitung Perbandingan Subkriteria'"
                         @click="isOpen = true" />
 
-                    <x-molecules.modal-confirm :title="'Nilai perbandingan antar sub kriteria hanya dapat dilakukan 1 kali penyimpanan. Setelahnya Anda tidak dapat melakukan ubah nilai pada perbandingan antar sub kriteria.'" />
+                    <x-molecules.modal-confirm :title="'Nilai perbandingan antar sub kriteria hanya dapat dilakukan 1 kali penyimpanan. Setelahnya Anda tidak dapat melakukan ubah nilai pada perbandingan antar subkriteria.'" />
                 </div>
             @else
                 <a href="{{ route('perhitunganSubkriteria.hasil') }}">
-                    <x-atoms.button.button-primary :customClass="'h-12 w-80 rounded-md'" :type="'button'" :name="'Lihat Hasil Perbandingan Sub kriteria'" />
+                    <x-atoms.button.button-primary :customClass="'h-12 w-80 rounded-md'" :type="'button'" :name="'Lihat Hasil Perbandingan Subkriteria'" />
                 </a>
             @endif
         </div>
