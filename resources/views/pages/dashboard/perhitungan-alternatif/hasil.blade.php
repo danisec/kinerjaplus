@@ -26,7 +26,7 @@
                         <tr>
                             <th class="border-b bg-slate-100 py-2 text-center font-bold text-gray-900"
                                 colspan="{{ count($alternatif) + 1 }}">
-                                Perbandingan Antar Alternatif Pada Kriteria : {{ $dataKriteria->nama_kriteria }}
+                                Perbandingan Antar Alternatif Berdasarkan Kriteria : {{ $dataKriteria->nama_kriteria }}
                             </th>
                         </tr>
 
@@ -102,7 +102,7 @@
                         <tr>
                             <th class="border-b bg-slate-100 py-2 text-center font-bold text-gray-900"
                                 colspan="{{ count($alternatif) + 2 }}">
-                                Perhitungan Bobot Prioritas Alternatif Pada Kriteria :
+                                Perhitungan Bobot Prioritas Alternatif Berdasarkan Kriteria :
                                 {{ $dataKriteria->nama_kriteria }}
                             </th>
                         </tr>
@@ -135,7 +135,10 @@
                                 @foreach ($alternatif as $alternatif2)
                                     <td class="px-3 py-3 text-center">
                                         @php
-                                            $normalizedValue = $normalisasiMatriks[$dataKriteria->kode_kriteria][$alternatif1->kode_alternatif][$alternatif2->kode_alternatif];
+                                            $normalizedValue =
+                                                $normalisasiMatriks[$dataKriteria->kode_kriteria][
+                                                    $alternatif1->kode_alternatif
+                                                ][$alternatif2->kode_alternatif];
                                         @endphp
 
                                         <input
