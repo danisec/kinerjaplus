@@ -174,6 +174,13 @@ class PerhitunganSubkriteriaService
         // calculate consistency index
         $consistencyIndex = [];
         foreach ($totalConsistencyMeasures as $kodeKriteria => $total) {
+            
+            // Avoid division by zero
+            if ($countSubkriteriaByKriteria[$kodeKriteria] == 1) {
+                $consistencyIndex[$kodeKriteria] = 0;
+                continue;
+            }
+
             $consistencyIndex[$kodeKriteria] = ($total - $countSubkriteriaByKriteria[$kodeKriteria]) / ($countSubkriteriaByKriteria[$kodeKriteria] - 1);
 
             $consistencyIndex[$kodeKriteria] = substr($consistencyIndex[$kodeKriteria], 0, 6);
@@ -188,6 +195,13 @@ class PerhitunganSubkriteriaService
         // calculate consistency ratio
         $consistencyRatio = [];
         foreach ($consistencyIndex as $kodeKriteria => $index) {
+
+            // Avoid division by zero
+            if ($ratioIndexBySubkriteria[$kodeKriteria] == 0) {
+                $consistencyRatio[$kodeKriteria] = 0;
+                continue;
+            }
+            
             $consistencyRatio[$kodeKriteria] = $index / $ratioIndexBySubkriteria[$kodeKriteria];
 
             $consistencyRatio[$kodeKriteria] = substr($consistencyRatio[$kodeKriteria], 0, 6);
