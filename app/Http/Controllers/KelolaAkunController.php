@@ -24,7 +24,7 @@ class KelolaAkunController extends Controller
     {      
         return view('pages.dashboard.kelola-akun.index', [
             'title' => 'Kelola Akun',
-            'user' => User::orderBy('fullname', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
+            'user' => User::orderBy('role', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
         ]);
     }
 
