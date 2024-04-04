@@ -8,6 +8,7 @@ use App\Models\Penilaian;
 use App\Models\PenilaianIndikator;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PenilaianController extends Controller
@@ -33,7 +34,7 @@ class PenilaianController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard.penilaian.index', [
+        return view('pages.superadmin.penilaian.index', [
             'title' => 'Data Penilaian',
             'penilaian' => Penilaian::with(['alternatifPertama'])->orderBy('alternatif_pertama', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
         ]);
@@ -44,7 +45,7 @@ class PenilaianController extends Controller
      */
     public function welcome()
     {
-        return view('pages.dashboard.penilaian.welcome', [
+        return view('pages.guru.penilaian.index', [
             'title' => 'Data Penilaian',
             'tahunAjaran' => $this->tahunAjaran,
         ]);
@@ -55,9 +56,20 @@ class PenilaianController extends Controller
      */
     public function create()
     {   
-        return view('pages.dashboard.penilaian.create', [
+        $tahunAjaran = $this->tahunAjaran;
+        $getUserAlternatif = Auth::user()->alternatif->kode_alternatif;
+        $alternatif = Alternatif::get();
+        $penilaian = Penilaian::with(['alternatifPertama', 'alternatifKedua', 'penilaianIndikator', 'penilaianIndikator.indikatorSubkriteria'])->orderBy('alternatif_pertama', 'ASC')->get();
+
+        // Ambil daftar alternatif_kedua yang sudah dinilai oleh alternatif_pertama $getUserAlternatif berdasarkan tahunAjaran
+        $alternatifKeduaTerpilih = $penilaian->where('alternatif_pertama', $getUserAlternatif)->where('tahun_ajaran', $tahunAjaran)->pluck('alternatif_kedua')->toArray();
+        // Filter alternatif_kedua yang belum dinilai oleh alternatif_pertama
+        $alternatifKeduaBelumTerpilih = $alternatif->whereNotIn('kode_alternatif', $alternatifKeduaTerpilih);
+
+        return view('pages.guru.penilaian.create', [
             'title' => 'Tambah Data Penilaian',
             'alternatif' => Alternatif::orderBy('nama_alternatif', 'ASC')->get(),
+            'alternatifKeduaBelumTerpilih' => $alternatifKeduaBelumTerpilih,
             'kriteria' => Kriteria::with(['subkriteria', 'subkriteria.indikatorSubkriteria.skalaIndikator.skalaIndikatorDetail'])->orderBy('kode_kriteria', 'ASC')->get(),
             'penilaian' => Penilaian::with(['alternatifPertama', 'alternatifKedua', 'penilaianIndikator', 'penilaianIndikator.indikatorSubkriteria'])->orderBy('alternatif_pertama', 'ASC')->get(),
             'tahunAjaran' => $this->tahunAjaran,
@@ -126,7 +138,7 @@ class PenilaianController extends Controller
      */
     public function show($id)
     {
-        return view('pages.dashboard.penilaian.show', [
+        return view('pages.superadmin.penilaian.show', [
             'title' => 'Detail Data Penilaian',
             'kriteria' => Kriteria::with(['subkriteria', 'subkriteria.indikatorSubkriteria'])->orderBy('kode_kriteria', 'ASC')->get(),
             'penilaian' => Penilaian::with(['alternatifPertama', 'alternatifKedua', 'penilaianIndikator', 'penilaianIndikator.skalaIndikatorDetail'])->where('id_penilaian', $id)->first(),
