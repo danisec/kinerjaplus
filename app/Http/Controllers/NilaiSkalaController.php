@@ -20,7 +20,7 @@ class NilaiSkalaController extends Controller
      */
     public function create()
     {
-        return view('pages.dashboard.nilai-skala.create', [
+        return view('pages.superadmin.nilai-skala.create', [
             'title' => 'Tambah Nilai Skala'
         ]);
     }
@@ -74,7 +74,7 @@ class NilaiSkalaController extends Controller
      */
     public function edit(NilaiSkala $nilaiSkala)
     {
-        return view('pages.dashboard.nilai-skala.edit', [
+        return view('pages.superadmin.nilai-skala.edit', [
             'title' => 'Ubah Nilai Skala',
             'nilaiSkala' => NilaiSkala::orderBy('id_nilai_skala', 'ASC')->get(),
         ]);
