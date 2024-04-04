@@ -64,12 +64,58 @@ class aside extends Component
             ],
         ];
 
-        if (in_array(Auth::user()->role, ['kepala sekolah', 'atasan langsung', 'guru'])) {
+        $sideNavGuruPenilaian = [
+            'Riwayat Penilaian' => [
+                'url' => 'data-riwayat-penilaian',
+                'viewBox' => '0 0 24 24',
+                'path' => 'M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+            ],
+        ];
+
+        $sideNavKepalaSekolahPenilaian = [
+            'Persetujuan Penilaian' => [
+                'url' => 'data-persetujuan-penilaian',
+                'viewBox' => '0 0 24 24',
+                'path' => 'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+            ],
+            'Catatan Karyawan' => [
+                'url' => 'data-catatan-karyawan',
+                'viewBox' => '0 0 24 24',
+                'path' => 'M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75',
+            ],
+        ];
+
+        if (in_array(Auth::user()->role, ['atasan langsung', 'guru'])) {
             $sideNavPenilaian = [
                 'Penilaian' => [
-                    'url' => 'data-penilaian/introduction',
+                    'url' => 'penilaian/introduction',
                     'viewBox' => '0 0 24 24',
                     'path' => 'M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008z',
+                ],
+            ];
+        }
+
+        if (in_array(Auth::user()->role, ['guru'])) {
+            $sideNavGuruPenilaian = [
+                'Riwayat Penilaian' => [
+                    'url' => 'riwayat-penilaian',
+                    'viewBox' => '0 0 24 24',
+                    'path' => 'M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+                ],
+            ];
+        }
+
+        if (in_array(Auth::user()->role, ['kepala sekolah'])) {
+            $sideNavKepalaSekolahPenilaian = [
+                'Persetujuan Penilaian' => [
+                    'url' => 'persetujuan-penilaian',
+                    'viewBox' => '0 0 24 24',
+                    'path' => 'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+                ],
+                'Catatan Karyawan' => [
+                    'url' => 'catatan-karyawan',
+                    'viewBox' => '0 0 24 24',
+                    'path' => 'M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75',
                 ],
             ];
         }
@@ -85,20 +131,6 @@ class aside extends Component
                 'url' => 'perhitungan-perbandingan-alternatif'
             ],
         ];
-
-        if (Auth::user()->role == 'atasan langsung') {
-            $sideNavPerhitungan = [
-                'Kriteria' => [
-                    'url' => 'perhitungan-perbandingan-kriteria/hasil-perbandingan-kriteria'
-                ],
-                'Subkriteria' => [
-                    'url' => 'perhitungan-perbandingan-subkriteria/hasil-perbandingan-subkriteria'
-                ],
-                'Alternatif' => [
-                    'url' => 'perhitungan-perbandingan-alternatif/hasil-perbandingan-alternatif'
-                ],
-            ];
-        }
 
         $sideNavPerankingan = [
             'Perankingan' => [
@@ -116,6 +148,6 @@ class aside extends Component
             ]
         ];
         
-        return view('components.organism.aside', compact('sideNavDashboard', 'sideNavData', 'sideNavPenilaian', 'sideNavPerhitungan', 'sideNavPerankingan', 'sideNavUser'));
+        return view('components.organism.aside', compact('sideNavDashboard', 'sideNavData', 'sideNavPenilaian', 'sideNavGuruPenilaian', 'sideNavKepalaSekolahPenilaian', 'sideNavPerhitungan', 'sideNavPerankingan', 'sideNavUser'));
     }
 }
