@@ -12,7 +12,7 @@ class KriteriaController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard.kriteria.index', [
+        return view('pages.superadmin.kriteria.index', [
             'title' => 'Kriteria',
             'kriteria' => Kriteria::orderBy('id_kriteria', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
         ]);
@@ -23,8 +23,14 @@ class KriteriaController extends Controller
      */
     public function create()
     {
-        return view('pages.dashboard.kriteria.create', [
+        // ambil kode kriteria terakhir
+        $lastKodeKriteria = Kriteria::orderBy('id_kriteria', 'DESC')->first();
+        // Ubah kode terakhir dengan menambahkan angka berikutnya
+        $newKodeKriteria = $lastKodeKriteria ? ++$lastKodeKriteria->kode_kriteria : 'K1';
+
+        return view('pages.superadmin.kriteria.create', [
             'title' => 'Tambah Kriteria',
+            'newKodeKriteria' => $newKodeKriteria,
         ]);
     }
 
@@ -63,7 +69,7 @@ class KriteriaController extends Controller
      */
     public function show($id)
     {
-        return view('pages.dashboard.kriteria.show', [
+        return view('pages.superadmin.kriteria.show', [
             'title' => 'Detail Kriteria',
             'kriteria' => Kriteria::where('id_kriteria', $id)->first()
         ]);
@@ -74,7 +80,7 @@ class KriteriaController extends Controller
      */
     public function edit($id)
     {
-        return view('pages.dashboard.kriteria.edit', [
+        return view('pages.superadmin.kriteria.edit', [
             'title' => 'Ubah Kriteria',
             'kriteria' => Kriteria::where('id_kriteria', $id)->first()
         ]);
