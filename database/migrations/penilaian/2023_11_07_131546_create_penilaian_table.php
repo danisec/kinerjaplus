@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('tahun_ajaran', 9);
             $table->string('alternatif_pertama', 3);
             $table->string('alternatif_kedua', 3);
+            $table->enum('status', ['Disetujui', 'Tidak Disetujui'])->nullable();
             $table->timestamps();
         });
     }
