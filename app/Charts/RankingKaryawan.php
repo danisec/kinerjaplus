@@ -3,124 +3,72 @@
 namespace App\Charts;
 
 use App\Models\Ranking;
+use ArielMejiaDev\LarapexCharts\BarChart;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
 
 class RankingKaryawan
 {
     protected $chart;
+    private $tahunAjaran;
+    private $ranking;
 
     public function __construct(LarapexChart $chart)
     {
         $this->chart = $chart;
+        $this->ranking = Ranking::with('alternatif')->get();
+
+        $currentMonth = date('m');
+        $isAfterJune = $currentMonth >= 6;
+        $currentYear = date('Y');
+        $lastYear = $currentYear - 1;
+        $nextYear = $currentYear + 1;
+        $this->tahunAjaran = $isAfterJune ? "$currentYear/$nextYear" : "$lastYear/$currentYear";
     }
 
     public function build(): \ArielMejiaDev\LarapexCharts\BarChart
     {
-        $ranking = Ranking::with('alternatif')->orderBy('created_at', 'DESC')->get();
+        $tahunAjaran = $this->tahunAjaran;
+        $ranking = $this->ranking;
 
-        $rankingByDate = $ranking->groupBy(function ($item) {
-            return \Carbon\Carbon::parse($item->created_at)->format('d-m-Y');
-        });
+        $topRanking = $ranking->where('tahun_ajaran', $tahunAjaran)->whereIn('rank', [1, 2, 3, 4, 5])->sortBy('rank');
 
-        // Inisialisasi array untuk menyimpan data
-        $dataByDate = [];
+        // Buatkan array untuk menampung data top ranking
+        $dataTopRanking = [];
 
-        // Loop melalui data yang dikelompokkan
-        foreach ($rankingByDate as $date => $rankings) {
-            // Dapatkan nama alternatif
-            $namaKaryawan = $rankings->pluck('alternatif.nama_alternatif')->toArray();
+        foreach ($topRanking as $key => $value) {
+            $tahunAjaran = $value->tahun_ajaran;
+            $namaAlternatif = $value->alternatif->nama_alternatif;
 
-            // Dapatkan nilai setiap alternatif
-            $nilai = $rankings->pluck('nilai')->toArray();
+            // Periksa apakah array $dataTopRanking[$tahunAjaran] sudah ada, jika belum, buat array kosong
+            if (!isset($dataTopRanking[$tahunAjaran])) {
+                $dataTopRanking[$tahunAjaran] = [];
+            }
 
-            // Dapatkan rank setiap alternatif
-            $rank = $rankings->pluck('rank')->toArray();
-
-            // Tambahkan data ke array
-            $dataByDate[] = [
-                'TanggalTahun' => $date,
-                'nama_alternatif' => $namaKaryawan,
-                'nilai' => $nilai,
-                'rank' => $rank,
+            // Masukkan data ke dalam array $dataTopRanking[$tahunAjaran]
+            $dataTopRanking[$tahunAjaran][] = [
+                'nama' => $namaAlternatif,
+                'nilai' => substr($value->nilai, 0, 8),
+                'rank' => $value->rank,
             ];
         }
 
-        // Mengurutkan data berdasarkan tanggal
-        usort($dataByDate, function ($a, $b) {
-            return strtotime($a['TanggalTahun']) - strtotime($b['TanggalTahun']);
-        });
-
-        
-        // Dapatkan nama alternatif unik
-        $uniqueAlternatives = [];
-
-        foreach ($dataByDate as $data) {
-            $namaAlternatif = $data['nama_alternatif'];
-
-            foreach ($namaAlternatif as $nama) {
-                if (!in_array($nama, $uniqueAlternatives)) {
-                    $uniqueAlternatives[] = $nama;
-                }
-            }
+        // Mengurutkan data berdasarkan total prioritas
+        if (!isset($dataTopRanking[$tahunAjaran])) {
+            $dataTopRanking[$tahunAjaran] = [];
+        } else {
+            usort($dataTopRanking[$tahunAjaran], function ($a, $b) {
+                return $b['nilai'] <=> $a['nilai'];
+            });
         }
 
-        // Inisialisasi array untuk data chart
-        $chartData = [];
+        // Mengambil nama karyawan dan total prioritas untuk grafik
+        $namaKaryawan = array_column($dataTopRanking[$tahunAjaran], 'nama');
+        $nilaiKaryawan = array_column($dataTopRanking[$tahunAjaran], 'nilai');
 
-        // Loop melalui data yang sudah diurutkan
-        foreach ($dataByDate as $data) {
-            // Dapatkan tanggal
-            $tanggal = $data['TanggalTahun'];
-
-            $namaAlternatif = $uniqueAlternatives;
-            $nilai = $data['nilai'];
-            $rank = $data['rank'];
-
-            // Tambahkan data ke array
-            $chartData[] = [
-                'tanggal' => $tanggal,
-                'nama_alternatif' => $namaAlternatif,
-                'nilai' => $nilai,
-                'rank' => $rank,
-            ];
-        }
-
-        $chart = $this->chart->barChart()
-            ->setTitle('Top Ranking');
-
-        // Inisialisasi array untuk menyimpan data
-        $chartDataByAlternatives = [];
-
-        // Loop melalui data yang sudah diurutkan
-        foreach ($dataByDate as $data) {
-            // Dapatkan tanggal
-            $tanggal = $data['TanggalTahun'];
-
-            $namaAlternatif = $data['nama_alternatif'];
-            $nilai = $data['nilai'];
-            $rank = $data['rank'];
-
-            // Loop melalui setiap nama alternatif
-            foreach ($namaAlternatif as $index => $nama) {
-                $chartDataByAlternatives[$nama][] = [
-                    'tanggal' => $tanggal,
-                    'nilai' => $nilai[$index], // Ambil nilai sesuai dengan indeks nama
-                    'rank' => $rank[$index], // Ambil rank sesuai dengan indeks nama
-                ];
-            }
-        }
-
-        // Loop melalui data alternatif yang telah dikelompokkan
-        foreach ($chartDataByAlternatives as $namaAlternatif => $dataAlternatif) {
-            // Tambahkan data dinamis berdasarkan tanggal
-            $chart->addData($namaAlternatif, collect($dataAlternatif)->pluck('nilai')->toArray());
-        }
-
-        // Set label sumbu X dengan nama alternatif dari data pertama
-        $chart->setXAxis(collect($dataByDate)->pluck('TanggalTahun')->toArray());
-
-        // $chart->setColors(['#00e396', '#46b284']);
-
-        return $chart;
+        return $this->chart->barChart()
+            ->setTitle('5 Top Ranking')
+            ->addData('Nilai', $nilaiKaryawan)
+            ->setXAxis($namaKaryawan)
+            ->setColors(['#34d399']);
     }
 }
