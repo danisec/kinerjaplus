@@ -20,7 +20,7 @@
                             <th class="border-b bg-slate-100 py-2 text-center font-bold text-gray-900"
                                 colspan="{{ $alternatif->count() + 1 }}">
                                 Perbandingan Antar
-                                Alternatif Pada Kriteria : {{ $dataKriteria->nama_kriteria }}
+                                Alternatif Berdasarkan Kriteria : {{ $dataKriteria->nama_kriteria }}
                             </th>
                         </tr>
 
