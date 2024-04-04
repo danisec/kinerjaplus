@@ -18,8 +18,9 @@ class Penilaian extends Model
             $query->where(function ($query) use ($search) {
                 $query->whereHas('alternatifPertama', function ($query) use ($search) {
                     $query->where('nama_alternatif', 'like', '%' . $search . '%');
-                });
-                $query->orWhere('tahun_ajaran', 'like', '%'. $search . '%');
+                })->orWhereHas('alternatifKedua', function ($query) use ($search) {
+                    $query->where('nama_alternatif', 'like', '%' . $search . '%');
+                })->orWhere('tahun_ajaran', 'like', '%' . $search . '%');
             });
         });
     }
