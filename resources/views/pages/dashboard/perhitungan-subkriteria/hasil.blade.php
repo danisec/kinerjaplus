@@ -129,7 +129,10 @@
                                 @foreach ($subkriteriaItems as $subkriteria2)
                                     <td class="px-3 py-3 text-center">
                                         @php
-                                            $normalisasiValue = $normalisasiMatriks[$kodeKriteria][$subkriteria1->id_subkriteria][$subkriteria2->id_subkriteria];
+                                            $normalisasiValue =
+                                                $normalisasiMatriks[$kodeKriteria][$subkriteria1->id_subkriteria][
+                                                    $subkriteria2->id_subkriteria
+                                                ];
                                         @endphp
 
                                         <input
@@ -265,7 +268,7 @@
             </div>
         @endforeach
 
-        @if (Auth::user()->role === 'superadmin')
+        @if (Auth::user()->role === 'superadmin' || Auth::user()->role === 'atasan langsung')
             @if ($consistencyRatio['Consistency Ratio (CR)'][$kodeKriteria] <= 0.1)
                 <div class="flex justify-end">
                     <a href="{{ route('perhitunganAlternatif.index') }}">
@@ -275,7 +278,7 @@
             @else
                 <div class="flex justify-start">
                     <a href="{{ route('perhitunganSubkriteria.index') }}">
-                        <x-atoms.button.button-primary :customClass="'h-12 w-80 rounded-md'" :type="'button'" :name="'Kembali ke Perbandingan Sub kriteria'" />
+                        <x-atoms.button.button-primary :customClass="'h-12 w-80 rounded-md'" :type="'button'" :name="'Kembali ke Perbandingan Subkriteria'" />
                     </a>
                 </div>
             @endif
