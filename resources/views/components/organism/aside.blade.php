@@ -42,10 +42,50 @@
                     </li>
                 @endif
 
-                @if (in_array(Auth::user()->role, ['superadmin', 'kepala sekolah', 'atasan langsung', 'guru']))
+                @if (in_array(Auth::user()->role, ['atasan langsung', 'guru']))
                     <li class="flex flex-col gap-2.5">
                         @foreach ($sideNavPenilaian as $name => $data)
                             <a class="{{ request()->segment(2) == $data['url'] || request()->segment(2) == 'data-penilaian'
+                                ? 'items-center rounded-lg p-2 text-gray-900 bg-gray-200/80 font-bold'
+                                : 'items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100' }} flex flex-row gap-2 text-base"
+                                href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
+
+                                <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }} h-5 w-5"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="{{ $data['viewBox'] }}"
+                                    stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ $data['path'] }}" />
+                                </svg>
+
+                                <span>{{ $name }}</span>
+                            </a>
+                        @endforeach
+                    </li>
+                @endif
+
+                @if (in_array(Auth::user()->role, ['guru']))
+                    <li class="flex flex-col gap-2.5">
+                        @foreach ($sideNavGuruPenilaian as $name => $data)
+                            <a class="{{ request()->segment(2) == $data['url'] || request()->segment(2) == 'data-riwayat-penilaian'
+                                ? 'items-center rounded-lg p-2 text-gray-900 bg-gray-200/80 font-bold'
+                                : 'items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100' }} flex flex-row gap-2 text-base"
+                                href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
+
+                                <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }} h-5 w-5"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="{{ $data['viewBox'] }}"
+                                    stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ $data['path'] }}" />
+                                </svg>
+
+                                <span>{{ $name }}</span>
+                            </a>
+                        @endforeach
+                    </li>
+                @endif
+
+                @if (in_array(Auth::user()->role, ['kepala sekolah']))
+                    <li class="flex flex-col gap-2.5">
+                        @foreach ($sideNavKepalaSekolahPenilaian as $name => $data)
+                            <a class="{{ request()->segment(2) == $data['url'] || request()->segment(2) == 'data-persetujuan-penilaian'
                                 ? 'items-center rounded-lg p-2 text-gray-900 bg-gray-200/80 font-bold'
                                 : 'items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100' }} flex flex-row gap-2 text-base"
                                 href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
