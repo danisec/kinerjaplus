@@ -7,7 +7,7 @@ $(document).ready(function () {
         let col = $(this).data("col");
         let selectedValue = parseFloat($(this).val());
 
-        $("#matriks[" + row + "][" + col + "]").val(selectedValue);
+        $("#matriks\\[" + row + "\\]\\[" + col + "\\]").val(selectedValue);
         let calculatedValue = (1 / selectedValue).toFixed(4);
 
         let calculatedInput = $(
