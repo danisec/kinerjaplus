@@ -11,6 +11,7 @@ class Ranking extends Model
 
     protected $table = 'ranking';
     protected $guarded = ['id_ranking'];
+    protected $primaryKey = 'id_ranking';
 
     public function alternatif()
     {
