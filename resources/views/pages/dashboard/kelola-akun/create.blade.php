@@ -87,8 +87,16 @@
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="password">
                     Password</label>
-                <input class="@error('password') border-red-500 @enderror field-input-slate w-full" name="password"
-                    type="password" value="{{ old('password') }}" placeholder="********" required>
+
+                <div class="flex flex-row items-center justify-end">
+                    <input class="@error('password') border-red-500 @enderror field-input-slate w-full"
+                        id="passwordInput" name="password" type="password" value="{{ old('password') }}"
+                        placeholder="********" required>
+
+                    <button class="absolute mr-2.5" id="togglePasswordVisibility" type="button">
+                        <x-atoms.svg.eye id="eyeIcon" />
+                    </button>
+                </div>
 
                 @error('password')
                     <p class="invalid-feedback">
