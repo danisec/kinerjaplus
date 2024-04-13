@@ -48,6 +48,7 @@ class DashboardController extends Controller
             'countSubkriteria' => Subkriteria::count(),
             'currentTahunAjaran' => $tahunAjaran,
             'tahunAjaranRanking' => $tahunAjaranRanking,
+            'user' => User::orderBy('role', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
             // 'chart' => $chart->build(),
         ]);
     }
