@@ -15,7 +15,7 @@ $(document).ready(function () {
             success: function (data) {
                 $("#indikatorSubkriteria").empty();
 
-                var option = $("<option>", {
+                let option = $("<option>", {
                     text: "Pilih Indikator Subkriteria",
                     selected: true,
                     hidden: true,
