@@ -45,7 +45,7 @@
                                 </div>
 
                                 @foreach ($indikator->skalaIndikator as $skalaIndikator)
-                                    <div class="my-8 flex flex-row items-center justify-center gap-16">
+                                    <div class="my-8 ml-10 flex flex-row gap-4">
                                         @php
                                             $foundInputValue = false;
                                         @endphp
@@ -67,7 +67,8 @@
                                                     : false;
                                             @endphp
 
-                                            <div class="flex flex-col items-center gap-2">
+                                            <div
+                                                class="flex h-max w-auto flex-col items-center justify-center gap-3 rounded-md bg-white p-3 shadow-slate-50 hover:shadow-md">
                                                 <input
                                                     name="id_skala_indikator_detail[{{ $skalaIndikator->id_indikator_subkriteria }}]"
                                                     type="radio"
@@ -75,10 +76,10 @@
                                                     {{ $selectedSkala ? 'checked' : '' }} @disabled(true)>
 
                                                 <label for="{{ $skalaIndikatorDetail->skala }}">
-                                                    {{ $skalaIndikatorDetail->skala == 1 ? 'Kurang' : '' }}
-                                                    {{ $skalaIndikatorDetail->skala == 2 ? 'Cukup' : '' }}
-                                                    {{ $skalaIndikatorDetail->skala == 3 ? 'Baik' : '' }}
-                                                    {{ $skalaIndikatorDetail->skala == 4 ? 'Sangat Baik' : '' }}
+                                                    {{ $skalaIndikatorDetail->skala == 1 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
+                                                    {{ $skalaIndikatorDetail->skala == 2 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
+                                                    {{ $skalaIndikatorDetail->skala == 3 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
+                                                    {{ $skalaIndikatorDetail->skala == 4 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
                                                 </label>
 
                                             </div>
