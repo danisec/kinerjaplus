@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('alternatif', function (Blueprint $table) {
             $table->id('id_alternatif');
-            $table->string('kode_alternatif', 2)->index();;
+            $table->string('kode_alternatif', 3)->index();;
             $table->string('nama_alternatif', 255);
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
             $table->date('tanggal_masuk_kerja');
