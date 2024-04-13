@@ -29,15 +29,7 @@
             <div class="my-6 w-full rounded-md bg-slate-100 p-8">
                 <p class="text-base font-bold uppercase tracking-wider text-gray-900">Petunjuk Pengisian</p>
                 <p class="my-6 text-base font-normal text-gray-900">Pada setiap pernyataan, pilihlah satu jawaban yang
-                    paling sesuai dengan ketentuan sebagai berikut:</p>
-                <p>
-                <ul class="list-inside list-decimal text-base font-normal text-gray-900">
-                    <li>Kurang</li>
-                    <li>Cukup</li>
-                    <li>Baik</li>
-                    <li>Sangat Baik</li>
-                </ul>
-                </p>
+                    paling menggambarkan diri Anda.</p>
             </div>
 
             @if (Auth::user()->alternatif != null)
@@ -69,16 +61,16 @@
                                     @endif
                                 @endforeach
 
-                                @foreach ($alternatifKeduaBelumTerpilih as $item)
-                                    @if ($item->nama_alternatif != Auth::user()->fullname)
-                                        <optgroup label="Rekan">
+                                <optgroup label="Rekan">
+                                    @foreach ($alternatifKeduaBelumTerpilih as $item)
+                                        @if ($item->nama_alternatif != Auth::user()->fullname)
                                             <option value="{{ $item->kode_alternatif }}"
                                                 {{ old('alternatif_kedua') == $item->nama_alternatif ? 'selected' : '' }}>
                                                 {{ $item->nama_alternatif }}
                                             </option>
-                                        </optgroup>
-                                    @endif
-                                @endforeach
+                                        @endif
+                                    @endforeach
+                                </optgroup>
                             </select>
 
                             @error('alternatif_kedua')
@@ -109,9 +101,10 @@
                                         </div>
 
                                         @foreach ($indikator->skalaIndikator as $skalaIndikator)
-                                            <div class="my-8 flex flex-row items-center justify-center gap-16">
+                                            <div class="my-8 ml-10 flex flex-row gap-4">
                                                 @foreach ($skalaIndikator->skalaIndikatorDetail as $skalaIndikatorDetail)
-                                                    <div class="flex flex-col items-center gap-2">
+                                                    <div
+                                                        class="flex h-max w-auto flex-col items-center justify-center gap-3 rounded-md bg-white p-3 shadow-slate-50 hover:shadow-md">
                                                         <input
                                                             name="id_skala_indikator_detail[{{ $skalaIndikator->id_indikator_subkriteria }}]"
                                                             type="radio"
@@ -121,11 +114,13 @@
                                                                 : '' }}
                                                             required>
 
-                                                        <label for="{{ $skalaIndikatorDetail->skala }}">
-                                                            {{ $skalaIndikatorDetail->skala == 1 ? 'Kurang' : '' }}
-                                                            {{ $skalaIndikatorDetail->skala == 2 ? 'Cukup' : '' }}
-                                                            {{ $skalaIndikatorDetail->skala == 3 ? 'Baik' : '' }}
-                                                            {{ $skalaIndikatorDetail->skala == 4 ? 'Sangat Baik' : '' }}
+                                                        <label
+                                                            class="text-left text-base font-normal leading-normal text-gray-900"
+                                                            for="{{ $skalaIndikatorDetail->skala }}">
+                                                            {{ $skalaIndikatorDetail->skala == 1 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
+                                                            {{ $skalaIndikatorDetail->skala == 2 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
+                                                            {{ $skalaIndikatorDetail->skala == 3 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
+                                                            {{ $skalaIndikatorDetail->skala == 4 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
                                                         </label>
                                                     </div>
                                                 @endforeach
