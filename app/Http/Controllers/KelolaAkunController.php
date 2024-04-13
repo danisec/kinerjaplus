@@ -22,7 +22,7 @@ class KelolaAkunController extends Controller
      */
     public function index()
     {      
-        return view('pages.dashboard.kelola-akun.index', [
+        return view('pages.it.kelola-akun.index', [
             'title' => 'Kelola Akun',
             'user' => User::orderBy('role', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
         ]);
@@ -33,7 +33,7 @@ class KelolaAkunController extends Controller
      */
     public function create()
     {
-        return view('pages.dashboard.kelola-akun.create', [
+        return view('pages.it.kelola-akun.create', [
             'title' => 'Tambah Akun',
             'role' => $this->role,
         ]);
@@ -88,7 +88,7 @@ class KelolaAkunController extends Controller
      */
     public function show(string $id)
     {
-        return view('pages.dashboard.kelola-akun.show', [
+        return view('pages.it.kelola-akun.show', [
             'title' => 'Detail Akun',
             'user' => User::findOrFail($id),
         ]);
@@ -99,7 +99,7 @@ class KelolaAkunController extends Controller
      */
     public function edit(string $id)
     {
-        return view('pages.dashboard.kelola-akun.edit', [
+        return view('pages.it.kelola-akun.edit', [
             'title' => 'Ubah Akun',
             'user' => User::findOrFail($id),
             'role' => $this->role,
