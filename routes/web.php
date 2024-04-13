@@ -3,6 +3,7 @@
 use App\Http\Controllers\AlternatifController;
 use App\Http\Controllers\CatatanKaryawanController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GroupKaryawanController;
 use App\Http\Controllers\KelolaAkunController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\LoginController;
@@ -62,6 +63,21 @@ Route::controller(AlternatifController::class)->name('alternatif.')->middleware(
     Route::put('/dashboard/data-alternatif/{id}', 'update')->name('update')->middleware('user-role:superadmin');
 
     Route::delete('/dashboard/data-alternatif/{id}', 'destroy')->name('destroy')->middleware('user-role:superadmin');
+});
+
+Route::controller(GroupKaryawanController::class)->name('groupKaryawan.')->middleware('auth')->group(function () {
+    Route::get('/dashboard/data-group-alternatif', 'index')->name('index')->middleware('user-role:superadmin,atasan langsung');
+    Route::get('/dashboard/data-group-alternatif/view-group-alternatif/{id}', 'show')->name('show')->middleware('user-role:superadmin,atasan langsung');
+
+    Route::get('/dashboard/data-group-alternatif/tambah-group-alternatif', 'create')->name('create')->middleware('user-role:superadmin');
+    Route::post('/dashboard/data-group-alternatif', 'store')->name('store')->middleware('user-role:superadmin');
+
+    Route::get('/dashboard/data-group-alternatif/ubah-group-alternatif/{id}/edit', 'edit')->name('edit')->middleware('user-role:superadmin');
+    Route::put('/dashboard/data-group-alternatif/{id}', 'update')->name('update')->middleware('user-role:superadmin');
+
+    Route::delete('/dashboard/data-group-alternatif/{id}', 'destroy')->name('destroy')->middleware('user-role:superadmin');
+
+    Route::get('/dashboard/data-group-alternatif/ubah-group-alternatif/{idGroupKaryawan}/getAlternatif', 'getAlternatif')->name('getAlternatif');
 });
 
 Route::controller(KriteriaController::class)->name('kriteria.')->middleware('auth')->group(function () {
@@ -189,6 +205,7 @@ Route::controller(RankingController::class)->name('ranking.')->middleware('auth'
 
 Route::controller(KelolaAkunController::class)->name('kelolaAkun.')->middleware('auth', 'user-role:superadmin,IT')->group(function () {
     Route::get('/dashboard/kelola-akun', 'index')->name('index');
+
     Route::get('/dashboard/kelola-akun/tambah-akun', 'create')->name('create');
     Route::get('/dashboard/kelola-akun/view-akun/{id}', 'show')->name('show');
 
