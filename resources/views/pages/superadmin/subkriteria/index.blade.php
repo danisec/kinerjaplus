@@ -17,13 +17,11 @@
                 <x-molecules.search :placeholder="'Cari Subkriteria'" :request="request('nama_subkriteria')" :name="'nama_subkriteria'" :value="request('nama_subkriteria')" />
             </div>
 
-            @if (Auth::user()->role === 'superadmin')
-                <div>
-                    <a href="{{ route('subkriteria.create') }}">
-                        <x-atoms.button.button-primary :customClass="'h-12 w-44 rounded-md'" :type="'button'" :name="'Tambah Subkriteria'" />
-                    </a>
-                </div>
-            @endif
+            <div>
+                <a href="{{ route('subkriteria.create') }}">
+                    <x-atoms.button.button-primary :customClass="'h-12 w-44 rounded-md'" :type="'button'" :name="'Tambah Subkriteria'" />
+                </a>
+            </div>
         </div>
     </div>
 
@@ -67,31 +65,29 @@
                                     </div>
                                 </div>
 
-                                @if (Auth::user()->role === 'superadmin')
-                                    <div x-data="{ showTooltip: false }">
-                                        <a class="font-medium text-blue-600"
-                                            href="{{ route('subkriteria.edit', $item->id_subkriteria) }}"
-                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                                            <x-atoms.svg.pen />
-                                        </a>
+                                <div x-data="{ showTooltip: false }">
+                                    <a class="font-medium text-blue-600"
+                                        href="{{ route('subkriteria.edit', $item->id_subkriteria) }}"
+                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                        <x-atoms.svg.pen />
+                                    </a>
 
-                                        <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
-                                            x-show="showTooltip">
-                                            <span>Ubah</span>
-                                        </div>
+                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
+                                        x-show="showTooltip">
+                                        <span>Ubah</span>
                                     </div>
+                                </div>
 
-                                    <div x-data="{ isOpen: false }">
-                                        <button class="text-red-600 focus:outline-none" type="button"
-                                            @click="isOpen = true">
-                                            <x-atoms.svg.trash />
-                                        </button>
+                                <div x-data="{ isOpen: false }">
+                                    <button class="text-red-600 focus:outline-none" type="button"
+                                        @click="isOpen = true">
+                                        <x-atoms.svg.trash />
+                                    </button>
 
-                                        <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama subkriteria : ' .
-                                            $item->nama_subkriteria .
-                                            ' ?'" :action="route('subkriteria.destroy', $item->id_subkriteria)" />
-                                    </div>
-                                @endif
+                                    <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama subkriteria : ' .
+                                        $item->nama_subkriteria .
+                                        ' ?'" :action="route('subkriteria.destroy', $item->id_subkriteria)" />
+                                </div>
                             </td>
                         </tr>
                     </tbody>
