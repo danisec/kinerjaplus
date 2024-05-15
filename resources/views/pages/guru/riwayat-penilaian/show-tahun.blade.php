@@ -74,10 +74,10 @@
                                 {{ $item->tahun_ajaran }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $item->alternatifPertama->nama_alternatif }}
+                                {{ $item->alternatifPertama->alternatifPertama->nama_alternatif }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $item->alternatifKedua->nama_alternatif }}
+                                {{ $item->alternatifKedua->alternatifPertama->nama_alternatif }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 text-center">
                                 <div class="flex items-center justify-center">
