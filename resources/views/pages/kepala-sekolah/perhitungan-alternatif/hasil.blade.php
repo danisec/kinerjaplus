@@ -5,14 +5,15 @@
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
                 <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('perhitunganAlternatif.index') }}">Perbandingan Alternatif</a>
+                    href="{{ route('perhitunganAlternatif.index') }}">Perbandingan Karyawan Tahun Ajaran
+                    {!! $tahunAjaran !!}</a>
             </div>
         </li>
 
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Hasil Perbandingan Alternatif</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Hasil Perbandingan Karyawan</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
@@ -37,7 +38,7 @@
 
                             @foreach ($alternatif as $item)
                                 <th class="px-3 py-3 text-center" scope="col">
-                                    {{ $item->nama_alternatif }}
+                                    {{ $item['nama_alternatif'] }}
                                 </th>
                             @endforeach
                         </tr>
@@ -48,30 +49,49 @@
                             <tr class="border-b bg-white">
                                 <th class="w-12 whitespace-nowrap bg-slate-100 px-6 py-4 font-medium text-gray-900"
                                     scope="row">
-                                    {{ $alternatif1->nama_alternatif }}
+                                    {{ $alternatif1['nama_alternatif'] }}
                                 </th>
                                 @foreach ($alternatif as $alternatif2)
                                     <td class="px-3 py-3 text-center">
-                                        @if ($alternatif1->kode_alternatif == $alternatif2->kode_alternatif)
+                                        @if ($alternatif1['id_alternatif'] == $alternatif2['id_alternatif'])
                                             <input
-                                                class="w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
-                                                name="matriks[{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1->kode_alternatif }}][{{ $alternatif2->kode_alternatif }}]"
+                                                class="w-20 rounded-md border-none bg-slate-100 text-center text-emerald-500 focus:ring-slate-100"
+                                                name="matriks[{{ $tahunAjaran }}][{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]"
                                                 type="text" value="1" @readonly(true)>
                                         @else
                                             @php
                                                 $nilai = $perhitunganAlternatif
                                                     ->where('kode_kriteria', $dataKriteria->kode_kriteria)
-                                                    ->where('alternatif_pertama', $alternatif1->kode_alternatif)
-                                                    ->where('alternatif_kedua', $alternatif2->kode_alternatif)
+                                                    ->where('alternatif_pertama', $alternatif1['kode_alternatif'])
+                                                    ->where('alternatif_kedua', $alternatif2['kode_alternatif'])
                                                     ->first();
                                             @endphp
 
-                                            <input
-                                                class="matriks w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
-                                                name="matriks[{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1->kode_alternatif }}][{{ $alternatif2->kode_alternatif }}]"
-                                                data-row="{{ $alternatif1->kode_alternatif }}"
-                                                data-col="{{ $alternatif2->kode_alternatif }}"
-                                                value="{{ $nilai ? $nilai->nilai_alternatif : '' }}" @readonly(true)>
+                                            @if ($alternatif1['id_alternatif'] < $alternatif2['id_alternatif'])
+                                                <select
+                                                    class="matriks w-20 rounded-md border border-slate-300 focus:bg-slate-100 focus:ring-slate-100"
+                                                    id="matriks[{{ $tahunAjaran }}][{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]""
+                                                    name="matriks[{{ $tahunAjaran }}][{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]"
+                                                    data-row="{{ $alternatif1['kode_alternatif'] }}"
+                                                    data-col="{{ $alternatif2['kode_alternatif'] }}">
+
+                                                    <option selected disabled></option>
+                                                    @for ($i = 1; $i <= 9; $i++)
+                                                        <option value="{{ $i }}"
+                                                            {{ $nilai && $nilai->nilai_alternatif == $i ? 'selected' : '' }}>
+                                                            {{ $i }}
+                                                        </option>
+                                                    @endfor
+                                                </select>
+                                            @else
+                                                <input
+                                                    class="matriksHasil w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                    name="matriks[{{ $tahunAjaran }}][{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]"
+                                                    data-row="{{ $alternatif1['kode_alternatif'] }}"
+                                                    data-col="{{ $alternatif2['kode_alternatif'] }}" type="text"
+                                                    value="{{ $nilai ? $nilai->nilai_alternatif : '0' }}"
+                                                    @readonly(true)>
+                                            @endif
                                         @endif
                                     </td>
                                 @endforeach
@@ -87,7 +107,7 @@
                                 <input
                                     class="w-20 rounded-md border-none bg-slate-100 text-center font-semibold focus:ring-slate-100"
                                     type="text"
-                                    value="{{ $perhitunganAlternatif->where('kode_kriteria', $dataKriteria->kode_kriteria)->where('alternatif_kedua', $alternatif1->kode_alternatif)->sum('nilai_alternatif') }}"
+                                    value="{{ $perhitunganAlternatif->where('kode_kriteria', $dataKriteria->kode_kriteria)->where('alternatif_kedua', $alternatif1['kode_alternatif'])->sum('nilai_alternatif') }}"
                                     @readonly(true)>
                             </td>
                         @endforeach
@@ -114,7 +134,7 @@
 
                             @foreach ($alternatif as $item)
                                 <th class="px-3 py-3 text-center" scope="col">
-                                    {{ $item->nama_alternatif }}
+                                    {{ $item['nama_alternatif'] }}
                                 </th>
                             @endforeach
 
@@ -129,7 +149,7 @@
                             <tr class="border-b bg-white">
                                 <th class="w-12 whitespace-nowrap bg-slate-100 px-6 py-4 font-medium text-gray-900"
                                     scope="row">
-                                    {{ $alternatif1->nama_alternatif }}
+                                    {{ $alternatif1['nama_alternatif'] }}
                                 </th>
 
                                 @foreach ($alternatif as $alternatif2)
@@ -137,18 +157,20 @@
                                         @php
                                             $normalizedValue =
                                                 $normalisasiMatriks[$dataKriteria->kode_kriteria][
-                                                    $alternatif1->kode_alternatif
-                                                ][$alternatif2->kode_alternatif];
+                                                    $alternatif1['kode_alternatif']
+                                                ][$alternatif2['kode_alternatif']];
                                         @endphp
 
                                         <input
                                             class="matriks w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
-                                            name="matriks[{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1->kode_alternatif }}][{{ $alternatif2->kode_alternatif }}]"
-                                            data-row="{{ $alternatif1->kode_alternatif }}"
-                                            data-col="{{ $alternatif2->kode_alternatif }}" type="text"
+                                            name="matriks[{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]"
+                                            data-row="{{ $alternatif1['kode_alternatif'] }}"
+                                            data-col="{{ $alternatif2['kode_alternatif'] }}" type="text"
                                             value="{{ $normalizedValue
                                                 ? $normalizedValue
-                                                : $normalisasiMatriks[$dataKriteria->kode_kriteria][$alternatif2->kode_alternatif][$alternatif1->kode_alternatif] }}"
+                                                : $normalisasiMatriks[$dataKriteria->kode_kriteria][$alternatif2['kode_alternatif']][
+                                                    $alternatif1['kode_alternatif']
+                                                ] }}"
                                             @readonly(true)>
                                     </td>
                                 @endforeach
@@ -157,8 +179,9 @@
                                     <input
                                         class="w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
                                         type="text"
-                                        value="{{ $bobotPrioritasAlternatif[$dataKriteria->kode_kriteria][$alternatif1->kode_alternatif] }}"
+                                        value="{{ $bobotPrioritasAlternatif[$tahunAjaran][$dataKriteria->kode_kriteria][$alternatif1['kode_alternatif']] }}"
                                         @readonly(true)>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
