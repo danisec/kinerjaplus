@@ -17,23 +17,21 @@
                 <x-molecules.search :placeholder="'Cari Indikator'" :request="request('indikator_subkriteria')" :name="'indikator_subkriteria'" :value="request('indikator_subkriteria')" />
             </div>
 
-            @if (Auth::user()->role === 'superadmin')
-                <div class="flex flex-row gap-4">
-                    @if ($nilaiSkala->isEmpty())
-                        <a href="{{ route('nilaiSkala.create') }}">
-                            <x-atoms.button.button-primary :customClass="'h-12 w-32 rounded-md'" :type="'button'" :name="'Nilai Skala'" />
-                        </a>
-                    @else
-                        <a href="{{ route('nilaiSkala.edit') }}">
-                            <x-atoms.button.button-primary :customClass="'h-12 w-32 rounded-md'" :type="'button'" :name="'Nilai Skala'" />
-                        </a>
-                    @endif
-
-                    <a href="{{ route('skalaIndikator.create') }}">
-                        <x-atoms.button.button-primary :customClass="'h-12 w-52 rounded-md'" :type="'button'" :name="'Tambah Skala Indikator'" />
+            <div class="flex flex-row gap-4">
+                @if ($nilaiSkala->isEmpty())
+                    <a href="{{ route('nilaiSkala.create') }}">
+                        <x-atoms.button.button-primary :customClass="'h-12 w-32 rounded-md'" :type="'button'" :name="'Nilai Skala'" />
                     </a>
-                </div>
-            @endif
+                @else
+                    <a href="{{ route('nilaiSkala.edit') }}">
+                        <x-atoms.button.button-primary :customClass="'h-12 w-32 rounded-md'" :type="'button'" :name="'Nilai Skala'" />
+                    </a>
+                @endif
+
+                <a href="{{ route('skalaIndikator.create') }}">
+                    <x-atoms.button.button-primary :customClass="'h-12 w-52 rounded-md'" :type="'button'" :name="'Tambah Skala Indikator'" />
+                </a>
+            </div>
         </div>
     </div>
 
@@ -83,31 +81,29 @@
                                     </div>
                                 </div>
 
-                                @if (Auth::user()->role === 'superadmin')
-                                    <div x-data="{ showTooltip: false }">
-                                        <a class="font-medium text-blue-600"
-                                            href="{{ route('skalaIndikator.edit', $item->id_skala_indikator) }}"
-                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                                            <x-atoms.svg.pen />
-                                        </a>
+                                <div x-data="{ showTooltip: false }">
+                                    <a class="font-medium text-blue-600"
+                                        href="{{ route('skalaIndikator.edit', $item->id_skala_indikator) }}"
+                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                        <x-atoms.svg.pen />
+                                    </a>
 
-                                        <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
-                                            x-show="showTooltip">
-                                            <span>Ubah</span>
-                                        </div>
+                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
+                                        x-show="showTooltip">
+                                        <span>Ubah</span>
                                     </div>
+                                </div>
 
-                                    <div x-data="{ isOpen: false }">
-                                        <button class="text-red-600 focus:outline-none" type="button"
-                                            @click="isOpen = true">
-                                            <x-atoms.svg.trash />
-                                        </button>
+                                <div x-data="{ isOpen: false }">
+                                    <button class="text-red-600 focus:outline-none" type="button"
+                                        @click="isOpen = true">
+                                        <x-atoms.svg.trash />
+                                    </button>
 
-                                        <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama indikator : ' .
-                                            $item->indikatorSubkriteria->indikator_subkriteria .
-                                            ' ?'" :action="route('skalaIndikator.destroy', $item->id_skala_indikator)" />
-                                    </div>
-                                @endif
+                                    <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama indikator : ' .
+                                        $item->indikatorSubkriteria->indikator_subkriteria .
+                                        ' ?'" :action="route('skalaIndikator.destroy', $item->id_skala_indikator)" />
+                                </div>
                             </td>
                         </tr>
                     </tbody>
