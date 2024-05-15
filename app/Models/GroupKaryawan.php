@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasAlternatif;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GroupKaryawan extends Model
 {
-    use HasFactory;
+    use HasFactory, HasAlternatif;
 
     protected $table = 'group_karyawan';
     protected $guarded = ['id_group_karyawan'];
@@ -20,8 +22,20 @@ class GroupKaryawan extends Model
         );
     }
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->setAlternatifKeys('kepala_sekolah', 'kode_alternatif');
+    }
+
     public function groupKaryawanDetail()
     {
         return $this->hasMany(GroupKaryawanDetail::class, 'id_group_karyawan', 'id_group_karyawan');
+    }
+
+    public function groupPenilaian()
+    {
+        return $this->hasMany(GroupPenilaian::class, 'id_group_karyawan', 'id_group_karyawan');
     }
 }
