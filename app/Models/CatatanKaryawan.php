@@ -16,15 +16,17 @@ class CatatanKaryawan extends Model
     {
         $query->when($filters['search'] ?? false, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->whereHas('alternatif', function ($query) use ($search) {
+                $query->whereHas('penilaian.alternatifPertama.alternatifPertama', function ($query) use ($search) {
+                    $query->where('nama_alternatif', 'like', '%' . $search . '%');
+                })->orWhereHas('penilaian.alternatifKedua.alternatifPertama', function ($query) use ($search) {
                     $query->where('nama_alternatif', 'like', '%' . $search . '%');
                 })->orWhere('tahun_ajaran', 'like', '%' . $search . '%');
             });
         });
     }
 
-    public function alternatif()
+    public function penilaian()
     {
-        return $this->belongsTo(Alternatif::class, 'kode_alternatif', 'kode_alternatif');
+        return $this->belongsTo(Penilaian::class, 'id_penilaian', 'id_penilaian');
     }
 }
