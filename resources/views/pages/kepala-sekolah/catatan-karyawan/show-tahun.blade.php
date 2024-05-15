@@ -40,10 +40,16 @@
                         Tahun Ajaran
                     </th>
                     <th class="px-6 py-3" scope="col">
-                        Nama Karyawan
+                        Nama Pemberi Nilai
+                    </th>
+                    <th class="px-6 py-3" scope="col">
+                        Kepada
                     </th>
                     <th class="px-6 py-3" scope="col">
                         Catatan
+                    </th>
+                    <th class="px-6 py-3" scope="col">
+                        Penilaian
                     </th>
                     <th class="px-6 py-3 text-center" scope="colgroup">
                         Aksi
@@ -62,10 +68,23 @@
                                 {{ $item->tahun_ajaran }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $item->alternatif->nama_alternatif }}
+                                {{ $item->penilaian->alternatifPertama->alternatifPertama->nama_alternatif }}
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                {{ $item->penilaian->alternatifKedua->alternatifPertama->nama_alternatif }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
                                 {{ Str::limit($item->catatan, 25, '...') }}
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                <div x-data="{ showTooltip: false }">
+                                    <a class="font-medium text-blue-600 underline hover:text-blue-500"
+                                        href="{{ route('persetujuanPenilaian.show', $item->id_penilaian) }}"
+                                        target="_blank" rel="noreferrer noopener" @mouseenter="showTooltip = true"
+                                        @mouseleave="showTooltip = false">
+                                        Lihat Penilaian
+                                    </a>
+                                </div>
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
@@ -101,7 +120,11 @@
                                     </button>
 
                                     <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus catatan karyawan : ' .
-                                        $item->alternatif->nama_alternatif .
+                                        $item->penilaian->alternatifPertama->alternatifPertama->nama_alternatif .
+                                        ' Kepada ' .
+                                        $item->penilaian->alternatifKedua->alternatifPertama->nama_alternatif .
+                                        ' Tahun Ajaran ' .
+                                        $item->tahun_ajaran .
                                         ' ?'" :action="route('catatanKaryawan.destroy', $item->id_catatan_karyawan)" />
                                 </div>
                             </td>
