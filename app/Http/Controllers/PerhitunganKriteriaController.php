@@ -7,6 +7,7 @@ use App\Models\PerhitunganKriteria;
 use App\Models\RatioIndex;
 use App\Services\PerhitunganKriteriaService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PerhitunganKriteriaController extends Controller
 {
@@ -29,8 +30,8 @@ class PerhitunganKriteriaController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard.perhitungan-kriteria.index', [
-            'title' => 'Perhitungan Kriteria',
+        return view('pages.kepala-sekolah.perhitungan-kriteria.index', [
+            'title' => 'Perbandingan Kriteria',
             'kriteria' => $this->kriteria,
             'perhitunganKriteria' => $this->perhitunganKriteria,
         ]);
@@ -83,31 +84,35 @@ class PerhitunganKriteriaController extends Controller
      */
     public function hasil()
     {
-        $ratioIndex = RatioIndex::orderBy('ordo_matriks', 'asc')->get();
-        $perhitunganKriteria = $this->perhitunganKriteria;
-        $jumlahKriteria = Kriteria::count();
+        $result = Cache::remember('hasil_perhitungan_kriteria', now()->addMinutes(30), function () {
+            $ratioIndex = RatioIndex::orderBy('ordo_matriks', 'asc')->get();
+            $perhitunganKriteria = $this->perhitunganKriteria;
+            $jumlahKriteria = Kriteria::count();
+    
+            $totalKolomKriteria = $this->perhitunganKriteriaService->totalKolomKriteria($perhitunganKriteria);
+            $normalisasiMatriks = $this->perhitunganKriteriaService->normalisasiMatriks($perhitunganKriteria, $totalKolomKriteria);
+            $totalBarisNormalisasiMatriks = $this->perhitunganKriteriaService->totalBarisNormalisasiMatriks($normalisasiMatriks);
+            $bobotPrioritasKriteria= $this->perhitunganKriteriaService->bobotPrioritasKriteria($totalBarisNormalisasiMatriks, $jumlahKriteria);
+            $consistencyMeasures= $this->perhitunganKriteriaService->consistencyMeasure($perhitunganKriteria, $bobotPrioritasKriteria);
+            $totalConsistencyMeasures= $this->perhitunganKriteriaService->totalConsistencyMeasures($consistencyMeasures, $jumlahKriteria);
+            $consistencyRatio= $this->perhitunganKriteriaService->consistencyRatio($totalConsistencyMeasures, $jumlahKriteria, $ratioIndex);
+            $consistencyResult= $this->perhitunganKriteriaService->consistencyResult($consistencyRatio);
 
-        $totalKolomKriteria = $this->perhitunganKriteriaService->totalKolomKriteria($perhitunganKriteria);
-        $normalisasiMatriks = $this->perhitunganKriteriaService->normalisasiMatriks($perhitunganKriteria, $totalKolomKriteria);
-        $totalBarisNormalisasiMatriks = $this->perhitunganKriteriaService->totalBarisNormalisasiMatriks($normalisasiMatriks);
-        $bobotPrioritasKriteria= $this->perhitunganKriteriaService->bobotPrioritasKriteria($totalBarisNormalisasiMatriks, $jumlahKriteria);
-        $consistencyMeasures= $this->perhitunganKriteriaService->consistencyMeasure($perhitunganKriteria, $bobotPrioritasKriteria);
-        $totalConsistencyMeasures= $this->perhitunganKriteriaService->totalConsistencyMeasures($consistencyMeasures, $jumlahKriteria);
-        $consistencyRatio= $this->perhitunganKriteriaService->consistencyRatio($totalConsistencyMeasures, $jumlahKriteria, $ratioIndex);
-        $consistencyResult= $this->perhitunganKriteriaService->consistencyResult($consistencyRatio);
+            // Mengembalikan data yang akan di simpan dalam cache
+            return [
+                'kriteria' => $this->kriteria,
+                'perhitunganKriteria' => $perhitunganKriteria,
+                'totalKolomKriteria' => $totalKolomKriteria,
+                'normalisasiMatriks' => $normalisasiMatriks,
+                'bobotPrioritasKriteria' => $bobotPrioritasKriteria,
+                'consistencyMeasures' => $consistencyMeasures,
+                'totalConsistencyMeasures' => $totalConsistencyMeasures,
+                'consistencyData' => $consistencyRatio,
+                'consistencyResult' => $consistencyResult,
+            ];
+        });
 
-        return view('pages.dashboard.perhitungan-kriteria.hasil', [
-            'title' => 'Hasil Perhitungan Kriteria',
-            'kriteria' => $this->kriteria,
-            'perhitunganKriteria' => $perhitunganKriteria,
-            'totalKolomKriteria' => $totalKolomKriteria,
-            'normalisasiMatriks' => $normalisasiMatriks,
-            'bobotPrioritasKriteria' => $bobotPrioritasKriteria,
-            'consistencyMeasures' => $consistencyMeasures,
-            'totalConsistencyMeasures' => $totalConsistencyMeasures,
-            'consistencyData' => $consistencyRatio,
-            'consistencyResult' => $consistencyResult,
-        ]);
+        return view('pages.kepala-sekolah.perhitungan-kriteria.hasil', array_merge(['title' => 'Hasil Perbandingan Kriteria'], $result));
     }
 
     /**
