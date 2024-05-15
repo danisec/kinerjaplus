@@ -12,6 +12,15 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
+                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
+                    href="{{ route('riwayatPenilaian.showTahun', ['firstYear' => $tahunAjaran[0], 'secondYear' => $tahunAjaran[1]]) }}">Tahun
+                    Ajaran {!! $tahunAjaran[0] !!}/{!! $tahunAjaran[1] !!}</a>
+            </div>
+        </li>
+
+        <li aria-current="page">
+            <div class="flex items-center">
+                <x-atoms.svg.arrow-right />
                 <span class="mx-2 text-base font-medium text-gray-500">Detail Penilaian</span>
             </div>
         </li>
@@ -22,8 +31,9 @@
 
         <div class="mt-8 space-y-6">
             <h4 class="text-2xl font-semibold text-gray-900">Detail Penilaian
-                {{ $penilaian->alternatifPertama->nama_alternatif }} Kepada
-                {{ $penilaian->alternatifKedua->nama_alternatif }} Tahun Ajaran {{ $penilaian->tahun_ajaran }}</h4>
+                {{ $penilaian->alternatifPertama->alternatifPertama->nama_alternatif }} Kepada
+                {{ $penilaian->alternatifKedua->alternatifPertama->nama_alternatif }} Tahun Ajaran
+                {{ $penilaian->tahun_ajaran }}</h4>
 
             <div>
                 @foreach ($kriteria as $item)
@@ -93,7 +103,7 @@
             </div>
 
             <div class="flex justify-center">
-                <a href="{{ route('riwayatPenilaian.index') }}">
+                <a href="{{ route('riwayatPenilaian.index') }}" onclick="window.close()">
                     <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
                 </a>
             </div>
