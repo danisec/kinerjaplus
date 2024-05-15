@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Alternatif;
 use App\Models\CatatanKaryawan;
+use App\Models\GroupKaryawan;
+use App\Models\GroupKaryawanDetail;
 use App\Models\Penilaian;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use PHPUnit\Framework\Attributes\Group;
 
 class CatatanKaryawanController extends Controller
 {
@@ -30,7 +33,23 @@ class CatatanKaryawanController extends Controller
      */
     public function index()
     {
-        $catatanKaryawanGroupedByTahun = CatatanKaryawan::select('tahun_ajaran')
+        // Cari nama alternatif berdasarkan group karyawan yang mana nama alternatif sama dengan nama auth user
+        $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
+
+        // checkAuthAlternatif berada di dalam group karyawan yang mana
+        $checkGroupKaryawanId = null;
+        if (Auth::user()->role == 'kepala sekolah') {
+            $checkGroupKaryawanId = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->value('id_group_karyawan');
+        } elseif (Auth::user()->role == 'guru') {
+            $checkGroupKaryawanId = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->value('id_group_karyawan');
+        }
+
+        // Dapatkan catatan karyawan yang memiliki group karyawan yang sama dengan group karyawan yang dimiliki oleh auth user  $checkGroupKaryawan
+        $catatanKaryawanGroupedByTahun = CatatanKaryawan::with(['penilaian', 'penilaian.alternatifPertama'])
+        ->whereHas('penilaian.alternatifPertama', function ($query) use ($checkGroupKaryawanId) {
+            $query->where('id_group_karyawan', $checkGroupKaryawanId);
+        })
+        ->select('tahun_ajaran')
         ->orderBy('tahun_ajaran', 'DESC')
         ->when(request()->has('search'), function ($query) {
             $query->where('tahun_ajaran', 'like', '%' . request('search') . '%');
@@ -38,9 +57,17 @@ class CatatanKaryawanController extends Controller
         ->groupBy('tahun_ajaran')
         ->pluck('tahun_ajaran');
 
+        // Menggabungkan tahun_ajaran dengan nama group karyawan
+        $catatanWithGroupKaryawan = [];
+        foreach ($catatanKaryawanGroupedByTahun as $tahun) {
+            $namaGroupKaryawan = GroupKaryawan::where('id_group_karyawan', $checkGroupKaryawanId)->value('nama_group_karyawan');
+            $catatanWithGroupKaryawan[] = ['tahun' => $tahun, 'namaGroupKaryawan' => $namaGroupKaryawan];
+        }
+
         return view('pages.kepala-sekolah.catatan-karyawan.index', [
             'title' => 'Data Catatan Karyawan',
             'catatanKaryawan' => $catatanKaryawanGroupedByTahun,
+            'catatanWithGroupKaryawan' => $catatanWithGroupKaryawan,
         ]);
     }
 
@@ -53,7 +80,7 @@ class CatatanKaryawanController extends Controller
 
         return view('pages.kepala-sekolah.catatan-karyawan.show-tahun', [
             'title' => 'Data Catatan Karyawan Tahun Ajaran ' . $tahunAjaranBreadcrumbs,
-            'catatanKaryawan' => CatatanKaryawan::with(['alternatif'])->where('tahun_ajaran', "$firstYear/$secondYear")->filter(request(['search']))->paginate(10)->withQueryString(),
+            'catatanKaryawan' => CatatanKaryawan::with(['penilaian', 'penilaian.alternatifPertama.alternatifPertama', 'penilaian.alternatifKedua.alternatifPertama'])->where('tahun_ajaran', "$firstYear/$secondYear")->filter(request(['search']))->paginate(10)->withQueryString(),
             'tahunAjaranBreadcrumbs' => $tahunAjaranBreadcrumbs,
         ]);
     }
@@ -66,8 +93,20 @@ class CatatanKaryawanController extends Controller
         // Dapatkan list tahun ajaran yang unik dari table penilaian
         $tahunAjaranPenilaian = Penilaian::select('tahun_ajaran')->orderBy('tahun_ajaran','DESC')->groupBy('tahun_ajaran')->pluck('tahun_ajaran');
 
-        $alternatif = Alternatif::get();
-        $pluckAlternatif = $alternatif->pluck('nama_alternatif', 'kode_alternatif')->toArray();
+        // Cari nama alternatif berdasarkan group karyawan yang mana nama alternatif sama dengan nama auth user
+        $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
+
+        // checkAuthAlternatif berada di dalam group karyawan yang mana
+        $checkGroupKaryawanId = null;
+        if (Auth::user()->role == 'kepala sekolah') {
+            $checkGroupKaryawanId = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->value('id_group_karyawan');
+        } elseif (Auth::user()->role == 'guru') {
+            $checkGroupKaryawanId = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->value('id_group_karyawan');
+        }
+
+        // Dapatkan semua nama alternatif yang berada di dalam group karyawan yang sama dengan kode alternatif auth user
+        $alternatif = GroupKaryawanDetail::with(['alternatif'])->where('id_group_karyawan', $checkGroupKaryawanId)->get();
+        $pluckAlternatif = $alternatif->pluck('alternatif.nama_alternatif', 'alternatif.kode_alternatif')->toArray();
         
         return view('pages.kepala-sekolah.catatan-karyawan.create', [
             'title' => 'Tambah Catatan Karyawan',
@@ -128,12 +167,27 @@ class CatatanKaryawanController extends Controller
      */
     public function edit($id)
     {
-        $alternatif = Alternatif::get();
-        $pluckAlternatif = $alternatif->pluck('nama_alternatif', 'kode_alternatif')->toArray();
+        // Cari nama alternatif berdasarkan group karyawan yang mana nama alternatif sama dengan nama auth user
+        $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
+
+        // checkAuthAlternatif berada di dalam group karyawan yang mana
+        $checkGroupKaryawanId = null;
+        if (Auth::user()->role == 'kepala sekolah') {
+            $checkGroupKaryawanId = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->value('id_group_karyawan');
+        } elseif (Auth::user()->role == 'guru') {
+            $checkGroupKaryawanId = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->value('id_group_karyawan');
+        }
+
+        // Dapatkan semua nama alternatif yang berada di dalam group karyawan yang sama dengan kode alternatif auth user
+        $alternatif = GroupKaryawanDetail::with(['alternatif'])->where('id_group_karyawan', $checkGroupKaryawanId)->get();
+        $pluckAlternatif = $alternatif->pluck('alternatif.nama_alternatif', 'alternatif.kode_alternatif')->toArray();
+        
+        $catatanKaryawan = CatatanKaryawan::with(['penilaian', 'penilaian.alternatifPertama', 'penilaian.alternatifKedua.alternatifPertama'])->where('id_catatan_karyawan', $id)->first();
+        // dd($catatanKaryawan);
 
         return view('pages.kepala-sekolah.catatan-karyawan.edit', [
             'title' => 'Ubah Catatan Karyawan',
-            'catatanKaryawan' => CatatanKaryawan::where('id_catatan_karyawan', $id)->first(),
+            'catatanKaryawan' => CatatanKaryawan::with(['penilaian', 'penilaian.alternatifPertama', 'penilaian.alternatifKedua.alternatifPertama'])->where('id_catatan_karyawan', $id)->first(),
             'pluckAlternatif' => $pluckAlternatif,
         ]);
     }
@@ -144,12 +198,10 @@ class CatatanKaryawanController extends Controller
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'kode_alternatif' => 'required',
-            'tahun_ajaran' => 'required',
+            'id_penilaian' => '',
+            'tahun_ajaran' => '',
             'catatan' => 'required',
         ],[
-            'kode_alternatif.required' => 'Nama karyawan harus diisi',
-            'tahun_ajaran.required' => 'Tahun ajaran harus diisi',
             'catatan.required' => 'Catatan harus diisi',
         ]);
 
