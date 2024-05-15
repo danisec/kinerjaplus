@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('group_karyawan_detail', function (Blueprint $table) {
             $table->id('id_group_karyawan_detail');
             $table->bigInteger('id_group_karyawan')->unsigned();
-            $table->string('kode_alternatif', 3);
+            $table->string('kode_alternatif', 4);
             $table->timestamps();
         });
     }
