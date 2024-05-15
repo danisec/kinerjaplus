@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('catatan_penilaian', function (Blueprint $table) {
-            $table->foreign('kode_alternatif', 'fk_kode_alternatif_alternatif_kode_alternatif')
-                ->references('kode_alternatif')
-                ->on('alternatif')
+        Schema::table('catatan_karyawan', function (Blueprint $table) {
+            $table->foreign('id_penilaian', 'fk_id_penilaian_penilaian')
+                ->references('id_penilaian')
+                ->on('penilaian')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
         });
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('catatan_penilaian', function (Blueprint $table) {
-            $table->dropForeign('fk_kode_alternatif_alternatif_kode_alternatif');
+        Schema::table('catatan_karyawan', function (Blueprint $table) {
+            $table->dropForeign('fk_id_penilaian_penilaian');
         });
     }
 };
