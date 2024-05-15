@@ -20,13 +20,28 @@ class Alternatif extends Model
         );
     }
 
+    public function groupKaryawan()
+    {
+        return $this->belongsTo(GroupKaryawan::class, 'kode_alternatif', 'kepala_sekolah');
+    }
+
+    public function groupKaryawanDetail()
+    {
+        return $this->belongsTo(GroupKaryawanDetail::class, 'kode_alternatif', 'kode_alternatif');
+    }
+
     public function users()
     {
-        return $this->belongsTo(User::class, 'fullname', 'nama_alternatif');
+        return $this->belongsTo(User::class, 'nama_alternatif', 'fullname');
     }
 
     public function penilaian()
     {
         return $this->hasMany(Penilaian::class, 'alternatif_pertama', 'kode_alternatif');
+    }
+
+    public function groupPenilaianDetail()
+    {
+        return $this->hasMany(GroupPenilaianDetail::class, 'alternatif_kedua', 'kode_alternatif');
     }
 }
