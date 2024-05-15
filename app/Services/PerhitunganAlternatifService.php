@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Alternatif;
+use App\Jobs\BobotPrioritasAlternatifJob;
 use App\Models\BobotPrioritasAlternatif;
 use Illuminate\Http\Request;
 
@@ -67,36 +67,25 @@ class PerhitunganAlternatifService
         return $totalBarisNormalisasiMatriks;
     }
 
-    public function bobotPrioritasAlternatif($totalBarisNormalisasiMatriks)
+    public function bobotPrioritasAlternatif($totalBarisNormalisasiMatriks, $alternatifGroupedByGroupKaryawan, $tahunAjaran)
     {
         // count total alternatif
-        $jumlahAlternatif = Alternatif::count();
+        $jumlahAlternatif = count($alternatifGroupedByGroupKaryawan);
+        $tahunAjaran = $tahunAjaran;
         
         // calculate bobot prioritas alternatif
         $bobotPrioritasAlternatif = [];
         foreach ($totalBarisNormalisasiMatriks as $kodeKriteria => $matrixKriteria) {
             foreach ($matrixKriteria as $alternatifPertama => $total) {
-                $bobotPrioritasAlternatif[$kodeKriteria][$alternatifPertama] = $total / $jumlahAlternatif;
+                $bobotPrioritasAlternatif[$tahunAjaran][$kodeKriteria][$alternatifPertama] = $total / $jumlahAlternatif;
 
-                $bobotPrioritasAlternatif[$kodeKriteria][$alternatifPertama] = substr($bobotPrioritasAlternatif[$kodeKriteria][$alternatifPertama], 0, 6);
+                $bobotPrioritasAlternatif[$tahunAjaran][$kodeKriteria][$alternatifPertama] = substr($bobotPrioritasAlternatif[$tahunAjaran][$kodeKriteria][$alternatifPertama], 0, 6);
             }
         }
 
-        // Save bobot prioritas alternatif to database
+        // Store bobot prioritas alternatif to database
         try {
-            BobotPrioritasAlternatif::truncate();
-
-            foreach ($bobotPrioritasAlternatif as $kodeKriteria => $matriksKriteria) {
-                foreach ($matriksKriteria as $dataAlternatif => $bobotPrioritas) {
-                    BobotPrioritasAlternatif::updateOrCreate(
-                        [
-                            'kode_kriteria' => $kodeKriteria,
-                            'kode_alternatif' => $dataAlternatif,
-                        ],
-                        ['bobot_prioritas' => $bobotPrioritas]
-                    );
-                }
-            }
+            BobotPrioritasAlternatifJob::dispatch($bobotPrioritasAlternatif, $tahunAjaran);
         } catch (\Throwable $th) {
             $notif = notify()->error('Terjadi kesalahan saat menyimpan data bobot prioritas alternatif');
             return back()->with('notif', $notif);
