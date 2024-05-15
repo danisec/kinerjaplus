@@ -7,6 +7,7 @@ use App\Models\RatioIndex;
 use App\Models\Subkriteria;
 use App\Services\PerhitunganSubkriteriaService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PerhitunganSubkriteriaController extends Controller
 {
@@ -29,8 +30,8 @@ class PerhitunganSubkriteriaController extends Controller
     {
         $subkriteria = Subkriteria::with(['kriteria'])->orderBy('kode_kriteria', 'asc')->get()->groupBy('kode_kriteria');
         
-        return view('pages.dashboard.perhitungan-subkriteria.index', [
-            'title' => 'Perhitungan Subkriteria',
+        return view('pages.kepala-sekolah.perhitungan-subkriteria.index', [
+            'title' => 'Perbandingan Subkriteria',
             'subkriteria' => $subkriteria,
             'perhitunganSubkriteria' => $this->perhitunganSubkriteria,
         ]);
@@ -87,37 +88,41 @@ class PerhitunganSubkriteriaController extends Controller
      */
     public function hasil()
     {
-        $ratioIndex = RatioIndex::orderBy('ordo_matriks', 'asc')->get();
-        $perhitunganSubkriteria = $this->perhitunganSubkriteria;
+        $result = Cache::remember('hasil_perhitungan_subkriteria', now()->addMinutes(30), function () {
+            $ratioIndex = RatioIndex::orderBy('ordo_matriks', 'asc')->get();
+            $perhitunganSubkriteria = $this->perhitunganSubkriteria;
+    
+            $totalKolomSubkriteria = $this->perhitunganSubkriteriaService->totalKolomSubkriteria($perhitunganSubkriteria);
+            $normalisasiMatriks = $this->perhitunganSubkriteriaService->normalisasiMatriks($perhitunganSubkriteria, $totalKolomSubkriteria);
+            
+            $totalBarisNormalisasiMatriks = $this->perhitunganSubkriteriaService->totalBarisNormalisasiMatriks($normalisasiMatriks);
+            $countSubkriteriaByKriteria = $this->perhitunganSubkriteriaService->countSubkriteriaByKriteria($totalBarisNormalisasiMatriks);
+            
+            $bobotPrioritasSubkriteria = $this->perhitunganSubkriteriaService->bobotPrioritasSubkriteria($totalBarisNormalisasiMatriks, $countSubkriteriaByKriteria);
+            $calculateTotalBobotSubkriteria = $this->perhitunganSubkriteriaService->calculateTotalBobotSubkriteria($bobotPrioritasSubkriteria);
+            
+            $consistencyMeasures = $this->perhitunganSubkriteriaService->consistencyMeasures($perhitunganSubkriteria, $bobotPrioritasSubkriteria);
+            $totalConsistencyMeasures = $this->perhitunganSubkriteriaService->totalConsistencyMeasures($consistencyMeasures, $countSubkriteriaByKriteria);
+    
+            $consistencyRatio = $this->perhitunganSubkriteriaService->consistencyRatio($totalConsistencyMeasures, $countSubkriteriaByKriteria, $ratioIndex);
+            $consistencyResult = $this->perhitunganSubkriteriaService->consistencyResult($consistencyRatio);
 
-        $totalKolomSubkriteria = $this->perhitunganSubkriteriaService->totalKolomSubkriteria($perhitunganSubkriteria);
-        $normalisasiMatriks = $this->perhitunganSubkriteriaService->normalisasiMatriks($perhitunganSubkriteria, $totalKolomSubkriteria);
-        
-        $totalBarisNormalisasiMatriks = $this->perhitunganSubkriteriaService->totalBarisNormalisasiMatriks($normalisasiMatriks);
-        $countSubkriteriaByKriteria = $this->perhitunganSubkriteriaService->countSubkriteriaByKriteria($totalBarisNormalisasiMatriks);
-        
-        $bobotPrioritasSubkriteria = $this->perhitunganSubkriteriaService->bobotPrioritasSubkriteria($totalBarisNormalisasiMatriks, $countSubkriteriaByKriteria);
-        $calculateTotalBobotSubkriteria = $this->perhitunganSubkriteriaService->calculateTotalBobotSubkriteria($bobotPrioritasSubkriteria);
-        
-        $consistencyMeasures = $this->perhitunganSubkriteriaService->consistencyMeasures($perhitunganSubkriteria, $bobotPrioritasSubkriteria);
-        $totalConsistencyMeasures = $this->perhitunganSubkriteriaService->totalConsistencyMeasures($consistencyMeasures, $countSubkriteriaByKriteria);
+            // Mengembalikan data yang akan di simpan dalam cache
+            return [
+                'subkriteria' => Subkriteria::with(['kriteria'])->orderBy('kode_kriteria', 'asc')->get()->groupBy('kode_kriteria'),
+                'perhitunganSubkriteria' => $perhitunganSubkriteria,
+                'totalKolomSubkriteria' => $totalKolomSubkriteria,
+                'normalisasiMatriks' => $normalisasiMatriks,
+                'bobotPrioritasSubkriteria' => $bobotPrioritasSubkriteria,
+                'totalBobotPrioritas' => $calculateTotalBobotSubkriteria,
+                'consistencyMeasures' => $consistencyMeasures,
+                'totalConsistencyMeasures' => $totalConsistencyMeasures,
+                'consistencyRatio' => $consistencyRatio,
+                'consistencyResult' => $consistencyResult,
+            ];
+        });
 
-        $consistencyRatio = $this->perhitunganSubkriteriaService->consistencyRatio($totalConsistencyMeasures, $countSubkriteriaByKriteria, $ratioIndex);
-        $consistencyResult = $this->perhitunganSubkriteriaService->consistencyResult($consistencyRatio);
-
-        return view('pages.dashboard.perhitungan-subkriteria.hasil', [
-            'title' => 'Hasil Perhitungan Sub kriteria',
-            'subkriteria' => Subkriteria::with(['kriteria'])->orderBy('kode_kriteria', 'asc')->get()->groupBy('kode_kriteria'),
-            'perhitunganSubkriteria' => $perhitunganSubkriteria,
-            'totalKolomSubkriteria' => $totalKolomSubkriteria,
-            'normalisasiMatriks' => $normalisasiMatriks,
-            'bobotPrioritasSubkriteria' => $bobotPrioritasSubkriteria,
-            'totalBobotPrioritas' => $calculateTotalBobotSubkriteria,
-            'consistencyMeasures' => $consistencyMeasures,
-            'totalConsistencyMeasures' => $totalConsistencyMeasures,
-            'consistencyRatio' => $consistencyRatio,
-            'consistencyResult' => $consistencyResult,
-        ]);
+        return view('pages.kepala-sekolah.perhitungan-subkriteria.hasil', array_merge(['title' => 'Hasil Perbandingan Subkriteria'], $result));
     }
 
     /**
