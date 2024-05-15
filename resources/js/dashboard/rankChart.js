@@ -1,13 +1,13 @@
-import jQuery from "jquery";
+import jQuery, { data } from "jquery";
 window.$ = jQuery;
 
 function showSkeletonLoading() {
-    $("#loadingChart").show();
+    $("#loadingRankChart").show();
     $("#topRanking").hide();
 }
 
 function hideSkeletonLoading() {
-    $("#loadingChart").hide();
+    $("#loadingRankChart").hide();
     $("#topRanking").show();
 }
 
@@ -42,14 +42,15 @@ $(document).ready(function () {
             success: function (data) {
                 hideSkeletonLoading();
 
-                let namaKaryawan = data.map(function (item) {
-                    return item.nama;
-                });
-                let nilaiKaryawan = data.map(function (item) {
-                    return item.nilai;
+                let dataKaryawan = data.map(function (item) {
+                    return {
+                        nama: item.nama,
+                        nilai: item.nilai,
+                        rank: item.rank,
+                    };
                 });
 
-                updateChart(namaKaryawan, nilaiKaryawan);
+                updateChart(dataKaryawan);
             },
             error: function (xhr, status, error) {
                 console.error(error);
@@ -57,7 +58,7 @@ $(document).ready(function () {
         });
     }
 
-    function updateChart(namaKaryawan, nilaiKaryawan) {
+    function updateChart(dataKaryawan) {
         Highcharts.chart("topRanking", {
             chart: {
                 type: "column",
@@ -68,11 +69,19 @@ $(document).ready(function () {
                 align: "left",
             },
             subtitle: {
-                text: "5 Peringkat Teratas",
+                // text: "5 Peringkat Teratas",
+                text:
+                    "5 Peringkat Teratas Kinerja Karyawan " +
+                    " Tahun Ajaran " +
+                    ($("#selectTahun").val()
+                        ? $("#selectTahun").val()
+                        : $("#selectTahun").data("current-tahun")),
                 align: "left",
             },
             xAxis: {
-                categories: namaKaryawan,
+                categories: dataKaryawan
+                    ? dataKaryawan.map((item) => item.nama)
+                    : [],
                 crosshair: true,
                 accessibility: {
                     description: "nama karyawan",
@@ -90,14 +99,34 @@ $(document).ready(function () {
             },
             plotOptions: {
                 column: {
+                    pointWidth: 100,
                     pointPadding: 0.2,
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function () {
+                            return (
+                                "Nilai: " +
+                                this.y.toFixed(5) +
+                                "<br>Rank: " +
+                                dataKaryawan[this.point.index].rank
+                            );
+                        },
+                    },
                     borderWidth: 0,
                 },
+            },
+            legend: {
+                enabled: false,
+            },
+            credits: {
+                enabled: false,
             },
             series: [
                 {
                     name: "Nilai",
-                    data: nilaiKaryawan,
+                    data: dataKaryawan
+                        ? dataKaryawan.map((item) => item.nilai)
+                        : [],
                     color: "#34d399",
                 },
             ],
