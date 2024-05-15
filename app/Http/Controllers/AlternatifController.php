@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class AlternatifController extends Controller
 {
-    /* 
+    /*
      * Constructor
      */
     private $namaKaryawan;
@@ -41,7 +41,7 @@ class AlternatifController extends Controller
         // ambil kode alternatif terakhir
         $lastKodeAlaternatif = Alternatif::orderBy('id_alternatif', 'DESC')->first();
         $newKodeAlternatif = $lastKodeAlaternatif ? ++$lastKodeAlaternatif->kode_alternatif : 'A1';
-       
+
         return view('pages.superadmin.alternatif.create', [
             'title' => 'Tambah Karyawan',
             'pluckAlternatif' => $alternatif->pluck('nama_alternatif')->toArray(),
