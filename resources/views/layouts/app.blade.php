@@ -12,20 +12,31 @@
     <title>{{ $title }} - {{ config('app.name') }}</title>
 
     @notifyCss
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/css/multi-select-tag.css', 'resources/js/app.js'])
 </head>
 
 <body>
     @include('notify::components.notify')
 
-    @if (Auth::check())
-        <div>
-            {{ $slot }}
-        </div>
+    @php
+        $agent = new \Jenssegers\Agent\Agent();
+    @endphp
+
+    @if ($agent->isDesktop())
+        @if (Auth::check())
+            <div>
+                {{ $slot }}
+            </div>
+        @else
+            <main>
+                {{ $slot }}
+            </main>
+        @endif
     @else
-        <main>
-            {{ $slot }}
-        </main>
+        <div class="mx-auto flex min-h-screen flex-col justify-center p-4">
+            <p class="text-base font-medium text-gray-900">Maaf, web aplikasi KinerjaPlus hanya dapat diakses melalui
+                tampilan desktop.</p>
+        </div>
     @endif
 
     @notifyJs
