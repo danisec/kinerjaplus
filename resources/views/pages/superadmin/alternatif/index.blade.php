@@ -17,13 +17,11 @@
                 <x-molecules.search :placeholder="'Cari Karyawan'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
             </div>
 
-            @if (Auth::user()->role === 'superadmin')
-                <div>
-                    <a href="{{ route('alternatif.create') }}">
-                        <x-atoms.button.button-primary :customClass="'h-12 w-40 rounded-md'" :type="'button'" :name="'Tambah Karyawan'" />
-                    </a>
-                </div>
-            @endif
+            <div>
+                <a href="{{ route('alternatif.create') }}">
+                    <x-atoms.button.button-primary :customClass="'h-12 w-40 rounded-md'" :type="'button'" :name="'Tambah Karyawan'" />
+                </a>
+            </div>
         </div>
     </div>
 
@@ -67,31 +65,29 @@
                                     </div>
                                 </div>
 
-                                @if (Auth::user()->role === 'superadmin')
-                                    <div x-data="{ showTooltip: false }">
-                                        <a class="font-medium text-blue-600"
-                                            href="{{ route('alternatif.edit', $item->id_alternatif) }}"
-                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                                            <x-atoms.svg.pen />
-                                        </a>
+                                <div x-data="{ showTooltip: false }">
+                                    <a class="font-medium text-blue-600"
+                                        href="{{ route('alternatif.edit', $item->id_alternatif) }}"
+                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                        <x-atoms.svg.pen />
+                                    </a>
 
-                                        <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
-                                            x-show="showTooltip">
-                                            <span>Ubah</span>
-                                        </div>
+                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
+                                        x-show="showTooltip">
+                                        <span>Ubah</span>
                                     </div>
+                                </div>
 
-                                    <div x-data="{ isOpen: false }">
-                                        <button class="text-red-600 focus:outline-none" type="button"
-                                            @click="isOpen = true">
-                                            <x-atoms.svg.trash />
-                                        </button>
+                                <div x-data="{ isOpen: false }">
+                                    <button class="text-red-600 focus:outline-none" type="button"
+                                        @click="isOpen = true">
+                                        <x-atoms.svg.trash />
+                                    </button>
 
-                                        <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama karyawan : ' .
-                                            $item->nama_alternatif .
-                                            ' ?'" :action="route('alternatif.destroy', $item->id_alternatif)" />
-                                    </div>
-                                @endif
+                                    <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama karyawan : ' .
+                                        $item->nama_alternatif .
+                                        ' ?'" :action="route('alternatif.destroy', $item->id_alternatif)" />
+                                </div>
                             </td>
                         </tr>
                     </tbody>
