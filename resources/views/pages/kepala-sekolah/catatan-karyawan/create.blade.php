@@ -5,7 +5,16 @@
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
                 <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('catatanKaryawan.index') }}">Catatan Karyawan</a>
+                    href="{{ route('persetujuanPenilaian.index') }}">Persetujuan Penilaian</a>
+            </div>
+        </li>
+
+        <li aria-current="page">
+            <div class="flex items-center">
+                <x-atoms.svg.arrow-right />
+                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
+                    href="{{ route('persetujuanPenilaian.showTahun', ['firstYear' => substr($tahunAjaran, 0, 4), 'secondYear' => substr($tahunAjaran, 5)]) }}">Tahun
+                    Ajaran {!! $tahunAjaran !!}</a>
             </div>
         </li>
 
@@ -18,24 +27,31 @@
     </x-molecules.breadcrumb>
 
     <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Catatan Karyawan</h4>
+        <h4 class="mb-6 flex flex-col text-2xl font-semibold text-gray-900">Tambah Catatan Penilaian
+            {!! $penilaian->alternatifPertama->alternatifPertama->nama_alternatif !!}
+            Kepada
+            {!! $penilaian->alternatifKedua->alternatifPertama->nama_alternatif !!}
+            <p class="text-sm font-normal text-gray-900"><span class="align-super text-red-600">&Star;</span>Buatkan
+                catatan
+                karyawan
+                jika
+                status penilaian tidak
+                disetujui.</p>
+        </h4>
 
-        <form class="mt-8 space-y-6" action="{{ route('catatanKaryawan.store') }}" method="POST">
+        <form class="mt-8 space-y-6"
+            action="{{ route('persetujuanPenilaian.updateCatatan', $penilaian->id_penilaian) }}" method="POST">
+            @method('PUT')
             @csrf
+
+            <input name="id_penilaian" type="hidden" value="{{ $penilaian->id_penilaian }}">
+            <input name="status" type="hidden" value="Tidak Disetujui">
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="tahun ajaran">
                     Tahun Ajaran</label>
-                <select class="@error('tahun_ajaran') border-red-500 @enderror field-input-slate w-full"
-                    name="tahun_ajaran" required>
-
-                    <option selected disabled hidden>Pilih Tahun Ajaran</option>
-                    @foreach ($tahunAjaranPenilaian as $index => $tahun)
-                        <option value="{{ $tahun }}" {{ old('tahun_ajaran') == $tahun ? 'selected' : '' }}>
-                            {{ $tahun }}
-                        </option>
-                    @endforeach
-                </select>
+                <input class="@error('tahun_ajaran') border-red-500 @enderror field-input-slate w-full"
+                    name="tahun_ajaran" type="text" value="{{ $tahunAjaran }}" required @readonly(true)>
 
                 @error('tahun_ajaran')
                     <p class="invalid-feedback">
@@ -45,30 +61,9 @@
             </div>
 
             <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama karyawan">
-                    Nama Karyawan</label>
-                <select class="@error('kode_alternatif') border-red-500 @enderror field-input-slate w-full"
-                    name="kode_alternatif" required>
-
-                    <option selected disabled hidden>Pilih Nama Karyawan</option>
-                    @foreach ($pluckAlternatif as $index => $item)
-                        <option value="{{ $index }}" {{ old('kode_alternatif') == $index ? 'selected' : '' }}>
-                            {{ $item }}
-                        </option>
-                    @endforeach
-                </select>
-
-                @error('kode_alternatif')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="catatan">
                     Catatan</label>
-                <textarea class="field-input-slate w-full" name="catatan" placeholder="Catatan" rows="3" required>{{ old('catatan') }}</textarea>
+                <textarea class="field-input-slate w-full" name="catatan" placeholder="Catatan" rows="3" autofocus required>{{ old('catatan') }}</textarea>
 
                 @error('catatan')
                     <p class="invalid-feedback">
