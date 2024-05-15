@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('penilaian', function (Blueprint $table) {
-            $table->foreign('alternatif_pertama', 'fk_penilaian_alternatif_pertama_alternatif_kode_alternatif')
-                ->references('kode_alternatif')
-                ->on('alternatif')
+            $table->foreign('alternatif_pertama', 'fk_alternatif_pertama_group_penilaian')
+                ->references('alternatif_pertama')
+                ->on('group_penilaian')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
         });
 
         Schema::table('penilaian', function (Blueprint $table) {
-            $table->foreign('alternatif_kedua', 'fk_penilaian_alternatif_kedua_alternatif_kode_alternatif')
-                ->references('kode_alternatif')
-                ->on('alternatif')
+            $table->foreign('alternatif_kedua', 'fk_alternatif_kedua_group_penilaian')
+                ->references('alternatif_pertama')
+                ->on('group_penilaian')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
         });
@@ -34,11 +34,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('penilaian', function (Blueprint $table) {
-            $table->dropForeign('fk_penilaian_alternatif_pertama_alternatif_kode_alternatif');
+            $table->dropForeign('fk_alternatif_pertama_group_penilaian');
         });
 
         Schema::table('penilaian', function (Blueprint $table) {
-            $table->dropForeign('fk_penilaian_alternatif_kedua_alternatif_kode_alternatif');
+            $table->dropForeign('fk_alternatif_kedua_group_penilaian');
         });
     }
 };
