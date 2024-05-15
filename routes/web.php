@@ -1,23 +1,11 @@
 <?php
 
-use App\Http\Controllers\AlternatifController;
-use App\Http\Controllers\CatatanKaryawanController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GroupKaryawanController;
 use App\Http\Controllers\KelolaAkunController;
-use App\Http\Controllers\KriteriaController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\NilaiSkalaController;
 use App\Http\Controllers\PenilaianController;
-use App\Http\Controllers\PerhitunganAlternatifController;
 use App\Http\Controllers\PerhitunganKriteriaController;
 use App\Http\Controllers\PerhitunganSubkriteriaController;
-use App\Http\Controllers\PersetujuanPenilaianController;
-use App\Http\Controllers\RankingController;
-use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RiwayatPenilaianController;
-use App\Http\Controllers\SkalaIndikatorController;
-use App\Http\Controllers\SubkriteriaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,176 +19,44 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [LoginController::class, 'index'])->name('home.index')->middleware('guest');
+Route::controller(DashboardController::class)->name('dashboard.')->middleware('auth')->group(function () {
+    Route::get('/dashboard', 'index')->name('index')->middleware('user-role:superadmin,yayasan,kepala sekolah,deputi,guru,IT,admin');
 
-Route::controller(LoginController::class)->name('login.')->group(function () {
-    Route::get('/login', 'index')->name('index')->middleware('guest');
-    Route::post('/login', 'store')->name('store')->middleware('guest');
-    Route::post('/logout', 'logout')->name('logout')->middleware('auth');
+    Route::get('/dashboard/{kodeAlternatif}/getSelfRankChart', 'getSelfRankChart')->name('getSelfRankChart')->middleware('user-role:kepala sekolah,guru');
+
+    Route::get('/dashboard/{firstYear}/{secondYear}/getRankTahunAjaranChart', 'getRankTahunAjaranChart')->name('getRankTahunAjaranChart')->middleware('user-role:kepala sekolah,guru');
+    Route::get('/dashboard/{firstYear}/{secondYear}/getRankTahunAjaranTable', 'getRankTahunAjaranTable')->name('getRankTahunAjaranTable')->middleware('user-role:kepala sekolah,guru');
+
+    Route::get('/dashboard/{firstYear}/{secondYear}/{namaGroupKaryawan}/getRankTahunAjaranGroupChart', 'getRankTahunAjaranGroupChart')->name('getRankTahunAjaranGroupChart')->middleware('user-role:superadmin,yayasan,deputi,IT,admin');
+    Route::get('/dashboard/{firstYear}/{secondYear}/{namaGroupKaryawan}/getRankTahunAjaranGroupTable', 'getRankTahunAjaranGroupTable')->name('getRankTahunAjaranGroupTable')->middleware('user-role:superadmin,yayasan,deputi,IT,admin');
 });
 
-Route::controller(RegisterController::class)->name('register.')->middleware('guest')->group(function () {
-    Route::get('/register', 'index')->name('index');
-    Route::post('/register', 'store')->name('store');
-});
-
-Route::controller(DashboardController::class)->name('dashboard.')->middleware('auth', 'user-role:superadmin,yayasan,kepala sekolah,atasan langsung,guru,IT')->group(function () {
-    Route::get('/dashboard', 'index')->name('index');
-    Route::post('/dashboard', 'store')->name('store');
-
-    Route::get('/dashboard/{firstYear}/{secondYear}/getRankTahunAjaranChart', 'getRankTahunAjaranChart')->name('getRankTahunAjaranChart');
-    Route::get('/dashboard/{firstYear}/{secondYear}/getRankTahunAjaranTable', 'getRankTahunAjaranTable')->name('getRankTahunAjaranTable');
-});
-
-Route::controller(AlternatifController::class)->name('alternatif.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/data-alternatif', 'index')->name('index')->middleware('user-role:superadmin,atasan langsung');
-    Route::get('/dashboard/data-alternatif/view-alternatif/{id}', 'show')->name('show')->middleware('user-role:superadmin,atasan langsung');
-
-    Route::get('/dashboard/data-alternatif/tambah-alternatif', 'create')->name('create')->middleware('user-role:superadmin');
-    Route::post('/dashboard/data-alternatif', 'store')->name('store')->middleware('user-role:superadmin');
-
-    Route::get('/dashboard/data-alternatif/ubah-alternatif/{id}/edit', 'edit')->name('edit')->middleware('user-role:superadmin');
-    Route::put('/dashboard/data-alternatif/{id}', 'update')->name('update')->middleware('user-role:superadmin');
-
-    Route::delete('/dashboard/data-alternatif/{id}', 'destroy')->name('destroy')->middleware('user-role:superadmin');
-});
-
-Route::controller(GroupKaryawanController::class)->name('groupKaryawan.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/data-group-alternatif', 'index')->name('index')->middleware('user-role:superadmin,atasan langsung');
-    Route::get('/dashboard/data-group-alternatif/view-group-alternatif/{id}', 'show')->name('show')->middleware('user-role:superadmin,atasan langsung');
-
-    Route::get('/dashboard/data-group-alternatif/tambah-group-alternatif', 'create')->name('create')->middleware('user-role:superadmin');
-    Route::post('/dashboard/data-group-alternatif', 'store')->name('store')->middleware('user-role:superadmin');
-
-    Route::get('/dashboard/data-group-alternatif/ubah-group-alternatif/{id}/edit', 'edit')->name('edit')->middleware('user-role:superadmin');
-    Route::put('/dashboard/data-group-alternatif/{id}', 'update')->name('update')->middleware('user-role:superadmin');
-
-    Route::delete('/dashboard/data-group-alternatif/{id}', 'destroy')->name('destroy')->middleware('user-role:superadmin');
-
-    Route::get('/dashboard/data-group-alternatif/ubah-group-alternatif/{idGroupKaryawan}/getAlternatif', 'getAlternatif')->name('getAlternatif');
-});
-
-Route::controller(KriteriaController::class)->name('kriteria.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/data-kriteria', 'index')->name('index')->middleware('user-role:superadmin,atasan langsung');
-    Route::get('/dashboard/data-kriteria/view-kriteria/{id}', 'show')->name('show')->middleware('user-role:superadmin,atasan langsung');
-
-    Route::get('/dashboard/data-kriteria/tambah-kriteria', 'create')->name('create')->middleware('user-role:superadmin');
-    Route::post('/dashboard/data-kriteria', 'store')->name('store')->middleware('user-role:superadmin');
-
-    Route::get('/dashboard/data-kriteria/ubah-kriteria/{id}/edit', 'edit')->name('edit')->middleware('user-role:superadmin');
-    Route::put('/dashboard/data-kriteria/{id}', 'update')->name('update')->middleware('user-role:superadmin');
-
-    Route::delete('/dashboard/data-kriteria/{id}', 'destroy')->name('destroy')->middleware('user-role:superadmin');
-});
-
-Route::controller(SubkriteriaController::class)->name('subkriteria.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/data-subkriteria', 'index')->name('index')->middleware('user-role:superadmin,atasan langsung');
-    Route::get('/dashboard/data-subkriteria/view-subkriteria/{id}', 'show')->name('show')->middleware('user-role:superadmin,atasan langsung');
-
-    Route::get('/dashboard/data-subkriteria/tambah-subkriteria', 'create')->name('create')->middleware('user-role:superadmin');
-    Route::post('/dashboard/data-subkriteria', 'store')->name('store')->middleware('user-role:superadmin');
-
-    Route::get('/dashboard/data-subkriteria/ubah-subkriteria/{id}/edit', 'edit')->name('edit')->middleware('user-role:superadmin');
-    Route::put('/dashboard/data-subkriteria/{id}', 'update')->name('update')->middleware('user-role:superadmin');
-
-    Route::delete('/dashboard/data-subkriteria/{id}', 'destroy')->name('destroy')->middleware('user-role:superadmin');
-
-    Route::get('/dashboard/data-subkriteria/tambah-subkriteria/get-new-code-subkriteria', 'getnewCodeSubkriteria')->name('getnewCodeSubkriteria')->middleware('user-role:superadmin');
-});
-
-Route::controller(SkalaIndikatorController::class)->name('skalaIndikator.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/data-skala-indikator', 'index')->name('index')->middleware('user-role:superadmin,atasan langsung');
-    Route::get('/dashboard/data-skala-indikator/view-skala-indikator/{id}', 'show')->name('show')->middleware('user-role:superadmin,atasan langsung');
-
-    Route::get('/dashboard/data-skala-indikator/tambah-skala-indikator', 'create')->name('create')->middleware('user-role:superadmin');
-    Route::post('/dashboard/data-skala-indikator', 'store')->name('store')->middleware('user-role:superadmin');
-
-    Route::get('/dashboard/data-skala-indikator/ubah-skala-indikator/{id}/edit', 'edit')->name('edit')->middleware('user-role:superadmin');
-    Route::put('/dashboard/data-skala-indikator/{id}', 'update')->name('update')->middleware('user-role:superadmin');
-
-    Route::delete('/dashboard/data-skala-indikator/{id}', 'destroy')->name('destroy')->middleware('user-role:superadmin');
-
-    Route::get('/dashboard/data-skala-indikator/tambah-skala-indikator/{kodeSubkriteria}/getIndikatorSubkriteria', 'getIndikatorSubkriteria')->name('getIndikatorSubkriteria');
-});
-
-Route::controller(NilaiSkalaController::class)->name('nilaiSkala.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/data-skala-indikator/tambah-nilai-skala', 'create')->name('create')->middleware('user-role:superadmin');
-    Route::post('/dashboard/data-skala-indikator/tambah-nilai-skala', 'store')->name('store')->middleware('user-role:superadmin');
-
-    Route::get('/dashboard/data-skala-indikator/ubah-nilai-skala/edit', 'edit')->name('edit')->middleware('user-role:superadmin');
-    Route::put('/dashboard/data-skala-indikator/ubah-nilai-skala/edit', 'update')->name('update')->middleware('user-role:superadmin');
-});
-
-Route::controller(PenilaianController::class)->name('penilaian.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/data-penilaian', 'index')->name('index')->middleware('user-role:superadmin');
-    Route::get('/dashboard/data-penilaian/view-penilaian/{id}', 'show')->name('show')->middleware('user-role:superadmin');
-
-    Route::get('/dashboard/penilaian/introduction', 'welcome')->name('welcome')->middleware('user-role:atasan langsung,guru');
-    Route::get('/dashboard/penilaian/tambah-penilaian', 'create')->name('create')->middleware('user-role:atasan langsung,guru');
-    Route::post('/dashboard/data-penilaian', 'store')->name('store')->middleware('user-role:kepala sekolah,atasan langsung,guru');
-
-    Route::get('/dashboard/data-penilaian/ubah-penilaian/{id}/edit', 'edit')->name('edit');
-    Route::put('/dashboard/data-penilaian/{id}', 'update')->name('update');
+Route::controller(PenilaianController::class)->name('penilaian.')->middleware('auth', 'user-role:kepala sekolah,guru')->group(function () {
+    Route::get('/dashboard/penilaian/introduction', 'welcome')->name('welcome');
+    Route::get('/dashboard/penilaian/tambah-penilaian', 'create')->name('create');
     
-    Route::delete('/dashboard/data-penilaian/{id}', 'destroy')->name('destroy');
+    Route::post('/dashboard/penilaian/introduction', 'store')->name('store');
 });
 
-Route::controller(RiwayatPenilaianController::class)->name('riwayatPenilaian.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/riwayat-penilaian', 'index')->name('index')->middleware('user-role:guru');
-    Route::get('/dashboard/riwayat-penilaian/view-penilaian/{id}', 'show')->name('show')->middleware('user-role:guru');
+Route::controller(RiwayatPenilaianController::class)->name('riwayatPenilaian.')->middleware('auth', 'user-role:kepala sekolah,guru')->group(function () {
+    Route::get('/dashboard/riwayat-penilaian', 'index')->name('index');
+    Route::get('/dashboard/riwayat-penilaian/view-penilaian/{id}', 'show')->name('show');
     
     Route::get('/dashboard/riwayat-penilaian/{firstYear}/{secondYear}', 'showTahun')->name('showTahun');
 });
 
-Route::controller(PersetujuanPenilaianController::class)->name('persetujuanPenilaian.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/persetujuan-penilaian', 'index')->name('index')->middleware('user-role:kepala sekolah');
-    Route::get('/dashboard/persetujuan-penilaian/view-penilaian/{id}', 'show')->name('show')->middleware('user-role:kepala sekolah');
-
-    Route::get('/dashboard/persetujuan-penilaian/ubah-persetujuan-penilaian/{id}/edit', 'edit')->name('edit');
-    Route::put('/dashboard/persetujuan-penilaian/{id}', 'update')->name('update');
-
-    Route::get('/dashboard/persetujuan-penilaian/{firstYear}/{secondYear}', 'showTahun')->name('showTahun');
-});
-
-Route::controller(CatatanKaryawanController::class)->name('catatanKaryawan.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/catatan-karyawan', 'index')->name('index')->middleware('user-role:kepala sekolah');
-    Route::get('/dashboard/catatan-karyawan/{firstYear}/{secondYear}', 'showTahun')->name('showTahun');
-    
-    Route::get('/dashboard/catatan-karyawan/view-catatan-karyawan/{id}/detail', 'show')->name('show')->middleware('user-role:kepala sekolah');
-
-    Route::get('/dashboard/catatan-karyawan/tambah-catatan-karyawan', 'create')->name('create')->middleware('user-role:kepala sekolah');
-    Route::post('/dashboard/catatan-karyawan', 'store')->name('store')->middleware('user-role:kepala sekolah');
-
-    Route::get('/dashboard/catatan-karyawan/ubah-catatan-karyawan/{id}/edit', 'edit')->name('edit');
-    Route::put('/dashboard/catatan-karyawan/{id}', 'update')->name('update');
-
-    Route::delete('/dashboard/catatan-karyawan/{id}', 'destroy')->name('destroy')->middleware('user-role:kepala sekolah');
-});
-
 Route::controller(PerhitunganKriteriaController::class)->name('perhitunganKriteria.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/perhitungan-perbandingan-kriteria', 'index')->name('index')->middleware('user-role:superadmin,atasan langsung');
-    Route::get('/dashboard/perhitungan-perbandingan-kriteria/hasil-perbandingan-kriteria', 'hasil')->name('hasil')->middleware('user-role:superadmin,atasan langsung');
+    Route::get('/dashboard/perbandingan-kriteria', 'index')->name('index')->middleware('user-role:superadmin');
+    Route::get('/dashboard/perbandingan-kriteria/hasil-perbandingan-kriteria', 'hasil')->name('hasil')->middleware('user-role:superadmin,kepala sekolah');
 
-    Route::post('/dashboard/perhitungan-perbandingan-kriteria', 'store')->name('store')->middleware('user-role:superadmin');
+    Route::post('/dashboard/perbandingan-kriteria', 'store')->name('store')->middleware('user-role:superadmin');
 });
 
 Route::controller(PerhitunganSubkriteriaController::class)->name('perhitunganSubkriteria.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/perhitungan-perbandingan-subkriteria', 'index')->name('index')->middleware('user-role:superadmin,atasan langsung');
-    Route::get('/dashboard/perhitungan-perbandingan-subkriteria/hasil-perbandingan-subkriteria', 'hasil')->name('hasil')->middleware('user-role:superadmin,atasan langsung');
+    Route::get('/dashboard/perbandingan-subkriteria', 'index')->name('index')->middleware('user-role:superadmin');
+    Route::get('/dashboard/perbandingan-subkriteria/hasil-perbandingan-subkriteria', 'hasil')->name('hasil')->middleware('user-role:superadmin,kepala sekolah');
 
-    Route::post('/dashboard/perhitungan-perbandingan-subkriteria', 'store')->name('store')->middleware('user-role:superadmin');
-});
-
-Route::controller(PerhitunganAlternatifController::class)->name('perhitunganAlternatif.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/perhitungan-perbandingan-alternatif', 'index')->name('index')->middleware('user-role:superadmin,atasan langsung');
-    Route::get('/dashboard/perhitungan-perbandingan-alternatif/hasil-perbandingan-alternatif', 'hasil')->name('hasil')->middleware('user-role:superadmin,atasan langsung');
-
-    Route::post('/dashboard/perhitungan-perbandingan-alternatif', 'store')->name('store')->middleware('user-role:superadmin');
-});
-
-Route::controller(RankingController::class)->name('ranking.')->middleware('auth', 'user-role:superadmin,atasan langsung')->group(function () {
-    Route::get('/dashboard/perankingan', 'index')->name('index');
-    Route::post('/dashboard/perankingan', 'store')->name('store');
+    Route::post('/dashboard/perbandingan-subkriteria', 'store')->name('store')->middleware('user-role:superadmin');
 });
 
 Route::controller(KelolaAkunController::class)->name('kelolaAkun.')->middleware('auth', 'user-role:superadmin,IT')->group(function () {
