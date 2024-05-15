@@ -12,16 +12,17 @@ class PenilaianSeeder extends Seeder
      */
     public function run(): void
     {
-        $alternatif = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'];
+        $alternatifPertama = ['A28'];
+        $alternatifKedua = ['A28', 'A9', 'A36', 'A45'];
 
         $penilaian = [];
 
-        foreach ($alternatif as $alternatifPertama) {
-            foreach ($alternatif as $alternatifKedua) {
+        foreach ($alternatifPertama as $alternatif) {
+            foreach ($alternatifKedua as $alternatif2) {
                 $penilaian[] = [
                     'tahun_ajaran' => '2023/2024',
-                    'alternatif_pertama' => $alternatifPertama,
-                    'alternatif_kedua' => $alternatifKedua,
+                    'alternatif_pertama' => $alternatif,
+                    'alternatif_kedua' => $alternatif2,
                     'status' => 'Disetujui',                    
                     'created_at' => now(),
                     'updated_at' => now(),
