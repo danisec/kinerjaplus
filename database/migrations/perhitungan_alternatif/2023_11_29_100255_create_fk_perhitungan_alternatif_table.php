@@ -21,16 +21,16 @@ return new class extends Migration
 
         Schema::table('perhitungan_alternatif', function (Blueprint $table) {
             $table->foreign('alternatif_pertama', 'fk_perhitungan_alternatif_alternatif_pertama')
-                ->references('kode_alternatif')
-                ->on('alternatif')
+                ->references('alternatif_pertama')
+                ->on('group_penilaian')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
         });
 
         Schema::table('perhitungan_alternatif', function (Blueprint $table) {
             $table->foreign('alternatif_kedua', 'fk_perhitungan_alternatif_alternatif_kedua')
-                ->references('kode_alternatif')
-                ->on('alternatif')
+                ->references('alternatif_pertama')
+                ->on('group_penilaian')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
         });
@@ -46,11 +46,11 @@ return new class extends Migration
         });
 
         Schema::table('perhitungan_alternatif', function (Blueprint $table) {
-            $table->dropForeign('fk_alternatif_pertama');
+            $table->dropForeign('fk_perhitungan_alternatif_alternatif_pertama');
         });
 
         Schema::table('perhitungan_alternatif', function (Blueprint $table) {
-            $table->dropForeign('fk_alternatif_kedua');
+            $table->dropForeign('fk_perhitungan_alternatif_alternatif_kedua');
         });
     }
 };
