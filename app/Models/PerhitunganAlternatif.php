@@ -14,11 +14,11 @@ class PerhitunganAlternatif extends Model
 
     public function alternatifPertama()
     {
-        return $this->belongsTo(Alternatif::class, 'alternatif_pertama', 'kode_alternatif');
+        return $this->belongsTo(GroupKaryawanDetail::class, 'alternatif_pertama', 'kode_alternatif');
     }
 
     public function alternatifKedua()
     {
-        return $this->belongsTo(Alternatif::class, 'alternatif_kedua', 'kode_alternatif');
+        return $this->belongsTo(GroupKaryawanDetail::class, 'alternatif_kedua', 'kode_alternatif');
     }
 }
