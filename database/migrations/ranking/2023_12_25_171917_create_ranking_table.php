@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ranking', function (Blueprint $table) {
             $table->id('id_ranking');
             $table->string('tahun_ajaran', 9);
-            $table->string('kode_alternatif', 3);
+            $table->string('kode_alternatif', 4);
             $table->double('nilai');
             $table->integer('rank');
             $table->timestamps();

@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('ranking', function (Blueprint $table) {
-            $table->foreign('kode_alternatif', 'fk_ranking_kode_alternatif')
-                ->references('kode_alternatif')
-                ->on('alternatif')
+            $table->foreign('kode_alternatif', 'fk_kode_alternatif_ranking_group_penilaian')
+                ->references('alternatif_pertama')
+                ->on('group_penilaian')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
         });
@@ -26,7 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('ranking', function (Blueprint $table) {
-            $table->dropForeign('fk_ranking_nama_alternatif');
+            $table->dropForeign('fk_kode_alternatif_ranking_group_penilaian');
         });
     }
 };
