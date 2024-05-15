@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\BobotPrioritasAlternatif;
 use App\Models\BobotPrioritasSubkriteria;
+use App\Models\GroupKaryawan;
+use App\Models\GroupKaryawanDetail;
 use App\Models\Kriteria;
 use App\Models\Penilaian;
+use App\Models\PerhitunganAlternatif;
 use App\Models\Ranking;
 use App\Services\RankingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RankingController extends Controller
 {
@@ -22,8 +26,7 @@ class RankingController extends Controller
     private $tahunAjaran;
 
     public function __construct(RankingService $rankingService)
-    {
-        $this->alternatifPenilaian = Penilaian::with(['penilaianIndikator', 'penilaianIndikator.skalaIndikatorDetail.skalaIndikator.indikatorSubkriteria', 'penilaianIndikator.skalaIndikatorDetail.nilaiSkala', 'alternatifKedua'])->where('status', 'Disetujui')->get();
+    {      
         $this->kriteria = Kriteria::orderBy('kode_kriteria', 'asc')->get();
         $this->bobotAlternatif = BobotPrioritasAlternatif::orderBy('kode_kriteria', 'asc')->get();
         $this->bobotPrioritasSubkriteria = BobotPrioritasSubkriteria::with(['kriteria'])->get();
@@ -32,6 +35,7 @@ class RankingController extends Controller
         $currentMonth = date('m');
         $isAfterJune = $currentMonth >= 6;
         $currentYear = date('Y');
+        // $currentYear = date(2026);
         $lastYear = $currentYear - 1;
         $nextYear = $currentYear + 1;
         $this->tahunAjaran = $isAfterJune ? "$currentYear/$nextYear" : "$lastYear/$currentYear";
@@ -43,16 +47,47 @@ class RankingController extends Controller
     public function index()
     {
         $tahunAjaran = $this->tahunAjaran;
-        $alternatifPenilaian = $this->alternatifPenilaian;
+
+        // Cari nama alternatif berdasarkan group karyawan yang mana nama alternatif sama dengan nama auth user
+        $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
+        
+        // checkAuthAlternatif berada di dalam group karyawan yang mana
+        $checkGroupKaryawanId = null;
+        if (Auth::user()->role == 'kepala sekolah') {
+            $checkGroupKaryawanId = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->value('id_group_karyawan');
+        } elseif (Auth::user()->role == 'guru') {
+            $checkGroupKaryawanId = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->value('id_group_karyawan');
+        }
+
+        // Dapatkan penilaian yang memiliki group karyawan yang sama dengan group karyawan yang dimiliki oleh auth user  $checkGroupKaryawan
+        $alternatifPenilaian = Penilaian::with(['penilaianIndikator', 'penilaianIndikator.skalaIndikatorDetail.skalaIndikator.indikatorSubkriteria', 'penilaianIndikator.skalaIndikatorDetail.nilaiSkala', 'alternatifKedua', 'alternatifKedua.alternatifPertama'])->where('status', 'Disetujui')
+        ->whereHas('alternatifKedua', function ($query) use ($checkGroupKaryawanId) {
+            $query->where('id_group_karyawan', $checkGroupKaryawanId);
+        })->get();
+
+        // dd($alternatifPenilaian);
+
+        // Check apakah terdapat perhitungan_alternatif yang memiliki tahun_ajaran paling terbaru berdasarkan $tahunAjaran
+        $checkPerhitunganAlternatif = PerhitunganAlternatif::where('tahun_ajaran', $tahunAjaran)->get();
+        // dd($checkPerhitunganAlternatif);
+
         $kriteria = $this->kriteria;
-        $bobotAlternatif = $this->bobotAlternatif;
+
+        // Dapatkan bobot prioritas alternatif berdasarkan $tahunAjaran terbaru
+        $bobotAlternatif = BobotPrioritasAlternatif::where('tahun_ajaran', $tahunAjaran)->orderBy('kode_kriteria', 'asc')->get();
+
         $bobotPrioritasSubkriteria = $this->bobotPrioritasSubkriteria;
 
-        $uniqueAlternatifPenilaianByTahunAjaran = $alternatifPenilaian->filter(function ($item) use ($tahunAjaran) {
-            return $item->tahun_ajaran == $tahunAjaran;
+        // Dapatkan unique alternatif kedua penilaian yang memiliki group karyawan yang sama dengan group karyawan yang dimiliki oleh auth user  $checkGroupKaryawan
+        $uniqueAlternatifPenilaianByTahunAjaran = $alternatifPenilaian->filter(function ($item) use ($tahunAjaran, $checkGroupKaryawanId) {
+            return $item->tahun_ajaran == $tahunAjaran && $item->alternatifKedua->id_group_karyawan == $checkGroupKaryawanId;
         })->unique('alternatif_kedua');
 
+        // dd($uniqueAlternatifPenilaianByTahunAjaran);
+
         $totalBobotKriteria = $this->rankingService->totalBobotKriteria($uniqueAlternatifPenilaianByTahunAjaran, $kriteria, $bobotPrioritasSubkriteria, $bobotAlternatif);
+
+        // dd($totalBobotKriteria);
 
         /* ================= */
 
@@ -126,7 +161,7 @@ class RankingController extends Controller
         // Dapatkan alternatif kedua dan penilaianIndikator yang memiliki tahun_ajaran paling terbaru berdasarkan $tahunAjaran
         $getNilaiSkala = [];
         foreach ($alternatifPenilaianByTahunAjaran as $keyAlternatif => $alternatifPenilaianItem) {
-            $alternatifKedua = $alternatifPenilaianItem->alternatifKedua;
+            $alternatifKedua = $alternatifPenilaianItem->alternatifKedua->alternatifPertama;
             $penilaianIndikator = $alternatifPenilaianItem->penilaianIndikator;
 
             $getNilaiSkala[$keyAlternatif][$alternatifKedua->kode_alternatif] = $penilaianIndikator;
@@ -255,18 +290,24 @@ class RankingController extends Controller
 
         // Hitung total nilai setiap kode alternatif $totalNilaiKriteriaAlternatif
         // Rumus = $avgNilaiKriteria + $totalBobotKriteria
+        
         $totalNilaiAlternatif = [];
-        foreach ($totalNilaiKriteriaAlternatif as $kodeAlternatif => $totalNilaiKriteriaAlternatifItem) {
-            $totalNilaiAlternatif[$kodeAlternatif] = $totalNilaiKriteriaAlternatifItem + $totalBobotKriteria[$kodeAlternatif];
+        
+        // Check apakah perhitungan_alternatif ada atau tidak
+        if ($checkPerhitunganAlternatif->isEmpty()) {
+            $totalNilaiAlternatif = $totalNilaiKriteriaAlternatif;
+        } else {
+            foreach ($totalNilaiKriteriaAlternatif as $kodeAlternatif => $totalNilaiKriteriaAlternatifItem) {
+                $totalNilaiAlternatif[$kodeAlternatif] = $totalNilaiKriteriaAlternatifItem + $totalBobotKriteria[$kodeAlternatif];
+            }
         }
 
         // dd($totalNilaiAlternatif);
 
-
         // Urutkan $totalNilaiAlternatif secara descending (dari yang tertinggi)
         arsort($totalNilaiAlternatif);
 
-        // Urutkan ranking dari nilai terbesar ke terkecil
+        // // Urutkan ranking dari nilai terbesar ke terkecil
         $rank = 0;
         $prevTotal = 0;
         $rankAlternatif = [];
@@ -297,8 +338,14 @@ class RankingController extends Controller
         try {
             foreach ($totalNilaiAlternatifAndRankAlternatif as $kodeAlternatif => $totalNilaiAlternatifAndRankAlternatifItem) {
                 Ranking::updateOrCreate(
-                    ['tahun_ajaran' => $tahunAjaran, 'kode_alternatif' => $kodeAlternatif],
-                    ['nilai' => $totalNilaiAlternatifAndRankAlternatifItem['nilai'], 'rank' => $totalNilaiAlternatifAndRankAlternatifItem['rank']]
+                    [
+                        'tahun_ajaran' => $totalNilaiAlternatifAndRankAlternatifItem['tahun_ajaran'],
+                        'kode_alternatif' => $kodeAlternatif,
+                    ],
+                    [
+                        'nilai' => $totalNilaiAlternatifAndRankAlternatifItem['nilai'],
+                        'rank' => $totalNilaiAlternatifAndRankAlternatifItem['rank'],
+                    ]
                 );
             }
         } catch (\Throwable $th) {
@@ -306,11 +353,12 @@ class RankingController extends Controller
             return back()->with('notif', $notif);
         }
         
-        return view('pages.dashboard.ranking.index', [
+        return view('pages.kepala-sekolah.ranking.index', [
             'title' => 'Perankingan',
             'tahunAjaran' => $tahunAjaran,
             'alternatifPenilaian' => $uniqueAlternatifPenilaianByTahunAjaran,
             'kriteria' => $kriteria,
+            'checkPerhitunganAlternatif' => $checkPerhitunganAlternatif,
             'bobotAlternatif' => $bobotAlternatif,
             'bobotPrioritasSubkriteria' => $bobotPrioritasSubkriteria,
             'totalBobotKriteria' => $totalBobotKriteria,
