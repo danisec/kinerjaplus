@@ -29,26 +29,32 @@
                     <th class="px-6 py-3" scope="col">
                         Tahun Ajaran
                     </th>
+                    <th class="px-6 py-3" scope="col">
+                        Nama Group Karyawan
+                    </th>
                     <th class="px-6 py-3 text-center" scope="colgroup">
                         Aksi
                     </th>
                 </tr>
             </thead>
 
-            @if ($penilaianAlternatifGroupedByTahun != null && $penilaianAlternatifGroupedByTahun->count() > 0)
-                @foreach ($penilaianAlternatifGroupedByTahun as $index => $tahun)
+            @if ($penilaianGroupedByTahun != null && $penilaianGroupedByTahun->count() > 0)
+                @foreach ($penilaianWithGroupKaryawan as $index => $item)
                     <tbody>
                         <tr class="border-b bg-white hover:bg-slate-100">
                             <th class="whitespace-nowrap px-6 py-4 font-medium text-gray-900" scope="row">
                                 {{ $index + 1 }}
                             </th>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $tahun }}
+                                {{ $item['tahun'] }}
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                {{ $item['namaGroupKaryawan'] }}
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
                                     <a class="font-medium text-gray-600"
-                                        href="{{ route('riwayatPenilaian.showTahun', ['firstYear' => substr($tahun, 0, 4), 'secondYear' => substr($tahun, 5)]) }}"
+                                        href="{{ route('riwayatPenilaian.showTahun', ['firstYear' => substr($item['tahun'], 0, 4), 'secondYear' => substr($item['tahun'], 5)]) }}"
                                         @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
                                         <x-atoms.svg.eye />
                                     </a>
