@@ -40,7 +40,7 @@
                     <th class="px-6 py-3" scope="col">
                         Nama Pengguna
                     </th>
-                    <th class="px-6 py-3" scope="col">
+                    <th class="w-40 px-6 py-3 text-center" scope="col">
                         Peran
                     </th>
                     <th class="flex justify-center px-6 py-3" scope="col">
@@ -62,8 +62,24 @@
                             <td class="px-6 py-4">
                                 {{ $item->username }}
                             </td>
-                            <td class="px-6 py-4">
-                                {{ $item->role }}
+                            <td class="px-6 py-4 text-center">
+                                <p
+                                    class="{{ $item->role == 'superadmin' || $item->role == 'admin'
+                                        ? 'bg-red-100/40 text-red-600'
+                                        : ($item->role == 'yayasan'
+                                            ? 'bg-emerald-100/40 text-emerald-600'
+                                            : ($item->role == 'deputi'
+                                                ? 'bg-violet-100/40 text-violet-600'
+                                                : ($item->role == 'kepala sekolah'
+                                                    ? 'bg-lime-100/40 text-lime-600'
+                                                    : ($item->role == 'guru'
+                                                        ? 'bg-fuchsia-100/40 text-fuchsia-600'
+                                                        : ($item->role == 'IT'
+                                                            ? 'bg-blue-100/40 text-blue-600'
+                                                            : ''))))) }} whitespace-nowrap rounded-full px-2.5 py-1 capitalize">
+
+                                    {{ $item->role }}
+                                </p>
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
