@@ -17,7 +17,7 @@
                 <x-molecules.search :placeholder="'Cari Tahun Catatan Karyawan'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
             </div>
 
-            <div>
+            <div class="hidden">
                 <a href="{{ route('catatanKaryawan.create') }}">
                     <x-atoms.button.button-primary :customClass="'h-12 w-60 rounded-md'" :type="'button'" :name="'Tambah Catatan Karyawan'" />
                 </a>
@@ -35,6 +35,9 @@
                     <th class="px-6 py-3" scope="col">
                         Tahun Ajaran
                     </th>
+                    <th class="px-6 py-3" scope="col">
+                        Nama Group Karyawan
+                    </th>
                     <th class="flex justify-center px-6 py-3" scope="col">
                         Aksi
                     </th>
@@ -43,18 +46,21 @@
 
             <tbody>
                 @if ($catatanKaryawan != null && $catatanKaryawan->count() > 0)
-                    @foreach ($catatanKaryawan as $index => $tahun)
+                    @foreach ($catatanWithGroupKaryawan as $index => $item)
                         <tr class="border-b bg-white hover:bg-slate-100">
                             <th class="whitespace-nowrap px-6 py-4 font-medium text-gray-900" scope="row">
                                 {{ $index + 1 }}
                             </th>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $tahun }}
+                                {{ $item['tahun'] }}
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                {{ $item['namaGroupKaryawan'] }}
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
                                     <a class="font-medium text-gray-600"
-                                        href="{{ route('catatanKaryawan.showTahun', ['firstYear' => substr($tahun, 0, 4), 'secondYear' => substr($tahun, 5)]) }}"
+                                        href="{{ route('catatanKaryawan.showTahun', ['firstYear' => substr($item['tahun'], 0, 4), 'secondYear' => substr($item['tahun'], 5)]) }}"
                                         @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
                                         <x-atoms.svg.eye />
                                     </a>
