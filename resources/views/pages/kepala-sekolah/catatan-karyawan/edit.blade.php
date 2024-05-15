@@ -18,12 +18,18 @@
     </x-molecules.breadcrumb>
 
     <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Ubah Catatan Karyawan</h4>
+        <h4 class="mb-6 flex flex-col text-2xl font-semibold text-gray-900">Ubah Catatan Penilaian
+            {!! $catatanKaryawan->penilaian->alternatifPertama->alternatifPertama->nama_alternatif !!}
+            Kepada
+            {!! $catatanKaryawan->penilaian->alternatifKedua->alternatifPertama->nama_alternatif !!}
+        </h4>
 
         <form class="mt-8 space-y-6"
             action="{{ route('catatanKaryawan.update', $catatanKaryawan->id_catatan_karyawan) }}" method="POST">
             @method('PUT')
             @csrf
+
+            <input name="id_penilaian" type="hidden" value="{{ $catatanKaryawan->id_penilaian }}">
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="tahun ajaran">
@@ -33,28 +39,6 @@
                     @readonly(true)>
 
                 @error('tahun_ajaran')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama karyawan">
-                    Nama Karyawan</label>
-                <select class="@error('kode_alternatif') border-red-500 @enderror field-input-slate w-full"
-                    name="kode_alternatif" required>
-
-                    <option selected disabled hidden>Pilih Nama Karyawan</option>
-                    @foreach ($pluckAlternatif as $index => $item)
-                        <option value="{{ $index }}"
-                            {{ $catatanKaryawan->kode_alternatif == $index ? 'selected' : '' }}>
-                            {{ $item }}
-                        </option>
-                    @endforeach
-                </select>
-
-                @error('kode_alternatif')
                     <p class="invalid-feedback">
                         {{ $message }}
                     </p>
@@ -74,7 +58,7 @@
             </div>
 
             <div class="flex flex-row gap-4">
-                <a href="{{ route('catatanKaryawan.index') }}">
+                <a href="{{ url()->previous() }}">
                     <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
                 </a>
                 <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Ubah'" />
