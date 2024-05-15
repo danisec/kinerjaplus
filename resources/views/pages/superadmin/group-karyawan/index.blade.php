@@ -17,13 +17,11 @@
                 <x-molecules.search :placeholder="'Cari Group Karyawan'" :request="request('nama_group_karyawan')" :name="'nama_group_karyawan'" :value="request('nama_group_karyawan')" />
             </div>
 
-            @if (Auth::user()->role === 'superadmin')
-                <div>
-                    <a href="{{ route('groupKaryawan.create') }}">
-                        <x-atoms.button.button-primary :customClass="'h-12 w-56 rounded-md'" :type="'button'" :name="'Tambah Group Karyawan'" />
-                    </a>
-                </div>
-            @endif
+            <div>
+                <a href="{{ route('groupKaryawan.create') }}">
+                    <x-atoms.button.button-primary :customClass="'h-12 w-56 rounded-md'" :type="'button'" :name="'Tambah Group Karyawan'" />
+                </a>
+            </div>
         </div>
     </div>
 
@@ -36,6 +34,9 @@
                     </th>
                     <th class="px-6 py-3" scope="col">
                         Nama Group Karyawan
+                    </th>
+                    <th class="px-6 py-3" scope="col">
+                        Kepala Sekolah
                     </th>
                     <th class="flex justify-center px-6 py-3" scope="col">
                         Aksi
@@ -53,6 +54,9 @@
                             <td class="px-6 py-4">
                                 {{ $item->nama_group_karyawan }}
                             </td>
+                            <td class="px-6 py-4">
+                                {{ $item->alternatif->nama_alternatif }}
+                            </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
                                     <a class="font-medium text-gray-600"
@@ -67,31 +71,29 @@
                                     </div>
                                 </div>
 
-                                @if (Auth::user()->role === 'superadmin')
-                                    <div x-data="{ showTooltip: false }">
-                                        <a class="font-medium text-blue-600"
-                                            href="{{ route('groupKaryawan.edit', $item->id_group_karyawan) }}"
-                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                                            <x-atoms.svg.pen />
-                                        </a>
+                                <div x-data="{ showTooltip: false }">
+                                    <a class="font-medium text-blue-600"
+                                        href="{{ route('groupKaryawan.edit', $item->id_group_karyawan) }}"
+                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                        <x-atoms.svg.pen />
+                                    </a>
 
-                                        <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
-                                            x-show="showTooltip">
-                                            <span>Ubah</span>
-                                        </div>
+                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
+                                        x-show="showTooltip">
+                                        <span>Ubah</span>
                                     </div>
+                                </div>
 
-                                    <div x-data="{ isOpen: false }">
-                                        <button class="text-red-600 focus:outline-none" type="button"
-                                            @click="isOpen = true">
-                                            <x-atoms.svg.trash />
-                                        </button>
+                                <div x-data="{ isOpen: false }">
+                                    <button class="text-red-600 focus:outline-none" type="button"
+                                        @click="isOpen = true">
+                                        <x-atoms.svg.trash />
+                                    </button>
 
-                                        <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus group karyawan : ' .
-                                            $item->nama_group_karyawan .
-                                            ' ?'" :action="route('groupKaryawan.destroy', $item->id_group_karyawan)" />
-                                    </div>
-                                @endif
+                                    <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus group karyawan : ' .
+                                        $item->nama_group_karyawan .
+                                        ' ?'" :action="route('groupKaryawan.destroy', $item->id_group_karyawan)" />
+                                </div>
                             </td>
                         </tr>
                     </tbody>
