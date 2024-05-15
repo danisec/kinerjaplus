@@ -61,7 +61,7 @@ class User extends Authenticatable
     protected function role(): Attribute
     {
         return new Attribute(
-            get: fn ($value) =>  ['superadmin', 'yayasan', 'kepala sekolah', 'atasan langsung', 'guru', 'IT'][$value],
+            get: fn ($value) =>  ['superadmin', 'yayasan', 'deputi', 'kepala sekolah', 'guru', 'IT', 'admin'][$value],
         );
     }
 }
