@@ -56,7 +56,7 @@
                                     <td class="px-3 py-3 text-center">
                                         @if ($subkriteria1->id_subkriteria == $subkriteria2->id_subkriteria)
                                             <input
-                                                class="w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                class="w-20 rounded-md border-none bg-slate-100 text-center text-emerald-500 focus:ring-slate-100"
                                                 type="text" value="1" readonly>
                                         @else
                                             @php

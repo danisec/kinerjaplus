@@ -50,7 +50,7 @@
                                         <td class="border px-3 py-4 text-center">
                                             @if ($item->id_subkriteria == $comparison->id_subkriteria)
                                                 <input
-                                                    class="w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                    class="w-20 rounded-md border-none bg-slate-100 text-center text-emerald-500 focus:ring-slate-100"
                                                     name="matriks[{{ $item->kode_kriteria }}][{{ $item->kode_subkriteria }}][{{ $comparison->kode_subkriteria }}]"
                                                     type="text" value="1" @readonly(true)>
                                             @else
@@ -95,7 +95,7 @@
                                         <td class="px-3 py-3 text-center">
                                             @if ($subkriteria1->id_subkriteria == $subkriteria2->id_subkriteria)
                                                 <input
-                                                    class="w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                    class="w-20 rounded-md border-none bg-slate-100 text-center text-emerald-500 focus:ring-slate-100"
                                                     name="matriks[{{ $subkriteria1->kode_subkriteria }}][{{ $subkriteria2->kode_subkriteria }}]"
                                                     type="text" value="1" @readonly(true)>
                                             @else
