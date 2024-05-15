@@ -74,10 +74,10 @@
                                 {{ $item->tahun_ajaran }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $item->alternatifPertama->nama_alternatif }}
+                                {{ $item->alternatifPertama->alternatifPertama->nama_alternatif }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $item->alternatifKedua->nama_alternatif }}
+                                {{ $item->alternatifKedua->alternatifPertama->nama_alternatif }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 text-center">
                                 <div class="flex items-center justify-center">
@@ -117,9 +117,9 @@
                                     </button>
 
                                     <x-molecules.modal-update :title="'Ubah Status Persetujuan Penilaian : ' .
-                                        $item->alternatifPertama->nama_alternatif .
+                                        $item->alternatifPertama->alternatifPertama->nama_alternatif .
                                         ' Kepada ' .
-                                        $item->alternatifKedua->nama_alternatif .
+                                        $item->alternatifKedua->alternatifPertama->nama_alternatif .
                                         ' Tahun Ajaran ' .
                                         $item->tahun_ajaran .
                                         ' ?'" :action="route('persetujuanPenilaian.update', $item->id_penilaian)" :modalId="'modal_' . $item->id_penilaian">
@@ -137,11 +137,25 @@
                                             </div>
 
                                             <div>
-                                                <button
-                                                    class="updateStatusButton rounded-md bg-red-700 px-8 py-2.5 text-white hover:bg-red-600 focus:bg-red-600 focus:ring-red-600"
-                                                    data-status="Tidak Disetujui" type="button">
-                                                    Tidak Disetujui
-                                                </button>
+                                                @if ($item->catatanKaryawan != null)
+                                                    <a
+                                                        href="{{ route('catatanKaryawan.edit', $item->catatanKaryawan->id_catatan_karyawan) }}">
+                                                        <button
+                                                            class="updateStatusButton rounded-md bg-red-700 px-8 py-2.5 text-white hover:bg-red-600 focus:bg-red-600 focus:ring-red-600"
+                                                            data-status="Tidak Disetujui" type="button">
+                                                            Tidak Disetujui
+                                                        </button>
+                                                    </a>
+                                                @else
+                                                    <a
+                                                        href="{{ route('persetujuanPenilaian.createCatatan', ['firstYear' => substr($tahunAjaranBreadcrumbs, 0, 4), 'secondYear' => substr($tahunAjaranBreadcrumbs, 5), 'id' => $item->id_penilaian]) }}">
+                                                        <button
+                                                            class="updateStatusButton rounded-md bg-red-700 px-8 py-2.5 text-white hover:bg-red-600 focus:bg-red-600 focus:ring-red-600"
+                                                            data-status="Tidak Disetujui" type="button">
+                                                            Tidak Disetujui
+                                                        </button>
+                                                    </a>
+                                                @endif
                                             </div>
                                         </div>
                                     </x-molecules.modal-update>
