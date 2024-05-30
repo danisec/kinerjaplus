@@ -22,7 +22,7 @@ return new class extends Migration
         Schema::table('penilaian_indikator', function (Blueprint $table) {
             $table->foreign('id_skala_indikator_detail', 'fk_penilaian_id_skala_indikator_detail')
                 ->references('id_skala_indikator_detail')
-                ->on('skala_indikator')
+                ->on('skala_indikator_detail')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
         });

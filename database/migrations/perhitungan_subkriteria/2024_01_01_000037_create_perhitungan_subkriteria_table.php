@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subkriteria', function (Blueprint $table) {
-            $table->id('id_subkriteria');
+        Schema::create('perhitungan_subkriteria', function (Blueprint $table) {
+            $table->id('id_perhitungan_subkriteria');
             $table->string('kode_kriteria', 3);
-            $table->string('kode_subkriteria', 6)->index();
-            $table->string('nama_subkriteria', 255);
-            $table->string('deskripsi_subkriteria', 2000);
-            $table->double('bobot_subkriteria');
+            $table->string('subkriteria_pertama', 6);
+            $table->string('subkriteria_kedua', 6);
+            $table->double('nilai_subkriteria');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subkriteria');
+        Schema::dropIfExists('perhitungan_subkriteria');
     }
 };
