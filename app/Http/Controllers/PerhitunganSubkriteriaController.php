@@ -75,10 +75,10 @@ class PerhitunganSubkriteriaController extends Controller
                 }
             }
 
-            $notif = notify()->success('Data perbandingan sub kriteria berhasil disimpan');
+            $notif = notify()->success('Data perbandingan subkriteria berhasil disimpan');
             return redirect()->route('perhitunganSubkriteria.hasil')->withInput()->with('notif', $notif);
         } catch (\Throwable $th) {
-            $notif = notify()->error('Data perbandingan sub kriteria gagal disimpan');
+            $notif = notify()->error('Data perbandingan subkriteria gagal disimpan');
             return redirect()->route('perhitunganSubkriteria.index')->withInput()->with('notif', $notif);
         }
     }
