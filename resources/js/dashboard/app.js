@@ -35,11 +35,8 @@ if (
 // Memeriksa apakah currentUser ada dan role-nya adalah "superadmin", "yayasan", "deputi", "IT", atau "admin"
 if (
     window.currentUser &&
-    (window.currentUser.role === "superadmin" ||
-        window.currentUser.role === "yayasan" ||
-        window.currentUser.role === "deputi" ||
-        window.currentUser.role === "IT" ||
-        window.currentUser.role === "admin")
+    (window.currentUser.role === "yayasan" ||
+        window.currentUser.role === "deputi")
 ) {
     // Memeriksa apakah pengguna berada di dashboard
     if (
