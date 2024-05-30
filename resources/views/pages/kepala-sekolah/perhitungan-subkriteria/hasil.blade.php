@@ -268,14 +268,8 @@
             </div>
         @endforeach
 
-        @if (Auth::user()->role === 'superadmin' || Auth::user()->role === 'atasan langsung')
-            @if ($consistencyRatio['Consistency Ratio (CR)'][$kodeKriteria] <= 0.1)
-                <div class="flex justify-end">
-                    <a href="{{ route('perhitunganAlternatif.index') }}">
-                        <x-atoms.button.button-primary :customClass="'h-12 w-80 rounded-md'" :type="'button'" :name="'Lanjutkan ke Perbandingan Alternatif'" />
-                    </a>
-                </div>
-            @else
+        @if (in_array(Auth::user()->role, ['superadmin']))
+            @if ($consistencyRatio['Consistency Ratio (CR)'][$kodeKriteria] >= 0.1)
                 <div class="flex justify-start">
                     <a href="{{ route('perhitunganSubkriteria.index') }}">
                         <x-atoms.button.button-primary :customClass="'h-12 w-80 rounded-md'" :type="'button'" :name="'Kembali ke Perbandingan Subkriteria'" />
