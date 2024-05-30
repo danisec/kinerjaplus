@@ -1,6 +1,4 @@
-if (
-    window.location.pathname == "/dashboard/perhitungan-perbandingan-kriteria"
-) {
+if (window.location.pathname == "/dashboard/perbandingan-kriteria") {
     import("./calculateMatriks")
         .then((module) => {})
         .catch((error) => {
