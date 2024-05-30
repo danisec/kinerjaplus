@@ -43,22 +43,30 @@ class DashboardController extends Controller
         $tahunAjaran = $this->tahunAjaran;
         $tahunAjaranRanking = $this->ranking->pluck('tahun_ajaran')->unique()->sortDesc();
 
-        if (in_array(Auth::user()->role, ['superadmin', 'yayasan', 'deputi', 'IT', 'admin'])){
+        if (in_array(Auth::user()->role, ['superadmin', 'IT', 'admin'])){
+
+            return view('pages.dashboard.home.index-admin', [
+                'title' => 'Dashboard',
+                'countUser' => User::count(),
+                'countAlternatif' => Alternatif::count(),
+                'countKriteria' => Kriteria::count(),
+                'countSubkriteria' => Subkriteria::count(),
+                'alternatif' => Alternatif::orderBy('id_alternatif', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
+                'user' => User::orderBy('role', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
+            ]);
+        }
+
+        if (in_array(Auth::user()->role, ['yayasan', 'deputi'])){
             
             $namaGroupKaryawan = GroupKaryawan::pluck('nama_group_karyawan');
             $getFirstNamaGroupKaryawan = GroupKaryawan::first();
 
             return view('pages.dashboard.home.index-group', [
                 'title' => 'Dashboard',
-                'countUser' => User::count(),
-                'countAlternatif' => Alternatif::count(),
-                'countKriteria' => Kriteria::count(),
-                'countSubkriteria' => Subkriteria::count(),
                 'currentTahunAjaran' => $tahunAjaran,
                 'tahunAjaranRanking' => $tahunAjaranRanking,
                 'namaGroupKaryawan' => $namaGroupKaryawan,
                 'firstNamaGroupKaryawan' => $getFirstNamaGroupKaryawan,
-                'user' => User::orderBy('role', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
             ]);
         }
 
