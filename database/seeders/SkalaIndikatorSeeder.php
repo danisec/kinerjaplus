@@ -138,6 +138,31 @@ class SkalaIndikatorSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'id_indikator_subkriteria' => 26,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id_indikator_subkriteria' => 27,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id_indikator_subkriteria' => 28,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id_indikator_subkriteria' => 29,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id_indikator_subkriteria' => 30,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
 
         foreach ($skalaIndikator as $data) {
