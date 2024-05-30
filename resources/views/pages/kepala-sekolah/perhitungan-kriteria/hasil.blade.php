@@ -246,7 +246,7 @@
             </table>
         </div>
 
-        @if (Auth::user()->role === 'superadmin' || Auth::user()->role === 'atasan langsung')
+        @if (in_array(Auth::user()->role, ['superadmin']))
             @if ($consistencyData['Consistency Ratio (CR)'] <= 0.1)
                 <div class="flex justify-end">
                     <a href="{{ route('perhitunganSubkriteria.index') }}">
