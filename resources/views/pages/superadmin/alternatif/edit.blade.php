@@ -46,10 +46,10 @@
                     name="nama_alternatif" required>
 
                     @foreach ($namaKaryawan as $item)
-                        @if (in_array($item->role, ['kepala sekolah', 'atasan langsung', 'guru']))
-                            <option value="{{ $item->fullname }}"
+                        @if (!in_array($item->role, ['superadmin', 'admin', 'IT']))
+                            <option class="capitalize" value="{{ $item->fullname }}"
                                 {{ $alternatif->nama_alternatif == $item->fullname ? 'selected' : '' }}>
-                                {{ $item->fullname }}
+                                {{ $item->fullname . ' - ' . $item->role }}
                             </option>
                         @endif
                     @endforeach
