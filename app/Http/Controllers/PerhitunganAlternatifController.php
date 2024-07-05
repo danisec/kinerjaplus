@@ -153,63 +153,67 @@ class PerhitunganAlternatifController extends Controller
     {
         $tahunAjaran = $this->tahunAjaran;
 
-        // Buat cache remember untuk data hasil query
-        $result = Cache::remember('hasil_perhitungan_alternatif_'.$tahunAjaran, 60, function () use ($tahunAjaran) {
-            // Query untuk mendapatkan data yang diperlukan
-            $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
-            
-            $checkGroupKaryawanId = null;
-            if (Auth::user()->role == 'kepala sekolah') {
-                $checkGroupKaryawanId = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->value('id_group_karyawan');
-            } elseif (Auth::user()->role == 'guru') {
-                $checkGroupKaryawanId = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->value('id_group_karyawan');
-            }
+        // Query untuk mendapatkan data yang diperlukan
+        $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
+        
+        $checkGroupKaryawanId = null;
+        if (in_array(Auth::user()->role, ['kepala sekolah'])) {
+            $checkGroupKaryawanId = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->value('id_group_karyawan');
+        } elseif (in_array(Auth::user()->role, [
+                'yayasan',
+                'deputi',
+                'guru',
+                'tata usaha tenaga pendidikan',
+                'tata usaha non tenaga pendidikan',
+                'kerohanian tenaga pendidikan',
+                'kerohanian non tenaga pendidikan',
+            ])) {
+            $checkGroupKaryawanId = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->value('id_group_karyawan');
+        }
 
-            $alternatifGroupedByGroupPenilaian = GroupPenilaian::with(['alternatifPertama'])
-                ->where('id_group_karyawan', $checkGroupKaryawanId)
-                ->get();
+        $alternatifGroupedByGroupPenilaian = GroupPenilaian::with(['alternatifPertama'])
+            ->where('id_group_karyawan', $checkGroupKaryawanId)
+            ->get();
 
-            $alternatifPenilaian = collect($alternatifGroupedByGroupPenilaian)
-                ->filter(function ($value) {
-                    return isset($value->alternatifPertama);
-                })
-                ->map(function ($value) {
-                    return [
-                        'nama_alternatif' => $value->alternatifPertama->nama_alternatif,
-                        'kode_alternatif' => $value->alternatif_pertama,
-                        'id_alternatif' => $value->alternatifPertama->id_alternatif,
-                    ];
-                })->toArray();
+        $alternatifPenilaian = collect($alternatifGroupedByGroupPenilaian)
+            ->filter(function ($value) {
+                return isset($value->alternatifPertama);
+            })
+            ->map(function ($value) {
+                return [
+                    'nama_alternatif' => $value->alternatifPertama->nama_alternatif,
+                    'kode_alternatif' => $value->alternatif_pertama,
+                    'id_alternatif' => $value->alternatifPertama->id_alternatif,
+                ];
+            })->toArray();
 
-            // Mengurutkan $alternatifPenilaian berdasarkan kode alternatif
-            usort($alternatifPenilaian, function ($a, $b) {
-                return strnatcmp($a['kode_alternatif'], $b['kode_alternatif']);
-            });
-
-            $kriteria = $this->kriteria;
-
-            $perhitunganAlternatif = $this->perhitunganAlternatif->where('tahun_ajaran', $tahunAjaran)->get();
-
-            $totalKolomAlternatif = $this->perhitunganAlternatifService->totalKolomAlternatif($perhitunganAlternatif);
-            $normalisasiMatriks = $this->perhitunganAlternatifService->normalisasiMatriks($perhitunganAlternatif, $totalKolomAlternatif);
-
-            $totalBarisNormalisasiMatriks = $this->perhitunganAlternatifService->totalBarisNormalisasiMatriks($normalisasiMatriks);
-            $bobotPrioritasAlternatif = $this->perhitunganAlternatifService->bobotPrioritasAlternatif($totalBarisNormalisasiMatriks, $alternatifGroupedByGroupPenilaian, $tahunAjaran);
-
-            // dd($bobotPrioritasAlternatif);
-
-            // Mengembalikan data yang akan disimpan dalam cache
-            return [
-                'alternatif' => $alternatifPenilaian,
-                'kriteria' => $kriteria,
-                'perhitunganAlternatif' => $perhitunganAlternatif,
-                'totalKolomAlternatif' => $totalKolomAlternatif,
-                'normalisasiMatriks' => $normalisasiMatriks,
-                'bobotPrioritasAlternatif' => $bobotPrioritasAlternatif,
-            ];
+        // Mengurutkan $alternatifPenilaian berdasarkan kode alternatif
+        usort($alternatifPenilaian, function ($a, $b) {
+            return strnatcmp($a['kode_alternatif'], $b['kode_alternatif']);
         });
 
-        return view('pages.kepala-sekolah.perhitungan-alternatif.hasil', array_merge(['title' => 'Hasil Perbandingan Karyawan', 'tahunAjaran' => $tahunAjaran], $result));
+        $kriteria = $this->kriteria;
+
+        $perhitunganAlternatif = $this->perhitunganAlternatif->where('tahun_ajaran', $tahunAjaran)->get();
+
+        $totalKolomAlternatif = $this->perhitunganAlternatifService->totalKolomAlternatif($perhitunganAlternatif);
+        $normalisasiMatriks = $this->perhitunganAlternatifService->normalisasiMatriks($perhitunganAlternatif, $totalKolomAlternatif);
+
+        $totalBarisNormalisasiMatriks = $this->perhitunganAlternatifService->totalBarisNormalisasiMatriks($normalisasiMatriks);
+        $bobotPrioritasAlternatif = $this->perhitunganAlternatifService->bobotPrioritasAlternatif($totalBarisNormalisasiMatriks, $alternatifGroupedByGroupPenilaian, $tahunAjaran);
+
+        // return data ke array
+        $resultArray = [
+            'tahunAjaran' => $tahunAjaran,
+            'alternatif' => $alternatifPenilaian,
+            'kriteria' => $kriteria,
+            'perhitunganAlternatif' => $perhitunganAlternatif,
+            'totalKolomAlternatif' => $totalKolomAlternatif,
+            'normalisasiMatriks' => $normalisasiMatriks,
+            'bobotPrioritasAlternatif' => $bobotPrioritasAlternatif,
+        ];
+
+        return view('pages.kepala-sekolah.perhitungan-alternatif.hasil', array_merge(['title' => 'Hasil Perbandingan Karyawan'], $resultArray));
     }
 
     /**
