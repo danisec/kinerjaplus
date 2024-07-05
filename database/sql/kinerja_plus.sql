@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 30, 2024 at 08:54 PM
+-- Generation Time: Jun 07, 2024 at 01:15 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.18
 
@@ -29,16 +29,80 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `alternatif` (
   `id_alternatif` bigint UNSIGNED NOT NULL,
-  `kode_alternatif` varchar(4) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_alternatif` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `jenis_kelamin` enum('Laki-laki','Perempuan') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_alternatif` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_alternatif` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_kelamin` enum('Laki-laki','Perempuan') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tanggal_masuk_kerja` date NOT NULL,
   `nip` bigint NOT NULL,
-  `jabatan` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pendidikan` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jabatan` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pendidikan` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `alternatif`
+--
+
+INSERT INTO `alternatif` (`id_alternatif`, `kode_alternatif`, `nama_alternatif`, `jenis_kelamin`, `tanggal_masuk_kerja`, `nip`, `jabatan`, `pendidikan`, `created_at`, `updated_at`) VALUES
+(1, 'A1', 'Mary Wahyuningsih, S.Kom', 'Perempuan', '2001-07-01', 101001, 'Deputi 1', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(2, 'A2', 'Lucia Sutarni, S.Pd', 'Perempuan', '2004-07-01', 402002, 'Kepala Sekolah TK', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(3, 'A3', 'Irmina Sihura', 'Perempuan', '2005-07-01', 502003, 'Guru', 'D3', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(4, 'A4', 'Rita Sofiani', 'Perempuan', '2006-04-01', 604004, 'Tata Usaha', 'SMA', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(5, 'A5', 'Hendriette Aphrodite Naomi Angelique Salakory', 'Perempuan', '2006-07-01', 602005, 'Guru', 'PGTK', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(6, 'A6', 'Tiyas Wulandari, S.Psi', 'Perempuan', '2008-07-01', 802008, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(7, 'A7', 'Selamat, M.Pd', 'Laki-laki', '2009-07-01', 901009, 'Deputi 2', 'S2', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(8, 'A8', 'Tek Hok, S.Kom', 'Laki-laki', '2010-01-01', 1002016, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(9, 'A9', 'Leni Sihombing, S.Pd', 'Perempuan', '2010-07-01', 1002018, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(10, 'A10', 'Diyah Kartika S,S.H', 'Perempuan', '2011-07-01', 1102026, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(11, 'A11', 'Muddin Sidabalok, S.Pd', 'Laki-laki', '2011-07-01', 1102030, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(12, 'A12', 'Ninik Kristoermadiarsih, M.M', 'Perempuan', '2011-10-17', 1102035, 'Kepala Sekolah SD', 'S2', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(13, 'A13', 'Christina Puloraran', 'Perempuan', '2012-01-25', 1202040, 'Guru', 'PGTK', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(14, 'A14', 'Triyono, S.E, M.Div', 'Laki-laki', '2012-07-01', 1202043, 'Kerohanian', 'S2', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(15, 'A15', 'Tanasia. S.Th', 'Perempuan', '2012-07-01', 1202044, 'Guru', 'S2', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(16, 'A16', 'Lusiana Sele, S.Pd', 'Perempuan', '2012-07-01', 1202047, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(17, 'A17', 'Iria Kharisma Joseph, ST', 'Laki-laki', '2012-07-01', 1202049, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(18, 'A18', 'Lisa Julita Mokosandi, S.Th', 'Perempuan', '2013-07-01', 1302072, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(19, 'A19', 'Theresia Rusmiyati', 'Perempuan', '2013-07-01', 1302075, 'Guru', 'D3', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(20, 'A20', 'Elna Santosa Manuel', 'Perempuan', '2013-07-01', 1304077, 'Tata Usaha', 'SMA', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(21, 'A21', 'Yacobus Santana, S.Pd', 'Laki-laki', '2014-07-01', 1402085, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(22, 'A22', 'R.AB.Susi Hastono, S.E', 'Laki-laki', '2014-07-01', 1402087, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(23, 'A23', 'Marusaha Samosir, S.Pd', 'Laki-laki', '2014-07-01', 1402089, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(24, 'A24', 'Aprilliana Grace Wilma Thenu, S.Sos', 'Perempuan', '2014-07-01', 1402092, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(25, 'A25', 'Gani Praditja Sakti, S.Pd', 'Laki-laki', '2015-07-01', 1502101, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(26, 'A26', 'Fransisca X.Suharti, S.Pd', 'Laki-laki', '2015-07-01', 1502104, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(27, 'A27', 'Kristiani Dwi Nugrohowati Djatiningsih, S.E', 'Perempuan', '2015-10-01', 1502107, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(28, 'A28', 'Elisabeth, S.Pd', 'Perempuan', '2016-07-01', 1602108, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(29, 'A29', 'Sovia Nainggolan, M.Pd', 'Perempuan', '2016-07-01', 1602111, 'Kepala Sekolah SMP', 'S2', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(30, 'A30', 'Cornelius Wiwit, S.Pd', 'Laki-laki', '2016-07-01', 1602112, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(31, 'A31', 'Artha Maulina Rochendraty, S.Pd', 'Perempuan', '2016-07-01', 1602123, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(32, 'A32', 'Siti Limaria Silaban, S.Pd', 'Perempuan', '2016-07-01', 1602125, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(33, 'A33', 'Steven Evan Edifianto, S.Pd', 'Laki-laki', '2016-07-01', 1602126, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(34, 'A34', 'Delinda', 'Perempuan', '2016-07-01', 1604128, 'Tata Usaha', 'SMA', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(35, 'A35', 'Linda Tiur Mauly, M.M', 'Perempuan', '2017-07-01', 1702138, 'Guru', 'S2', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(36, 'A36', 'Jaka Winarta,M.Div', 'Laki-laki', '2017-07-01', 1702139, 'Kerohanian', 'S2', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(37, 'A37', 'Heri Prasetya, S.Pd', 'Laki-laki', '2018-07-01', 1802143, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(38, 'A38', 'Martha Septiningtyas, S.Pd, M.Hum.', 'Perempuan', '2018-07-01', 1802145, 'Guru', 'S2', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(39, 'A39', 'Pesta Maria Siburian, S.Pd', 'Perempuan', '2019-07-01', 1902151, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(40, 'A40', 'Ronica Sales Julianti Siahaan, S.Pd', 'Perempuan', '2019-07-01', 1902152, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(41, 'A41', 'Roslinah, S.Pd', 'Perempuan', '2019-07-01', 1902154, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(42, 'A42', 'Elvina Br. Manik, S.Pd', 'Perempuan', '2020-07-01', 2002161, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(43, 'A43', 'Rian Hendri Tupamahu, S.Pd', 'Laki-laki', '2020-07-01', 2002163, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(44, 'A44', 'Rachel Oktaviani Hutahaean, S.Pd', 'Perempuan', '2021-01-01', 2102164, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(45, 'A45', 'Prima Caesar, B.Ed, S.Pd.', 'Perempuan', '2020-07-01', 2102165, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(46, 'A46', 'Dhea Khanti Nathali', 'Perempuan', '2021-10-01', 2102166, 'Tata Usaha', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(47, 'A47', 'Jelda Febrina Sesfaot, S.Pd', 'Perempuan', '2021-01-01', 2102167, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(48, 'A48', 'Romi Poire Sihotang, S.Kom', 'Laki-laki', '2022-01-01', 2102168, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(49, 'A49', 'Sriningsih Hutabarat, S.Pd', 'Perempuan', '2023-07-01', 2307201, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(50, 'A50', 'Theresa Christina Yoel, S.Pd', 'Perempuan', '2023-07-01', 2307202, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(51, 'A51', 'Erni Maduma BR Marbun, S.Pd', 'Perempuan', '2023-07-01', 2307203, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(52, 'A52', 'Tanty Chandra Siregar, S.Pd', 'Perempuan', '2023-07-01', 2307204, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(53, 'A53', 'Agnes Paul, S.Pd', 'Perempuan', '2023-07-01', 2307205, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(54, 'A54', 'Missy Friska Margaretha', 'Perempuan', '2024-04-17', 2407209, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(55, 'A55', 'Andre Saputra Julianto', 'Laki-laki', '2024-04-22', 2407210, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(56, 'A56', 'Yeny Irawati', 'Perempuan', '2024-06-01', 2402211, 'Tata Usaha', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(57, 'A57', 'Ekam Sehari Manalu', 'Laki-laki', '2024-07-01', 2407212, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59'),
+(58, 'A58', 'Odaligo Zega', 'Laki-laki', '2024-07-01', 2407213, 'Guru', 'S1', '2024-06-06 19:30:59', '2024-06-06 19:30:59');
 
 -- --------------------------------------------------------
 
@@ -48,9 +112,9 @@ CREATE TABLE `alternatif` (
 
 CREATE TABLE `bobot_prioritas_alternatif` (
   `id_bobot_prioritas_alternatif` bigint UNSIGNED NOT NULL,
-  `tahun_ajaran` varchar(9) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_kriteria` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_alternatif` varchar(4) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tahun_ajaran` varchar(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_kriteria` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_alternatif` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `bobot_prioritas` double NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -75,9 +139,9 @@ CREATE TABLE `bobot_prioritas_kriteria` (
 --
 
 INSERT INTO `bobot_prioritas_kriteria` (`id_bobot_prioritas_kriteria`, `id_kriteria`, `bobot_prioritas`, `created_at`, `updated_at`) VALUES
-(1, 1, 0.8214, '2024-05-30 13:16:45', '2024-05-30 13:16:45'),
-(2, 2, 0.13093333333333, '2024-05-30 13:16:45', '2024-05-30 13:16:45'),
-(3, 3, 0.0476, '2024-05-30 13:16:45', '2024-05-30 13:16:45');
+(1, 1, 0.65543333333333, '2024-05-30 21:00:12', '2024-05-30 21:00:12'),
+(2, 2, 0.1867, '2024-05-30 21:00:12', '2024-05-30 21:00:12'),
+(3, 3, 0.15773333333333, '2024-05-30 21:00:12', '2024-05-30 21:00:12');
 
 -- --------------------------------------------------------
 
@@ -87,8 +151,7 @@ INSERT INTO `bobot_prioritas_kriteria` (`id_bobot_prioritas_kriteria`, `id_krite
 
 CREATE TABLE `bobot_prioritas_subkriteria` (
   `id_bobot_prioritas_subkriteria` bigint UNSIGNED NOT NULL,
-  `kode_kriteria` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_subkriteria` bigint UNSIGNED NOT NULL,
+  `kode_kriteria` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `bobot_prioritas` double NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -103,8 +166,8 @@ CREATE TABLE `bobot_prioritas_subkriteria` (
 CREATE TABLE `catatan_karyawan` (
   `id_catatan_karyawan` bigint UNSIGNED NOT NULL,
   `id_penilaian` bigint UNSIGNED NOT NULL,
-  `tahun_ajaran` varchar(9) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `catatan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tahun_ajaran` varchar(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `catatan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -117,11 +180,11 @@ CREATE TABLE `catatan_karyawan` (
 
 CREATE TABLE `failed_jobs` (
   `id` bigint UNSIGNED NOT NULL,
-  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `uuid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -133,8 +196,8 @@ CREATE TABLE `failed_jobs` (
 
 CREATE TABLE `group_karyawan` (
   `id_group_karyawan` bigint UNSIGNED NOT NULL,
-  `nama_group_karyawan` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kepala_sekolah` varchar(4) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_group_karyawan` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kepala_sekolah` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -148,7 +211,7 @@ CREATE TABLE `group_karyawan` (
 CREATE TABLE `group_karyawan_detail` (
   `id_group_karyawan_detail` bigint UNSIGNED NOT NULL,
   `id_group_karyawan` bigint UNSIGNED NOT NULL,
-  `kode_alternatif` varchar(4) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_alternatif` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -162,7 +225,7 @@ CREATE TABLE `group_karyawan_detail` (
 CREATE TABLE `group_penilaian` (
   `id_group_penilaian` bigint UNSIGNED NOT NULL,
   `id_group_karyawan` bigint UNSIGNED NOT NULL,
-  `alternatif_pertama` varchar(4) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alternatif_pertama` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -176,7 +239,7 @@ CREATE TABLE `group_penilaian` (
 CREATE TABLE `group_penilaian_detail` (
   `id_group_penilaian_detail` bigint UNSIGNED NOT NULL,
   `id_group_penilaian` bigint UNSIGNED NOT NULL,
-  `alternatif_kedua` varchar(4) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alternatif_kedua` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -189,8 +252,8 @@ CREATE TABLE `group_penilaian_detail` (
 
 CREATE TABLE `indikator_subkriteria` (
   `id_indikator_subkriteria` bigint UNSIGNED NOT NULL,
-  `kode_subkriteria` varchar(6) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `indikator_subkriteria` varchar(2000) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_subkriteria` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `indikator_subkriteria` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -239,8 +302,8 @@ INSERT INTO `indikator_subkriteria` (`id_indikator_subkriteria`, `kode_subkriter
 
 CREATE TABLE `jobs` (
   `id` bigint UNSIGNED NOT NULL,
-  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `attempts` tinyint UNSIGNED NOT NULL,
   `reserved_at` int UNSIGNED DEFAULT NULL,
   `available_at` int UNSIGNED NOT NULL,
@@ -255,8 +318,8 @@ CREATE TABLE `jobs` (
 
 CREATE TABLE `kriteria` (
   `id_kriteria` bigint UNSIGNED NOT NULL,
-  `kode_kriteria` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_kriteria` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_kriteria` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_kriteria` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `bobot_kriteria` double NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -279,7 +342,7 @@ INSERT INTO `kriteria` (`id_kriteria`, `kode_kriteria`, `nama_kriteria`, `bobot_
 
 CREATE TABLE `migrations` (
   `id` int UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -343,7 +406,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `nilai_skala` (
   `id_nilai_skala` bigint UNSIGNED NOT NULL,
-  `skala` enum('1','2','3','4') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `skala` enum('1','2','3','4') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `nilai_skala` double NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -366,8 +429,8 @@ INSERT INTO `nilai_skala` (`id_nilai_skala`, `skala`, `nilai_skala`, `created_at
 --
 
 CREATE TABLE `password_reset_tokens` (
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -379,10 +442,10 @@ CREATE TABLE `password_reset_tokens` (
 
 CREATE TABLE `penilaian` (
   `id_penilaian` bigint UNSIGNED NOT NULL,
-  `tahun_ajaran` varchar(9) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `alternatif_pertama` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `alternatif_kedua` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('Disetujui','Tidak Disetujui') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tahun_ajaran` varchar(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alternatif_pertama` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alternatif_kedua` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('Disetujui','Tidak Disetujui') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -409,9 +472,9 @@ CREATE TABLE `penilaian_indikator` (
 
 CREATE TABLE `perhitungan_alternatif` (
   `id_perhitungan_alternatif` bigint UNSIGNED NOT NULL,
-  `kode_kriteria` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `alternatif_pertama` varchar(4) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `alternatif_kedua` varchar(4) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_kriteria` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alternatif_pertama` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alternatif_kedua` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `nilai_alternatif` double NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -425,8 +488,8 @@ CREATE TABLE `perhitungan_alternatif` (
 
 CREATE TABLE `perhitungan_kriteria` (
   `id_perhitungan_kriteria` bigint UNSIGNED NOT NULL,
-  `kriteria_pertama` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kriteria_kedua` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kriteria_pertama` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kriteria_kedua` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `nilai_kriteria` double NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -455,7 +518,7 @@ INSERT INTO `perhitungan_kriteria` (`id_perhitungan_kriteria`, `kriteria_pertama
 
 CREATE TABLE `perhitungan_subkriteria` (
   `id_perhitungan_subkriteria` bigint UNSIGNED NOT NULL,
-  `kode_kriteria` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_kriteria` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `subkriteria_pertama` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `subkriteria_kedua` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `nilai_subkriteria` double NOT NULL,
@@ -571,11 +634,11 @@ INSERT INTO `perhitungan_subkriteria` (`id_perhitungan_subkriteria`, `kode_krite
 
 CREATE TABLE `personal_access_tokens` (
   `id` bigint UNSIGNED NOT NULL,
-  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tokenable_id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `abilities` text COLLATE utf8mb4_unicode_ci,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -590,8 +653,8 @@ CREATE TABLE `personal_access_tokens` (
 
 CREATE TABLE `ranking` (
   `id_ranking` bigint UNSIGNED NOT NULL,
-  `tahun_ajaran` varchar(9) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_alternatif` varchar(4) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tahun_ajaran` varchar(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_alternatif` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `nilai` double NOT NULL,
   `rank` int NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -696,8 +759,8 @@ INSERT INTO `skala_indikator` (`id_skala_indikator`, `id_indikator_subkriteria`,
 CREATE TABLE `skala_indikator_detail` (
   `id_skala_indikator_detail` bigint UNSIGNED NOT NULL,
   `id_skala_indikator` bigint UNSIGNED NOT NULL,
-  `skala` enum('1','2','3','4') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `deskripsi_skala` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `skala` enum('1','2','3','4') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi_skala` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -836,9 +899,9 @@ INSERT INTO `skala_indikator_detail` (`id_skala_indikator_detail`, `id_skala_ind
 
 CREATE TABLE `subkriteria` (
   `id_subkriteria` bigint UNSIGNED NOT NULL,
-  `kode_kriteria` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_subkriteria` varchar(6) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_subkriteria` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_kriteria` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_subkriteria` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_subkriteria` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `deskripsi_subkriteria` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `bobot_subkriteria` double NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -873,13 +936,13 @@ INSERT INTO `subkriteria` (`id_subkriteria`, `kode_kriteria`, `kode_subkriteria`
 
 CREATE TABLE `users` (
   `id` bigint UNSIGNED NOT NULL,
-  `fullname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `fullname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `role` int NOT NULL DEFAULT '0',
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -890,7 +953,65 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `fullname`, `username`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Admin', 'admin', 'admin@gmail.com', NULL, '$2y$10$qxeM/thbQubgj21C8dFQI.I.6z3I1LLVXdU/iomCSxP88LnH01Amy', 0, NULL, '2024-05-30 17:02:18', '2024-05-30 10:05:13', NULL);
+(1, 'admin', 'admin', 'admin@gmail.com', NULL, '$2y$10$WFfzYwXdQ60KnYqAKOmUKepWymcFdc54sZnEDA224GaeLw5u2a3/a', 0, NULL, '2024-06-06 12:10:39', '2024-06-06 12:10:39', NULL),
+(2, 'Mary Wahyuningsih, S.Kom', 'mary', 'marywahyuningsih@gmail.com', NULL, '$2y$10$ZSUqsuciKFZYc228tXY3V.zZgkJuDporuwLfRO0XGQL.XUBMZapsy', 2, NULL, '2024-06-06 12:10:39', '2024-06-06 12:10:39', NULL),
+(3, 'Lucia Sutarni, S.Pd', 'lucia', 'luciasutarni@gmail.com', NULL, '$2y$10$d2V24.OROVH/ekQd2mwvyeu27pNLn8bkoaV66PrNS8KrJmPXSf1Je', 3, NULL, '2024-06-06 12:10:39', '2024-06-06 12:10:39', NULL),
+(4, 'Irmina Sihura', 'irmina', 'irminasihura@gmail.com', NULL, '$2y$10$2oQiSIAFr9YaxW1dPczPKuXxhgX5vHcyl90XKC1E2Lr0FSSQh6Rba', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(5, 'Rita Sofiani', 'rita', 'ritasofiani@gmail.com', NULL, '$2y$10$C4GBM0cj6us/9t0tJIopoOPMZRCo4Bh50wuQKMhZtqcrdkGjnPyFy', 7, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(6, 'Hendriette Aphrodite Naomi Angelique Salakory', 'hendriette', 'hendriette@gmail.com', NULL, '$2y$10$bAHLy0n0Pdco389KetJQWe8uHFyuN85Z7pIOMuN4r.bK./C3akrVe', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(7, 'Tiyas Wulandari, S.Psi', 'tiyas', 'tiyaswulandari@gmail.com', NULL, '$2y$10$RMViEPBBJaQHaaBuYL.xreGN5AnjSJLW3Up0TSFr1RiROLGTcbnfq', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(8, 'Selamat, M.Pd', 'selamat', 'selamat@gmail.com', NULL, '$2y$10$GWDxKEamIMol8/QEmzE1p.s8R1Fha9zeyDmCnFB0PgC/0wb2/7U52', 2, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(9, 'Tek Hok, S.Kom', 'tekhok', 'tekhok@gmail.com', NULL, '$2y$10$L9QieHhn7Hr0DyCxzjJbsuWZiTmTmYzuKvGw4A6.tLMVlUtFZ8psG', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(10, 'Leni Sihombing, S.Pd', 'leni', 'lenisihombing@gmail.com', NULL, '$2y$10$hJFcjO0nex9rtij1KFSvN.ivReU/j3sXo30.eCwUDCxuNb9cCGmOu', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(11, 'Diyah Kartika S,S.H', 'diyah', 'diyahkartika@gmail.com', NULL, '$2y$10$OH9RXcI8JWLgcv/oQdMR0e3V9v7vc/cwPUdLpQeW/8FFody8ZkJBO', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(12, 'Muddin Sidabalok, S.Pd', 'muddin', 'muddinsidabalok@gmail.com', NULL, '$2y$10$UGwqpFtTUzOKk6hRYArZV.HPh8zypT0NkpHGBIAErnwqlB2C4bN/y', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(13, 'Ninik Kristoermadiarsih, M.M', 'ninik', 'ninikkristoermadiarsih@gmail.com', NULL, '$2y$10$4AhRr2CTWQmcRxhMoUvavuSr1mj7IGosvD1C2KHpaHwSAZPb/n9DW', 3, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(14, 'Christina Puloraran', 'christina', 'christinapuloraran@gmail.com', NULL, '$2y$10$X3kyedTlaJeA.facFivDc.abxa9GqPOO41jU.t1xUdFRXKiGcWIRC', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(15, 'Triyono, S.E, M.Div', 'triyono', 'triyono@gmail.com', NULL, '$2y$10$MABjpF5d6yMnC04o8Vl4gOuu2WZj3okQ9Fvof9Xbh838hb7zlYQOi', 9, NULL, '2024-06-06 12:10:40', '2024-06-06 18:53:00', NULL),
+(16, 'Tanasia. S.Th', 'tanasia', 'tanasia@gmail.com', NULL, '$2y$10$3jMLyuIlW.I8hb54tf7lKeZZCrhzdqAl0r/cFdjEm66jjzWK3Bw86', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(17, 'Lusiana Sele, S.Pd', 'lusiana', 'lusiana@gmail.com', NULL, '$2y$10$gH/2o0dd9E0IbTpGBFDgZeDFrMJjp5oAI2PZFB0xHNvu1YwhTs26i', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(18, 'Iria Kharisma Joseph, ST', 'iria', 'iriakharismajoseph@gmail.com', NULL, '$2y$10$/yAZROJUgFrST2b4K5tSk.jMxfSf2W1kl3ej5GHv6LCY4x5Jl7cXa', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(19, 'Lisa Julita Mokosandi, S.Th', 'lisa', 'lisajulitamokosandi@gmail.com', NULL, '$2y$10$taCKfbaPxM7j5moLtHaBz.jFkW6unrqncVruuC5sb4eGh6UNpQpwO', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(20, 'Theresia Rusmiyati', 'theresia', 'theresia@gmail.com', NULL, '$2y$10$m1/Sb.FZm4zeq2LWUnre/.FsKoR/Z2ubVjdeljTM3rm.kRtwH5D42', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(21, 'Elna Santosa Manuel', 'elna', 'elna@gmail.com', NULL, '$2y$10$kIQmVG27lYN5W2MP5.ZpreJzJkgfW37J5ZR3cf1dancyCOuSDBwVa', 7, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(22, 'Yacobus Santana, S.Pd', 'yacobus', 'yacobussantana@gmail.com', NULL, '$2y$10$8p5SvnYFgGJbqsKZLugLyON7MEiF34GFeR96aKuzZDbP/nrwzmEGG', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(23, 'R.AB.Susi Hastono, S.E', 'susi', 'susihastono@gmail.com', NULL, '$2y$10$WP3GWTKfs8ldD4Y8Mdckf.tZe6dyaFv1ccOSxIGXmNGNuJtbwrmj.', 4, NULL, '2024-06-06 12:10:40', '2024-06-06 12:10:40', NULL),
+(24, 'Marusaha Samosir, S.Pd', 'marusaha', 'marusahasamosir@gmail.com', NULL, '$2y$10$vvkShWwlPPwjI1XyKCQosuuhkvNznUgFoWGJPZ4Twf2S8oLUMxuMe', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(25, 'Aprilliana Grace Wilma Thenu, S.Sos', 'aprilliana', 'aprillianagrace@gmail.com', NULL, '$2y$10$hYVQB6bU4MqudJdWMUuXmOKhHA1S.tQl2XECW3wGjpUf/nWICpBYi', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(26, 'Gani Praditja Sakti, S.Pd', 'gani', 'ganipraditjasakti@gmail.com', NULL, '$2y$10$YEkBlz3hQwzsYstIhVsM7.E3EiB9vYzTw6JMrYbRsdSCubaROiOwy', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(27, 'Fransisca X.Suharti, S.Pd', 'fransisca', 'fransisca@gmail.com', NULL, '$2y$10$/Nvp1/6pcmXrgkSt9O1cmOz4EJ551w64Jd3KPRvZ0LQ1SlTUb7yPC', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(28, 'Kristiani Dwi Nugrohowati Djatiningsih, S.E', 'kristiana', 'kristiana@gmail.com', NULL, '$2y$10$4nxgy3inhTm3m2bGHyznceh3oMwED3fHbqPyaSd6AhhMYE9XsyWYu', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(29, 'Elisabeth, S.Pd', 'elisabeth', 'elisabeth@gmail.com', NULL, '$2y$10$Vr2QQptHawCGe6Zs5IvtQuRIOpE4Smu6TAPMGAOOwqhzo26RFpS4m', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(30, 'Sovia Nainggolan, M.Pd', 'sovia', 'sovianainggolan@gmail.com', NULL, '$2y$10$.Icx4Y8p0NE0Jt3XM56dqeF5GOAmmO1as64PQdP0LxT7enB93Yn0u', 3, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(31, 'Cornelius Wiwit, S.Pd', 'cornelius', 'corneliuswiwit@gmail.com', NULL, '$2y$10$R9nfaTxgPjBM6BCV/epMZOnj3c2WSGzJks14.xBSYOCHqghsRdZ/i', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(32, 'Artha Maulina Rochendraty, S.Pd', 'artha', 'arthamaulina@gmail.com', NULL, '$2y$10$dNnIrUsz/SECb3yLwIDKo.FvtNfBJ1vqwjbndEgUMd34oF0QFLGbC', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(33, 'Siti Limaria Silaban, S.Pd', 'siti', 'sitilimariasilaban@gmail.com', NULL, '$2y$10$sfeIpPm6y70/JWU8nnuC8u6Oj98oM6S8Ba0/jX3u20bONZGn.S9gm', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(34, 'Steven Evan Edifianto, S.Pd', 'stevan', 'stevanevanedifianto@gmail.com', NULL, '$2y$10$qQnnBBDC5AMEph3jEiTV2uoxBqWBHt6P.r4/rWJ2KfBqFIHWTvlOC', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(35, 'Delinda', 'delinda', 'delinda@gmail.com', NULL, '$2y$10$1p5dTKP6wDEbf4n1bMoAA.q1qJy.0oBOBqc6fnSWhtdaQQk0en6eC', 7, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(36, 'Linda Tiur Mauly, M.M', 'linda', 'lindatiurmauly@gmail.com', NULL, '$2y$10$T6Rx5i4G5NgBYaNONXjrmO5m9DTfWgolBn.P3RFpQednUcTKfayYy', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(37, 'Jaka Winarta,M.Div', 'jaka', 'jakawinarta@gmail.com', NULL, '$2y$10$pEqwgWL3XbPuttU6DF5ZiuAEA8NtjDkZtXC5IX.W6ko9L4LlBp6ye', 10, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(38, 'Heri Prasetya, S.Pd', 'heri', 'heriprasetya@gmail.com', NULL, '$2y$10$rnwTnfzfC0pd4kqzO1a6aumW1I0LH78ttv24LZUWVMwAxSo0B/tW2', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(39, 'Martha Septiningtyas, S.Pd, M.Hum.', 'martha', 'marthaseptiningtyas@gmail.com', NULL, '$2y$10$W.ypxn5GtHuhKgYP/AmFqeIVvfZ.ODFhfDl55E0OqDM/PIp8NokMS', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(40, 'Pesta Maria Siburian, S.Pd', 'pesta', 'pestamariasiburian@gmail.com', NULL, '$2y$10$yzkcaMftcSzLwZXoZU2bbexiFHOC1AVPM.WS1s0A4ZWJstgMhGpom', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(41, 'Ronica Sales Julianti Siahaan, S.Pd', 'ronica', 'ronicasales@gmail.com', NULL, '$2y$10$THCkjx7oteHrE8Gfdnl/Ne1J9kxmFefo/zOPQv1aOuS6ePG9FM6F.', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(42, 'Roslinah, S.Pd', 'roslinah', 'roslinah@gmail.com', NULL, '$2y$10$z4jZ2lJyBkQu/uutZdKZieuINsKrYHVdlxX6ZSgd/cpkBB9JXQ8ZG', 4, NULL, '2024-06-06 12:10:41', '2024-06-06 12:10:41', NULL),
+(43, 'Elvina Br. Manik, S.Pd', 'elvina', 'elvina@gmail.com', NULL, '$2y$10$FB7ZuHWicQTf1dEqxvmU.u4KdupJS/BMn92kRKaMooWDWJ9mWb5/e', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(44, 'Rian Hendri Tupamahu, S.Pd', 'rian', 'rianhendritupamahu@gmail.com', NULL, '$2y$10$k7Jy6VBO/BhgNjKh.zBMzuwstTjxB7B6qbsZewKcM3tIzWPgNGeG2', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(45, 'Rachel Oktaviani Hutahaean, S.Pd', 'rachel', 'racheloktavianihutahaean@gmail.com', NULL, '$2y$10$M6KD1eylyXBjHE5Br6/iweN3LanQZkJwtB2nAE2TW4cYSR2BGi0IC', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(46, 'Prima Caesar, B.Ed, S.Pd.', 'prima', 'primacaesar@gmail.com', NULL, '$2y$10$RwOXJ98Hze0Uoe.S.avC4.cxyC0dd1tDQS3JxrCKjja0kEDHDYIWO', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(47, 'Dhea Khanti Nathali', 'dhea', 'dheakhantinathali@gmail.com', NULL, '$2y$10$hCsqCkxadrXfirh9.VErFeauKabtUaZG/wxN/YmyQyQnSuXr7gebq', 7, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(48, 'Jelda Febrina Sesfaot, S.Pd', 'jelda', 'jeldafebrinasesfaoti@gmail.com', NULL, '$2y$10$mgV3LZ66dcNE8ay/ERoRPeasWEu8Ty9yWSd/Hpoz8sGKJJSS6FqdC', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(49, 'Romi Poire Sihotang, S.Kom', 'romi', 'romipoiresihotang@gmail.com', NULL, '$2y$10$O4TwbAYE4bJ1SG/GrIwpOerUv4.P70xp.ORj.EgrZldQgsIE2ePES', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(50, 'Sriningsih Hutabarat, S.Pd', 'sriningsih', 'sriningsihhutabarat@gmail.com', NULL, '$2y$10$MqCFxV.WQXPH727egV/KROn3Bf2wedzQ/IY5icKG4f8mMIi2bxu.S', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(51, 'Theresa Christina Yoel, S.Pd', 'theresa', 'theresachristinayoel@gmail.com', NULL, '$2y$10$u1dxZlAjvdUu7tce3i5Eqex2o9h2nSgr7zDufFXcom1eLWfEvKqIa', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(52, 'Erni Maduma BR Marbun, S.Pd', 'erni', 'ernimaduma@gmail.com', NULL, '$2y$10$wmelZpcY294wOK4kD7lAwOZ4in3Y.lRtfXOhrWldIpF45tYj5rBbC', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(53, 'Tanty Chandra Siregar, S.Pd', 'tanty', 'tantychandrasiregar@gmail.com', NULL, '$2y$10$0BSAKqKb4DzxHshM/rClye9RuBQrylOw5u3iGENxRhpTel93umibq', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(54, 'Agnes Paul, S.Pd', 'agnes', 'agnespaul@gmail.com', NULL, '$2y$10$HjcMvbTNYjbJdctMQHWal.3ppa..mqP1LanyYzfKQB5b4Yl0Ysc0u', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(55, 'Missy Friska Margaretha', 'missy', 'missyfriskamargaretha@gmail.com', NULL, '$2y$10$EpeElCPcZUm3ejQuagLe/uBbDwZ2xuZ22iGgwxDnIeRxnOcgdTyty', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(56, 'Andre Saputra Julianto', 'andre', 'andresaputrajulianto@gmail.com', NULL, '$2y$10$fQjU9zTub1ok3HsGq4JjsOJ5hrKgIQFOzCATeVWaK5evlLgrKdAKu', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(57, 'Yeny Irawati', 'yeny', 'yenyirawati@gmail.com', NULL, '$2y$10$l/IMtSnBLXleZC3KFoCpzeJDR0vSjHXp6V0E0Ah0bC.Ce0PezM0he', 7, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(58, 'Ekam Sehari Manalu', 'ekam', 'ekamseharimanalu@gmail.com', NULL, '$2y$10$MJwEFGLSYROZ.ATHmsa/1OMQDOY.GS2mzFOL3.mGOYhEjfPsQy7yq', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL),
+(59, 'Odaligo Zega', 'odaligo', 'odaligozega@gmail.com', NULL, '$2y$10$yRG3nE/QBu5DMEQNP7bdC.qqoliHpCQCBCd/FVjH6nVLOw0ADMBGi', 4, NULL, '2024-06-06 12:10:42', '2024-06-06 12:10:42', NULL);
 
 --
 -- Indexes for dumped tables
@@ -1114,7 +1235,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `alternatif`
 --
 ALTER TABLE `alternatif`
-  MODIFY `id_alternatif` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_alternatif` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT for table `bobot_prioritas_alternatif`
@@ -1270,7 +1391,7 @@ ALTER TABLE `subkriteria`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- Constraints for dumped tables
