@@ -41,8 +41,24 @@
             </div>
 
             <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama kepala sekolah">
-                    Nama Kepala Sekolah</label>
+                <div class="mb-2 flex flex-row items-center gap-2">
+                    <label class="block text-base font-medium text-gray-900" for="nama kepala sekolah">
+                        Nama Kepala Sekolah</label>
+
+                    <div class="cursor-pointer pt-0.5" x-data="{ showTooltip: false }">
+                        <div @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                            <x-atoms.svg.help-circle width='18' height='18' />
+                        </div>
+
+                        <div class="absolute z-10 w-96 rounded bg-slate-50 px-2 py-1 text-base text-gray-900"
+                            x-show="showTooltip">
+                            Pilih kepala sekolah untuk validasi status penilaian, perbandingan karyawan,
+                            dan
+                            perankingan.
+                        </div>
+                    </div>
+                </div>
+
                 <select class="@error('kepala_sekolah') border-red-500 @enderror field-input-slate w-full"
                     name="kepala_sekolah" required>
 
