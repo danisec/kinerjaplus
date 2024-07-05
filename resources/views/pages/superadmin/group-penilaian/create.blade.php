@@ -20,12 +20,25 @@
     </x-molecules.breadcrumb>
 
     <div class="mx-auto my-8 w-10/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Filter Group Karyawan
-            <p class="mt-1 text-base font-normal leading-normal text-gray-900">Filter group penilaian digunakan untuk
-                menetapkan siapa yang
-                dapat
-                memberikan penilaian kepada atasan atau rekan yang lainnya.</p>
-        </h4>
+
+        <div class="mb-6 flex flex-row items-center gap-2">
+            <h4 class="text-2xl font-semibold text-gray-900">Filter Penilaian
+            </h4>
+
+            <div class="pt-0.5" x-data="{ showTooltip: false }">
+                <div @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                    <x-atoms.svg.help-circle width='20' height='20' />
+                </div>
+
+                <div class="absolute z-10 w-96 rounded bg-slate-50 px-2 py-1 text-base text-gray-900"
+                    x-show="showTooltip">
+                    Filter penilaian digunakan untuk
+                    menetapkan siapa yang
+                    dapat
+                    memberikan penilaian kepada atasan atau rekan yang lainnya.
+                </div>
+            </div>
+        </div>
 
         <form class="mt-8 space-y-6" action="{{ route('groupPenilaian.store', $groupKaryawan->id_group_karyawan) }}"
             method="POST">
