@@ -57,17 +57,16 @@ class AlternatifController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'kode_alternatif' => 'required|unique:alternatif,kode_alternatif|max:3',
+            'kode_alternatif' => 'required|unique:alternatif,kode_alternatif',
             'nama_alternatif' => 'required|unique:alternatif,nama_alternatif',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tanggal_masuk_kerja' => 'required|date',
-            'nip' => 'required|numeric|unique:alternatif,nip|digits:10',
+            'nip' => 'required|numeric|unique:alternatif,nip',
             'jabatan' => 'required',
-            'pendidikan' => 'required|max:3',
+            'pendidikan' => 'required|max:10',
         ], [
             'kode_alternatif.required' => 'Kode alternatif harus diisi',
             'kode_alternatif.unique' => 'Kode alternatif sudah ada',
-            'kode_alternatif.max' => 'Kode alternatif maksimal 3 karakter',
             'nama_alternatif.required' => 'Nama karyawan harus diisi',
             'nama_alternatif.unique' => 'Nama karyawan sudah ada',
             'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
@@ -77,10 +76,9 @@ class AlternatifController extends Controller
             'nip.required' => 'Nomor induk pegawai harus diisi',
             'nip.numeric' => 'Nomor induk pegawai harus berupa angka',
             'nip.unique' => 'Nomor induk pegawai sudah ada',
-            'nip.digits' => 'Nomor induk pegawai harus 10 digit',
             'jabatan.required' => 'Jabatan harus diisi',
             'pendidikan.required' => 'Pendidikan harus diisi',
-            'pendidikan.max' => 'Pendidikan maksimal 3 karakter',
+            'pendidikan.max' => 'Pendidikan maksimal 10 karakter',
         ]);
 
         try {
@@ -126,16 +124,15 @@ class AlternatifController extends Controller
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'kode_alternatif' => 'required|max:3',
+            'kode_alternatif' => 'required',
             'nama_alternatif' => 'required',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tanggal_masuk_kerja' => 'required|date',
-            'nip' => 'required|numeric|digits:10',
+            'nip' => 'required|numeric',
             'jabatan' => 'required',
-            'pendidikan' => 'required|max:3',
+            'pendidikan' => 'required|max:10',
         ], [
             'kode_alternatif.required' => 'Kode alternatif harus diisi',
-            'kode_alternatif.max' => 'Kode alternatif maksimal 3 karakter',
             'nama_alternatif.required' => 'Nama karyawan harus diisi',
             'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
             'jenis_kelamin.in' => 'Jenis kelamin harus Laki-laki atau Perempuan',
@@ -143,10 +140,9 @@ class AlternatifController extends Controller
             'tanggal_masuk_kerja.date' => 'Tanggal masuk kerja harus berupa tanggal',
             'nip.required' => 'Nomor induk pegawai harus diisi',
             'nip.numeric' => 'Nomor induk pegawai harus berupa angka',
-            'nip.digits' => 'Nomor induk pegawai harus 10 digit',
             'jabatan.required' => 'Jabatan harus diisi',
             'pendidikan.required' => 'Pendidikan harus diisi',
-            'pendidikan.max' => 'Pendidikan maksimal 3 karakter',
+            'pendidikan.max' => 'Pendidikan maksimal 10 karakter',
         ]);
 
         try {
