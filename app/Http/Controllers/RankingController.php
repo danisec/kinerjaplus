@@ -35,7 +35,6 @@ class RankingController extends Controller
         $currentMonth = date('m');
         $isAfterJune = $currentMonth >= 6;
         $currentYear = date('Y');
-        // $currentYear = date(2026);
         $lastYear = $currentYear - 1;
         $nextYear = $currentYear + 1;
         $this->tahunAjaran = $isAfterJune ? "$currentYear/$nextYear" : "$lastYear/$currentYear";
