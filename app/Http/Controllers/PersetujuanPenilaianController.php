@@ -178,7 +178,7 @@ class PersetujuanPenilaianController extends Controller
             } else {
                 CatatanKaryawan::where('id_penilaian', $id)->delete();
 
-                $notif = notify()->success('Status persetujuan penilaian berhasil diubah');
+                $notif = notify()->success('Status persetujuan penilaian berhasil disimpan');
                 return back()->withInput()->with('notif', $notif);
             }
         } catch (\Exception $e) {
