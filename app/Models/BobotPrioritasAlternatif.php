@@ -11,6 +11,7 @@ class BobotPrioritasAlternatif extends Model
 
     protected $table = 'bobot_prioritas_alternatif';
     protected $guarded = ['id_bobot_prioritas_alternatif'];
+    protected $primaryKey = 'id_bobot_prioritas_alternatif';
 
     public function kriteria()
     {
