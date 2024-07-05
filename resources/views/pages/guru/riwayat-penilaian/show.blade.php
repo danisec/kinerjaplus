@@ -36,69 +36,80 @@
                 {{ $penilaian->tahun_ajaran }}</h4>
 
             <div>
+                @php
+                    $kriteriaCounter = 1;
+                @endphp
+
                 @foreach ($kriteria as $item)
-                    <div class="mb-6 rounded-md bg-slate-50 p-4">
-                        <h4 class="block text-xl font-semibold text-gray-900">
-                            {{ chr(64 + $loop->iteration) . '.' }} {{ $item->nama_kriteria }}
-                        </h4>
+                    @if (
+                        !in_array($penilaian->alternatifKedua->alternatifPertama->users->role, [
+                            'tata usaha non tenaga pendidikan',
+                            'kerohanian non tenaga pendidikan',
+                        ]) || $item->kode_kriteria != 'K2')
+                        <div class="mb-6 rounded-md bg-slate-50 p-4">
+                            <h4 class="block text-xl font-semibold text-gray-900">
+                                {{ chr(64 + $kriteriaCounter++) . '.' }} {{ $item->nama_kriteria }}
+                            </h4>
 
-                        @foreach ($item->subkriteria as $subkriteria)
-                            <h6 class="ml-5 pb-2 pt-5 text-lg font-semibold text-gray-900">
-                                {{ $loop->iteration . '.' }} {{ $subkriteria->nama_subkriteria }}
-                            </h6>
+                            @foreach ($item->subkriteria as $subkriteria)
+                                <h6 class="ml-5 pb-2 pt-5 text-lg font-semibold text-gray-900">
+                                    {{ $loop->iteration . '.' }} {{ $subkriteria->nama_subkriteria }}
+                                </h6>
 
-                            @foreach ($subkriteria->indikatorSubkriteria as $indikator)
-                                <div class="mb-3">
-                                    <p class="ml-10 text-base font-medium text-gray-900">
-                                        {{ $loop->iteration . ')' }} {{ $indikator->indikator_subkriteria }}
-                                    </p>
-                                </div>
+                                @foreach ($subkriteria->indikatorSubkriteria as $indikator)
+                                    <div class="mb-3">
+                                        <p class="ml-10 text-base font-medium text-gray-900">
+                                            {{ $loop->iteration . ')' }} {{ $indikator->indikator_subkriteria }}
+                                        </p>
+                                    </div>
 
-                                @foreach ($indikator->skalaIndikator as $skalaIndikator)
-                                    <div class="my-8 ml-10 flex flex-row gap-4">
-                                        @php
-                                            $foundInputValue = false;
-                                        @endphp
-
-                                        @foreach ($skalaIndikator->skalaIndikatorDetail as $skalaIndikatorDetail)
+                                    @foreach ($indikator->skalaIndikator as $skalaIndikator)
+                                        <div class="my-8 ml-10 flex flex-row gap-4">
                                             @php
-                                                $penilaianDetail = $penilaian
-                                                    ? $penilaian->penilaianIndikator
-                                                        ->where(
-                                                            'id_skala_indikator_detail',
-                                                            $skalaIndikatorDetail->id_skala_indikator_detail,
-                                                        )
-                                                        ->first()
-                                                    : null;
-
-                                                $selectedSkala = $penilaianDetail
-                                                    ? $penilaianDetail->id_skala_indikator_detail ==
-                                                        $skalaIndikatorDetail->id_skala_indikator_detail
-                                                    : false;
+                                                $foundInputValue = false;
                                             @endphp
 
-                                            <div
-                                                class="flex h-max w-auto flex-col items-center justify-center gap-3 rounded-md bg-white p-3 shadow-slate-50 hover:shadow-md">
-                                                <input
-                                                    name="id_skala_indikator_detail[{{ $skalaIndikator->id_indikator_subkriteria }}]"
-                                                    type="radio"
-                                                    value="{{ $skalaIndikatorDetail->id_skala_indikator_detail }}"
-                                                    {{ $selectedSkala ? 'checked' : '' }} @disabled(true)>
+                                            @foreach ($skalaIndikator->skalaIndikatorDetail as $skalaIndikatorDetail)
+                                                @php
+                                                    $penilaianDetail = $penilaian
+                                                        ? $penilaian->penilaianIndikator
+                                                            ->where(
+                                                                'id_skala_indikator_detail',
+                                                                $skalaIndikatorDetail->id_skala_indikator_detail,
+                                                            )
+                                                            ->first()
+                                                        : null;
 
-                                                <label for="{{ $skalaIndikatorDetail->skala }}">
-                                                    {{ $skalaIndikatorDetail->skala == 1 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
-                                                    {{ $skalaIndikatorDetail->skala == 2 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
-                                                    {{ $skalaIndikatorDetail->skala == 3 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
-                                                    {{ $skalaIndikatorDetail->skala == 4 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
-                                                </label>
+                                                    $selectedSkala = $penilaianDetail
+                                                        ? $penilaianDetail->id_skala_indikator_detail ==
+                                                            $skalaIndikatorDetail->id_skala_indikator_detail
+                                                        : false;
+                                                @endphp
 
-                                            </div>
-                                        @endforeach
-                                    </div>
+                                                <div
+                                                    class="flex h-max w-auto flex-col items-center justify-center gap-3 rounded-md bg-white p-3 shadow-slate-50 hover:shadow-md">
+                                                    <input
+                                                        name="id_skala_indikator_detail[{{ $skalaIndikator->id_indikator_subkriteria }}]"
+                                                        type="radio"
+                                                        value="{{ $skalaIndikatorDetail->id_skala_indikator_detail }}"
+                                                        {{ $selectedSkala ? 'checked' : '' }}
+                                                        @disabled(true)>
+
+                                                    <label for="{{ $skalaIndikatorDetail->skala }}">
+                                                        {{ $skalaIndikatorDetail->skala == 1 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
+                                                        {{ $skalaIndikatorDetail->skala == 2 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
+                                                        {{ $skalaIndikatorDetail->skala == 3 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
+                                                        {{ $skalaIndikatorDetail->skala == 4 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
+                                                    </label>
+
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endforeach
                                 @endforeach
                             @endforeach
-                        @endforeach
-                    </div>
+                        </div>
+                    @endif
                 @endforeach
             </div>
 
