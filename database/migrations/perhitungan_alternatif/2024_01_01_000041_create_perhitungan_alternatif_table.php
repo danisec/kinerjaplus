@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('perhitungan_alternatif', function (Blueprint $table) {  
             $table->id('id_perhitungan_alternatif');
+            $table->string('tahun_ajaran', 9);
             $table->string('kode_kriteria', 3);
             $table->string('alternatif_pertama', 4);
             $table->string('alternatif_kedua', 4);
