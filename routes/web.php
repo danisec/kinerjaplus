@@ -20,25 +20,27 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::controller(DashboardController::class)->name('dashboard.')->middleware('auth')->group(function () {
-    Route::get('/dashboard', 'index')->name('index')->middleware('user-role:superadmin,yayasan,kepala sekolah,deputi,guru,IT,admin');
+    Route::get('/dashboard', 'index')->name('index')->middleware('user-role:superadmin,yayasan,kepala sekolah,deputi,guru,IT,admin,tata usaha tenaga pendidikan,tata usaha non tenaga pendidikan,kerohanian tenaga pendidikan,kerohanian non tenaga pendidikan');
 
-    Route::get('/dashboard/{kodeAlternatif}/getSelfRankChart', 'getSelfRankChart')->name('getSelfRankChart')->middleware('user-role:kepala sekolah,guru');
+    Route::get('/dashboard/{kodeAlternatif}/getSelfRankChart', 'getSelfRankChart')->name('getSelfRankChart')->middleware('user-role:yayasan,deputi,kepala sekolah,guru,tata usaha tenaga pendidikan,tata usaha non tenaga pendidikan,kerohanian tenaga pendidikan,kerohanian non tenaga pendidikan');
 
-    Route::get('/dashboard/{firstYear}/{secondYear}/getRankTahunAjaranChart', 'getRankTahunAjaranChart')->name('getRankTahunAjaranChart')->middleware('user-role:kepala sekolah,guru');
-    Route::get('/dashboard/{firstYear}/{secondYear}/getRankTahunAjaranTable', 'getRankTahunAjaranTable')->name('getRankTahunAjaranTable')->middleware('user-role:kepala sekolah,guru');
+    Route::get('/dashboard/{firstYear}/{secondYear}/getRankTahunAjaranChart', 'getRankTahunAjaranChart')->name('getRankTahunAjaranChart')->middleware('user-role:kepala sekolah,guru,tata usaha tenaga pendidikan,tata usaha non tenaga pendidikan,kerohanian tenaga pendidikan,kerohanian non tenaga pendidikan');
+    Route::get('/dashboard/{firstYear}/{secondYear}/getRankTahunAjaranTable', 'getRankTahunAjaranTable')->name('getRankTahunAjaranTable')->middleware('user-role:kepala sekolah,guru,tata usaha tenaga pendidikan,tata usaha non tenaga pendidikan,kerohanian tenaga pendidikan,kerohanian non tenaga pendidikan');
 
     Route::get('/dashboard/{firstYear}/{secondYear}/{namaGroupKaryawan}/getRankTahunAjaranGroupChart', 'getRankTahunAjaranGroupChart')->name('getRankTahunAjaranGroupChart')->middleware('user-role:superadmin,yayasan,deputi,IT,admin');
     Route::get('/dashboard/{firstYear}/{secondYear}/{namaGroupKaryawan}/getRankTahunAjaranGroupTable', 'getRankTahunAjaranGroupTable')->name('getRankTahunAjaranGroupTable')->middleware('user-role:superadmin,yayasan,deputi,IT,admin');
 });
 
-Route::controller(PenilaianController::class)->name('penilaian.')->middleware('auth', 'user-role:kepala sekolah,guru')->group(function () {
+Route::controller(PenilaianController::class)->name('penilaian.')->middleware('auth', 'user-role:yayasan,deputi,kepala sekolah,guru,tata usaha tenaga pendidikan,tata usaha non tenaga pendidikan,kerohanian tenaga pendidikan,kerohanian non tenaga pendidikan')->group(function () {
     Route::get('/dashboard/penilaian/introduction', 'welcome')->name('welcome');
     Route::get('/dashboard/penilaian/tambah-penilaian', 'create')->name('create');
+
+    Route::get('/dashboard/penilaian/tambah-penilaian/get-kriteria/{kodeAlternatif}', 'getKriteria')->name('getKriteria');
     
     Route::post('/dashboard/penilaian/introduction', 'store')->name('store');
 });
 
-Route::controller(RiwayatPenilaianController::class)->name('riwayatPenilaian.')->middleware('auth', 'user-role:kepala sekolah,guru')->group(function () {
+Route::controller(RiwayatPenilaianController::class)->name('riwayatPenilaian.')->middleware('auth', 'user-role:yayasan,deputi,kepala sekolah,guru,tata usaha tenaga pendidikan,tata usaha non tenaga pendidikan,kerohanian tenaga pendidikan,kerohanian non tenaga pendidikan')->group(function () {
     Route::get('/dashboard/riwayat-penilaian', 'index')->name('index');
     Route::get('/dashboard/riwayat-penilaian/view-penilaian/{id}', 'show')->name('show');
     
