@@ -76,7 +76,7 @@
                                                         ? 'bg-fuchsia-100/40 text-fuchsia-600'
                                                         : ($item->role == 'IT'
                                                             ? 'bg-blue-100/40 text-blue-600'
-                                                            : ''))))) }} whitespace-nowrap rounded-full px-2.5 py-1 capitalize">
+                                                            : 'bg-yellow-100/40 text-yellow-600'))))) }} whitespace-nowrap rounded-full px-2.5 py-1 capitalize">
 
                                     {{ $item->role }}
                                 </p>
