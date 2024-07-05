@@ -7,3 +7,4 @@ import "./perhitunganKriteria/app";
 import "./perhitunganSubkriteria/app";
 import "./perhitunganAlternatif/app";
 import "./groupKaryawan/app";
+import "./penilaian/app";
