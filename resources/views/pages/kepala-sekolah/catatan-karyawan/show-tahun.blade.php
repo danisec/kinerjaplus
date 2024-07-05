@@ -46,9 +46,6 @@
                         Kepada
                     </th>
                     <th class="px-6 py-3" scope="col">
-                        Catatan
-                    </th>
-                    <th class="px-6 py-3" scope="col">
                         Penilaian
                     </th>
                     <th class="px-6 py-3 text-center" scope="colgroup">
@@ -72,9 +69,6 @@
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
                                 {{ $item->penilaian->alternatifKedua->alternatifPertama->nama_alternatif }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4">
-                                {{ Str::limit($item->catatan, 25, '...') }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
