@@ -95,7 +95,7 @@ class RiwayatPenilaianController extends Controller
         return view('pages.guru.riwayat-penilaian.show', [
             'title' => 'Detail Data Penilaian',
             'kriteria' => Kriteria::with(['subkriteria', 'subkriteria.indikatorSubkriteria'])->orderBy('kode_kriteria', 'ASC')->get(),
-            'penilaian' => Penilaian::with(['alternatifPertama.alternatifPertama', 'alternatifKedua', 'penilaianIndikator', 'penilaianIndikator.skalaIndikatorDetail'])->where('id_penilaian', $id)->first(),
+            'penilaian' => Penilaian::with(['alternatifPertama.alternatifPertama', 'alternatifKedua',  'alternatifKedua.alternatifPertama.users', 'penilaianIndikator', 'penilaianIndikator.skalaIndikatorDetail'])->where('id_penilaian', $id)->first(),
             'tahunAjaran' => $tahunAjaran,
         ]);
     }
