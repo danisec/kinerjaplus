@@ -9,6 +9,7 @@ use App\Models\GroupPenilaian;
 use App\Models\Kriteria;
 use App\Models\Penilaian;
 use App\Models\PenilaianIndikator;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -47,9 +48,28 @@ class PenilaianController extends Controller
      */
     public function welcome()
     {
+        $getUserAlternatif = Auth::user()->alternatif->kode_alternatif;
+
+        // Dapatkan $getUserAlternatif berada di group karyawan mana
+        $getAlternatifGroupKaryawan = null;
+        if (in_array(Auth::user()->role, ['kepala sekolah'])) {
+            $getAlternatifGroupKaryawan = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $getUserAlternatif)->first();
+        } elseif (in_array(Auth::user()->role, [
+                'yayasan',
+                'deputi',
+                'guru',
+                'tata usaha tenaga pendidikan',
+                'tata usaha non tenaga pendidikan',
+                'kerohanian tenaga pendidikan',
+                'kerohanian non tenaga pendidikan',
+            ])) {
+            $getAlternatifGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $getUserAlternatif)->first();
+        }
+
         return view('pages.guru.penilaian.index', [
             'title' => 'Penilaian',
             'tahunAjaran' => $this->tahunAjaran,
+            'checkGroupKaryawan' => $getAlternatifGroupKaryawan,
         ]);
     }
 
@@ -66,9 +86,17 @@ class PenilaianController extends Controller
 
         // Dapatkan $getUserAlternatif berada di group karyawan mana
         $getAlternatifGroupKaryawan = null;
-        if (Auth::user()->role == 'kepala sekolah') {
+        if (in_array(Auth::user()->role, ['kepala sekolah'])) {
             $getAlternatifGroupKaryawan = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $getUserAlternatif)->first();
-        } elseif (Auth::user()->role == 'guru') {
+        } elseif (in_array(Auth::user()->role, [
+                'yayasan',
+                'deputi',
+                'guru',
+                'tata usaha tenaga pendidikan',
+                'tata usaha non tenaga pendidikan',
+                'kerohanian tenaga pendidikan',
+                'kerohanian non tenaga pendidikan',
+            ])) {
             $getAlternatifGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $getUserAlternatif)->first();
         }
 
@@ -237,5 +265,30 @@ class PenilaianController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Get kriteria
+     */
+    public function getKriteria(Request $request, $kodeAlternatif)
+    {
+        // Mendapatkan kriteria berdasarkan kode_alternatif yang dipilih
+         $kodeAlternatif = $request->kode_alternatif;
+
+        // Ambil role user berdasarkan kode_alternatif yang dipilih
+        $user = User::whereHas(
+            'alternatif',
+            function ($query) use ($kodeAlternatif) {
+                $query->where('kode_alternatif', $kodeAlternatif);
+            }
+        )->first();
+
+        $kriteria = Kriteria::with('subkriteria.indikatorSubkriteria.skalaIndikator.skalaIndikatorDetail')
+            ->when($user && in_array($user->role, ['tata usaha non tenaga pendidikan', 'kerohanian non tenaga pendidikan']), function ($query) {
+                $query->where('kode_kriteria', '!=', 'K2');
+            })
+            ->get();
+
+        return response()->json($kriteria);
     }
 }
