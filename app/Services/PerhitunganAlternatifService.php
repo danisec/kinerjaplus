@@ -67,10 +67,10 @@ class PerhitunganAlternatifService
         return $totalBarisNormalisasiMatriks;
     }
 
-    public function bobotPrioritasAlternatif($totalBarisNormalisasiMatriks, $alternatifGroupedByGroupKaryawan, $tahunAjaran)
+    public function bobotPrioritasAlternatif($totalBarisNormalisasiMatriks, $alternatifGroupedByGroupPenilaian, $tahunAjaran)
     {
         // count total alternatif
-        $jumlahAlternatif = count($alternatifGroupedByGroupKaryawan);
+        $jumlahAlternatif = count($alternatifGroupedByGroupPenilaian);
         $tahunAjaran = $tahunAjaran;
         
         // calculate bobot prioritas alternatif
@@ -85,7 +85,20 @@ class PerhitunganAlternatifService
 
         // Store bobot prioritas alternatif to database
         try {
-            BobotPrioritasAlternatifJob::dispatch($bobotPrioritasAlternatif, $tahunAjaran);
+            foreach ($bobotPrioritasAlternatif as $keyTahunAjaran => $valueTahunAjaran) {
+                foreach ($valueTahunAjaran as $kodeKriteria => $matriksKriteria) {
+                    foreach ($matriksKriteria as $dataAlternatif => $bobotPrioritas) {
+                        BobotPrioritasAlternatif::updateOrCreate(
+                            [
+                                'tahun_ajaran' => $keyTahunAjaran,
+                                'kode_kriteria' => $kodeKriteria,
+                                'kode_alternatif' => $dataAlternatif,
+                            ],
+                            ['bobot_prioritas' => $bobotPrioritas]
+                        );
+                    }
+                }
+            }
         } catch (\Throwable $th) {
             $notif = notify()->error('Terjadi kesalahan saat menyimpan data bobot prioritas alternatif');
             return back()->with('notif', $notif);
