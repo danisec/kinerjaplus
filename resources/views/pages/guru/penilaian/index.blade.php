@@ -10,7 +10,7 @@
         </li>
     </x-molecules.breadcrumb>
 
-    @if (Auth::user()->alternatif != null)
+    @if ($checkGroupKaryawan != null)
         <div class="mx-auto my-8 w-full">
             <h4 class="text-2xl font-semibold text-gray-900">Penilaian Kinerja Tahun Ajaran {!! $tahunAjaran !!}</h4>
 
@@ -31,7 +31,8 @@
         </div>
     @else
         <div class="flex flex-col items-center justify-center">
-            <h2>Anda belum terdaftar sebagai karyawan. Hubungi admin untuk mendaftarkan diri Anda.</h2>
+            <h2>Anda belum terdaftar di group karyawan. Hubungi admin untuk mendaftarkan diri Anda ke dalam
+                group karyawan.</h2>
         </div>
     @endif
 
