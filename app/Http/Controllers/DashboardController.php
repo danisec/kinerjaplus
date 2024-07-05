@@ -58,6 +58,19 @@ class DashboardController extends Controller
 
         if (in_array(Auth::user()->role, ['yayasan', 'deputi'])){
             
+            // Cari nama alternatif berdasarkan group karyawan yang mana nama alternatif sama dengan nama auth user
+            $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
+
+            // Dapatkan $checkAuthAlternatif berada di group karyawan mana
+            $checkGroupKaryawan = null;
+            if (in_array(Auth::user()->role, ['kepala sekolah'])) {
+                $checkGroupKaryawan = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->first();
+            } elseif (in_array(Auth::user()->role, ['yayasan','deputi'])) {
+                $checkGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->first();
+            }
+
+            $selfRankings = $this->ranking->sortable()->orderBy('tahun_ajaran', 'DESC')->where('kode_alternatif', $checkAuthAlternatif)->paginate(5)->withQueryString();
+
             $namaGroupKaryawan = GroupKaryawan::pluck('nama_group_karyawan');
             $getFirstNamaGroupKaryawan = GroupKaryawan::first();
 
@@ -67,19 +80,33 @@ class DashboardController extends Controller
                 'tahunAjaranRanking' => $tahunAjaranRanking,
                 'namaGroupKaryawan' => $namaGroupKaryawan,
                 'firstNamaGroupKaryawan' => $getFirstNamaGroupKaryawan,
+                'checkGroupKaryawan' => $checkGroupKaryawan,
+                'selfRankings' => $selfRankings,
             ]);
         }
 
-        if (in_array(Auth::user()->role, ['kepala sekolah', 'guru'])){
+        if (in_array(Auth::user()->role, [
+            'kepala sekolah', 
+            'guru', 
+            'tata usaha tenaga pendidikan', 
+            'tata usaha non tenaga pendidikan', 
+            'kerohanian tenaga pendidikan', 
+            'kerohanian non tenaga pendidikan'])){
 
             // Cari nama alternatif berdasarkan group karyawan yang mana nama alternatif sama dengan nama auth user
             $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
 
             // Dapatkan $checkAuthAlternatif berada di group karyawan mana
             $checkGroupKaryawan = null;
-            if (Auth::user()->role == 'kepala sekolah') {
+            if (in_array(Auth::user()->role, ['kepala sekolah'])) {
                 $checkGroupKaryawan = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->first();
-            } elseif (Auth::user()->role == 'guru') {
+            } elseif (in_array(Auth::user()->role, [
+                'guru',
+                'tata usaha tenaga pendidikan',
+                'tata usaha non tenaga pendidikan',
+                'kerohanian tenaga pendidikan',
+                'kerohanian non tenaga pendidikan',
+            ])) {
                 $checkGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->first();
             }
 
