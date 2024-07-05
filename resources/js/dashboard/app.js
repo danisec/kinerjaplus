@@ -1,8 +1,14 @@
-// Memeriksa apakah currentUser ada dan role-nya adalah "kepala sekolah" atau "guru"
+// Memeriksa apakah currentUser dan role pengguna
 if (
     window.currentUser &&
-    (window.currentUser.role === "kepala sekolah" ||
-        window.currentUser.role === "guru")
+    (window.currentUser.role === "yayasan" ||
+        window.currentUser.role === "deputi" ||
+        window.currentUser.role === "kepala sekolah" ||
+        window.currentUser.role === "guru" ||
+        window.currentUser.role === "tata usaha tenaga pendidikan" ||
+        window.currentUser.role === "tata usaha non tenaga pendidikan" ||
+        window.currentUser.role === "kerohanian tenaga pendidikan" ||
+        window.currentUser.role === "kerohanian non tenaga pendidikan")
 ) {
     // Memeriksa apakah pengguna berada di dashboard
     if (
@@ -15,7 +21,23 @@ if (
             .catch((error) => {
                 console.error("Gagal mengimpor selfRankChart");
             });
+    }
+}
 
+if (
+    window.currentUser &&
+    (window.currentUser.role === "kepala sekolah" ||
+        window.currentUser.role === "guru" ||
+        window.currentUser.role === "tata usaha tenaga pendidikan" ||
+        window.currentUser.role === "tata usaha non tenaga pendidikan" ||
+        window.currentUser.role === "kerohanian tenaga pendidikan" ||
+        window.currentUser.role === "kerohanian non tenaga pendidikan")
+) {
+    // Memeriksa apakah pengguna berada di dashboard
+    if (
+        window.location.pathname === "/dashboard" ||
+        window.location.pathname === "/dashboard/"
+    ) {
         // Mengimpor rankChart
         import("./rankChart")
             .then((module) => {})
@@ -32,7 +54,7 @@ if (
     }
 }
 
-// Memeriksa apakah currentUser ada dan role-nya adalah "superadmin", "yayasan", "deputi", "IT", atau "admin"
+// Memeriksa apakah currentUser ada dan role-nya adalah "yayasan", "deputi"
 if (
     window.currentUser &&
     (window.currentUser.role === "yayasan" ||
