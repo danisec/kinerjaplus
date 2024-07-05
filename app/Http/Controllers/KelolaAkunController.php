@@ -14,7 +14,19 @@ class KelolaAkunController extends Controller
 
     public function __construct()
     {
-        $this->role = ['0' => 'superadmin','1' => 'yayasan','2' => 'deputi', '3' => 'kepala sekolah', '4' => 'guru', '5' => 'IT', 6 => 'admin'];
+        $this->role = [
+            '0' => 'superadmin',
+            '6' => 'admin',
+            '1' => 'yayasan',
+            '2' => 'deputi',
+            '3' => 'kepala sekolah',
+            '4' => 'guru',
+            '7' => 'tata usaha tenaga pendidikan', 
+            '8' => 'tata usaha non tenaga pendidikan',
+            '9' => 'kerohanian tenaga pendidikan', 
+            '10' => 'kerohanian non tenaga pendidikan',
+            '5' => 'IT',
+        ];
     }
 
     /**
