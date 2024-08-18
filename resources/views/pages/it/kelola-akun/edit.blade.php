@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -18,7 +18,7 @@
     </x-molecules.breadcrumb>
 
     <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Akun</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Ubah Akun</h4>
 
         <form class="mt-8 space-y-6" action="{{ route('kelolaAkun.update', $user->id) }}" method="POST">
             @method('PUT')
@@ -69,15 +69,34 @@
                 <select class="@error('role') border-red-500 @enderror field-input-slate w-full" name="role"
                     required>
 
-                    @foreach ($role as $index => $item)
-                        <option class="capitalize" value="{{ $index }}"
-                            {{ $user->role == $item ? 'selected' : '' }}>
-                            {{ $item }}
+                    @foreach ($roles as $role)
+                        <option class="capitalize" value="{{ $role->name }}"
+                            {{ old('role', $user->roles->first()->name ?? '') == $role->name ? 'selected' : '' }}>
+                            {{ $role->name }}
                         </option>
                     @endforeach
                 </select>
 
                 @error('role')
+                    <p class="invalid-feedback">
+                        {{ $message }}
+                    </p>
+                @enderror
+            </div>
+
+            <div>
+                <label class="mb-2 block text-base font-medium text-gray-900" for="permission">
+                    Permission Pengguna</label>
+                <select class="@error('permission') border-red-500 @enderror field-input-slate w-full" id="permission"
+                    name="permission[]" multiple required>
+                    @foreach ($permission as $itemPermission)
+                        <option value="{{ $itemPermission->id }}"
+                            {{ in_array($itemPermission->id, $user->getAllPermissions()->pluck('id')->toArray()) ? 'selected' : '' }}>
+                            {{ $itemPermission->name }}
+                    @endforeach
+                </select>
+
+                @error('permission')
                     <p class="invalid-feedback">
                         {{ $message }}
                     </p>
@@ -114,4 +133,4 @@
         </form>
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
