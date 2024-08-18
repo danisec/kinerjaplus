@@ -6,10 +6,10 @@ use App\Models\Alternatif;
 use App\Models\Dashboard;
 use App\Models\GroupKaryawan;
 use App\Models\GroupKaryawanDetail;
-use App\Models\GroupPenilaian;
 use App\Models\Kriteria;
 use App\Models\Ranking;
 use App\Models\Subkriteria;
+use App\Models\TanggalPenilaian;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +25,7 @@ class DashboardController extends Controller
     public function __construct()
     {
         // Gunakan pagination untuk menampilkan data ranking
-        $this->ranking = Ranking::with('alternatif.alternatifPertama');
+        $this->ranking = Ranking::with('tanggalPenilaian', 'alternatif.alternatifPertama');
 
         $currentMonth = date('m');
         $isAfterJune = $currentMonth >= 6;
@@ -39,11 +39,14 @@ class DashboardController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $tahunAjaran = $this->tahunAjaran;
-        $tahunAjaranRanking = $this->ranking->pluck('tahun_ajaran')->unique()->sortDesc();
+    {        
+        // Dapatkan id_tanggal_penilaian yang unik dan urutkan dari yang terbesar
+        $tanggalPenilaian = TanggalPenilaian::with('groupKaryawan')->orderBy('id_tanggal_penilaian', 'DESC')->get();
 
-        if (in_array(Auth::user()->role, ['superadmin', 'IT', 'admin'])){
+        // Dapatkan id_tanggal_penilaian yang paling terbaru
+        $getFirstTanggalPenilaian = TanggalPenilaian::orderBy('id_tanggal_penilaian', 'DESC')->first();
+
+        if (Auth::user()->hasAnyRole('superadmin', 'IT', 'admin')){
 
             return view('pages.dashboard.home.index-admin', [
                 'title' => 'Dashboard',
@@ -52,20 +55,20 @@ class DashboardController extends Controller
                 'countKriteria' => Kriteria::count(),
                 'countSubkriteria' => Subkriteria::count(),
                 'alternatif' => Alternatif::orderBy('id_alternatif', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
-                'user' => User::orderBy('role', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
+                'user' => User::orderBy('fullname', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
             ]);
         }
 
-        if (in_array(Auth::user()->role, ['yayasan', 'deputi'])){
+        if (Auth::user()->hasAnyRole('yayasan', 'deputi')){
             
             // Cari nama alternatif berdasarkan group karyawan yang mana nama alternatif sama dengan nama auth user
-            $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
+            $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif ?? null;
 
             // Dapatkan $checkAuthAlternatif berada di group karyawan mana
             $checkGroupKaryawan = null;
-            if (in_array(Auth::user()->role, ['kepala sekolah'])) {
+            if (Auth::user()->hasRole('kepala sekolah')) {
                 $checkGroupKaryawan = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->first();
-            } elseif (in_array(Auth::user()->role, ['yayasan','deputi'])) {
+            } elseif (Auth::user()->hasAnyRole('yayasan', 'deputi')) {
                 $checkGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->first();
             }
 
@@ -76,8 +79,8 @@ class DashboardController extends Controller
 
             return view('pages.dashboard.home.index-group', [
                 'title' => 'Dashboard',
-                'currentTahunAjaran' => $tahunAjaran,
-                'tahunAjaranRanking' => $tahunAjaranRanking,
+                'tanggalPenilaian' => $tanggalPenilaian,
+                'firstTanggalPenilaian' => $getFirstTanggalPenilaian,
                 'namaGroupKaryawan' => $namaGroupKaryawan,
                 'firstNamaGroupKaryawan' => $getFirstNamaGroupKaryawan,
                 'checkGroupKaryawan' => $checkGroupKaryawan,
@@ -85,7 +88,7 @@ class DashboardController extends Controller
             ]);
         }
 
-        if (in_array(Auth::user()->role, [
+        if (Auth::user()->hasAnyRole([
             'kepala sekolah', 
             'guru', 
             'tata usaha tenaga pendidikan', 
@@ -94,13 +97,13 @@ class DashboardController extends Controller
             'kerohanian non tenaga pendidikan'])){
 
             // Cari nama alternatif berdasarkan group karyawan yang mana nama alternatif sama dengan nama auth user
-            $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
+            $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif ?? null;
 
             // Dapatkan $checkAuthAlternatif berada di group karyawan mana
             $checkGroupKaryawan = null;
-            if (in_array(Auth::user()->role, ['kepala sekolah'])) {
+            if (Auth::user()->hasRole('kepala sekolah')) {
                 $checkGroupKaryawan = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->first();
-            } elseif (in_array(Auth::user()->role, [
+            } elseif (Auth::user()->hasAnyRole([
                 'guru',
                 'tata usaha tenaga pendidikan',
                 'tata usaha non tenaga pendidikan',
@@ -110,12 +113,12 @@ class DashboardController extends Controller
                 $checkGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->first();
             }
 
-            $selfRankings = $this->ranking->sortable()->orderBy('tahun_ajaran', 'DESC')->where('kode_alternatif', $checkAuthAlternatif)->paginate(5)->withQueryString();
+            $selfRankings = $this->ranking->sortable()->orderBy('id_tanggal_penilaian', 'DESC')->where('kode_alternatif', $checkAuthAlternatif)->paginate(5)->withQueryString();
 
             return view('pages.dashboard.home.index', [
                 'title' => 'Dashboard',
-                'currentTahunAjaran' => $tahunAjaran,
-                'tahunAjaranRanking' => $tahunAjaranRanking,
+                'tanggalPenilaian' => $tanggalPenilaian,
+                'firstTanggalPenilaian' => $getFirstTanggalPenilaian,
                 'checkGroupKaryawan' => $checkGroupKaryawan,
                 'selfRankings' => $selfRankings,
             ]);
@@ -176,7 +179,7 @@ class DashboardController extends Controller
     public function getSelfRankChart($kodeAlternatif)
     {
         // Cari ranking berdasarkan kodeAlternatif dan nama alternatif auth user $checkGroupKaryawan
-        $ranking = $this->ranking->orderBy('tahun_ajaran', 'DESC')->where('kode_alternatif', $kodeAlternatif)->get();
+        $ranking = $this->ranking->orderBy('id_tanggal_penilaian', 'DESC')->where('kode_alternatif', $kodeAlternatif)->get();
 
         // Convert collection to array
         $selfRanking = $ranking->toArray();
@@ -184,7 +187,8 @@ class DashboardController extends Controller
         // Buatkan array untuk menampung data top ranking
         $dataSelfRanking = [];
         foreach ($selfRanking as $key => $value) {
-            $dataSelfRanking[$key]['tahun_ajaran'] = $value['tahun_ajaran'];
+            $dataSelfRanking[$key]['tahun_ajaran'] = $value['tanggal_penilaian']['tahun_ajaran'];
+            $dataSelfRanking[$key]['semester'] = $value['tanggal_penilaian']['semester'];
             $dataSelfRanking[$key]['nama'] = $value['alternatif']['alternatif_pertama']['nama_alternatif'];
             $dataSelfRanking[$key]['nilai'] = $value['nilai'];
             $dataSelfRanking[$key]['rank'] = $value['rank'];
@@ -201,23 +205,23 @@ class DashboardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function getRankTahunAjaranChart($firstYear, $secondYear)
+    public function getRankTahunAjaranChart($idTanggalPenilaian)
     {
         // Cari nama alternatif berdasarkan group karyawan yang mana nama alternatif sama dengan nama auth user
         $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
 
         // Dapatkan $checkAuthAlternatif berada di group karyawan mana
         $checkGroupKaryawanId = null;
-        if (Auth::user()->role == 'kepala sekolah') {
+        if (Auth::user()->hasRole('kepala sekolah')) {
             $checkGroupKaryawanId = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->value('id_group_karyawan');
-        } elseif (Auth::user()->role == 'guru') {
+        } elseif (Auth::user()->hasRole('guru')) {
             $checkGroupKaryawanId = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->value('id_group_karyawan');
         }
 
         // Cari ranking berdasarkan tahun ajaran dan nama alternatif yang memiliki group karyawan yang sama dengan group karyawan yang dimiliki oleh auth user  $checkGroupKaryawan
         $ranking = $this->ranking
             ->orderBy('rank', 'ASC')
-            ->where('tahun_ajaran', "$firstYear/$secondYear")
+            ->where('id_tanggal_penilaian', $idTanggalPenilaian)
             ->whereHas('alternatif', function ($query) use ($checkGroupKaryawanId) {
                 $query->whereHas('groupKaryawan', function ($query) use ($checkGroupKaryawanId) {
                     $query->where('id_group_karyawan', $checkGroupKaryawanId);
@@ -230,12 +234,13 @@ class DashboardController extends Controller
 
         // Convert collection to array
         $topRanking = $topRanking->toArray();
+
         // dd($topRanking);
 
         // Buatkan array untuk menampung data top ranking
         $dataTopRanking = [];
         foreach ($topRanking as $key => $value) {
-            $dataTopRanking[$key]['tahun_ajaran'] = $value['tahun_ajaran'];
+            $dataTopRanking[$key]['tahun_ajaran'] = $value['tanggal_penilaian']['tahun_ajaran'];
             $dataTopRanking[$key]['nama'] = $value['alternatif']['alternatif_pertama']['nama_alternatif'];
             $dataTopRanking[$key]['nilai'] = $value['nilai'];
             $dataTopRanking[$key]['rank'] = $value['rank'];
@@ -252,21 +257,23 @@ class DashboardController extends Controller
     /**
      * Display the specified resource in storage.
      */
-    public function getRankTahunAjaranTable($firstYear, $secondYear)
+    public function getRankTahunAjaranTable($idTanggalPenilaian)
     {
         // Cari nama alternatif berdasarkan group karyawan yang mana nama alternatif sama dengan nama auth user
         $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
 
         // checkAuthAlternatif berada di dalam group karyawan yang mana
         $checkGroupKaryawanId = null;
-        if (Auth::user()->role == 'kepala sekolah') {
+        if (Auth::user()->hasRole('kepala sekolah')) {
             $checkGroupKaryawanId = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->value('id_group_karyawan');
-        } elseif (Auth::user()->role == 'guru') {
+        } elseif (Auth::user()->hasRole('guru')) {
             $checkGroupKaryawanId = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->value('id_group_karyawan');
         }
 
         // Cari ranking berdasarkan tahun ajaran dan nama alternatif yang memiliki group karyawan yang sama dengan group karyawan yang dimiliki oleh auth user  $checkGroupKaryawan
-        $rankings = $this->ranking->orderBy('rank', 'ASC')->where('tahun_ajaran', "$firstYear/$secondYear")
+        $rankings = $this->ranking
+        ->orderBy('rank', 'ASC')
+        ->where('id_tanggal_penilaian', $idTanggalPenilaian)
         ->whereHas('alternatif', function ($query) use ($checkGroupKaryawanId) {
             $query->whereHas('groupKaryawan', function ($query) use ($checkGroupKaryawanId) {
                 $query->where('id_group_karyawan', $checkGroupKaryawanId);
@@ -277,7 +284,8 @@ class DashboardController extends Controller
         $data = $rankings->transform(function ($item) {
             return [
                 'id' => $item->id_ranking,
-                'tahun_ajaran' => $item->tahun_ajaran,
+                'tahun_ajaran' => $item->tanggalPenilaian->tahun_ajaran,
+                'semester' => $item->tanggalPenilaian->semester,
                 'nama' => $item->alternatif->alternatifPertama->nama_alternatif,
                 'nilai' => $item->nilai,
                 'rank' => $item->rank,
@@ -298,10 +306,11 @@ class DashboardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function getRankTahunAjaranGroupChart($firstYear, $secondYear, $namaGroupKaryawan)
+    public function getRankTahunAjaranGroupChart($idTanggalPenilaian, $namaGroupKaryawan)
     {
         // Cari ranking berdasarkan tahun ajaran dan berdasarkan nama group karyawan
-        $ranking = $this->ranking->where('tahun_ajaran', "$firstYear/$secondYear")
+        $ranking = $this->ranking
+        ->where('id_tanggal_penilaian', $idTanggalPenilaian)
         ->whereHas('alternatif', function ($query) use ($namaGroupKaryawan) {
             $query->whereHas('groupKaryawan', function ($query) use ($namaGroupKaryawan) {
                 $query->where('nama_group_karyawan', $namaGroupKaryawan);
@@ -317,7 +326,8 @@ class DashboardController extends Controller
         // Buatkan array untuk menampung data top ranking
         $dataTopRanking = [];
         foreach ($topRanking as $key => $value) {
-            $dataTopRanking[$key]['tahun_ajaran'] = $value['tahun_ajaran'];
+            $dataTopRanking[$key]['tahun_ajaran'] = $value['tanggal_penilaian']['tahun_ajaran'];
+            $dataTopRanking[$key]['semester'] = $value['tanggal_penilaian']['semester'];
             $dataTopRanking[$key]['nama'] = $value['alternatif']['alternatif_pertama']['nama_alternatif'];
             $dataTopRanking[$key]['nilai'] = $value['nilai'];
             $dataTopRanking[$key]['rank'] = $value['rank'];
@@ -334,10 +344,12 @@ class DashboardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function getRankTahunAjaranGroupTable($firstYear, $secondYear, $namaGroupKaryawan)
+    public function getRankTahunAjaranGroupTable($idTanggalPenilaian, $namaGroupKaryawan)
     {
         // Cari ranking berdasarkan tahun ajaran dan berdasarkan nama group karyawan
-        $rankings = $this->ranking->orderBy('rank', 'ASC')->where('tahun_ajaran', "$firstYear/$secondYear")
+        $rankings = $this->ranking
+        ->orderBy('rank', 'ASC')
+        ->where('id_tanggal_penilaian', $idTanggalPenilaian)
         ->whereHas('alternatif', function ($query) use ($namaGroupKaryawan) {
             $query->whereHas('groupKaryawan', function ($query) use ($namaGroupKaryawan) {
                 $query->where('nama_group_karyawan', $namaGroupKaryawan);
@@ -348,7 +360,8 @@ class DashboardController extends Controller
         $data = $rankings->transform(function ($item) {
             return [
                 'id' => $item->id_ranking,
-                'tahun_ajaran' => $item->tahun_ajaran,
+                'tahun_ajaran' => $item->tanggalPenilaian->tahun_ajaran,
+                'semester' => $item->tanggalPenilaian->semester,
                 'nama' => $item->alternatif->alternatifPertama->nama_alternatif,
                 'nilai' => $item->nilai,
                 'rank' => $item->rank,
