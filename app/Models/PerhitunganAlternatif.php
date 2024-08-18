@@ -12,6 +12,11 @@ class PerhitunganAlternatif extends Model
     protected $table = 'perhitungan_alternatif';
     protected $guarded = ['id_perhitungan_alternatif'];
 
+    public function tanggalPenilaian()
+    {
+        return $this->belongsTo(TanggalPenilaian::class, 'id_tanggal_penilaian', 'id_tanggal_penilaian');
+    }
+
     public function alternatifPertama()
     {
         return $this->belongsTo(GroupKaryawanDetail::class, 'alternatif_pertama', 'kode_alternatif');
