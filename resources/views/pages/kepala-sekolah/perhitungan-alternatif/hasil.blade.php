@@ -1,19 +1,19 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
                 <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('perhitunganAlternatif.index') }}">Perbandingan Karyawan Tahun Ajaran
-                    {!! $tahunAjaran !!}</a>
+                    href="{{ route('perhitunganAlternatif.introduction') }}">Perbandingan Pegawai Tahun Ajaran
+                    {!! $tahunAjaran->tahun_ajaran . ' - Semester ' . $tahunAjaran->semester !!}</a>
             </div>
         </li>
 
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Hasil Perbandingan Karyawan</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Hasil Perbandingan Pegawai</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
@@ -56,7 +56,7 @@
                                         @if ($alternatif1['id_alternatif'] == $alternatif2['id_alternatif'])
                                             <input
                                                 class="w-20 rounded-md border-none bg-slate-100 text-center text-emerald-500 focus:ring-slate-100"
-                                                name="matriks[{{ $tahunAjaran }}][{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]"
+                                                name="matriks[{{ $idTanggalPenilaian }}][{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]"
                                                 type="text" value="1" @readonly(true)>
                                         @else
                                             @php
@@ -68,25 +68,19 @@
                                             @endphp
 
                                             @if ($alternatif1['id_alternatif'] < $alternatif2['id_alternatif'])
-                                                <select
-                                                    class="matriks w-20 rounded-md border border-slate-300 focus:bg-slate-100 focus:ring-slate-100"
-                                                    id="matriks[{{ $tahunAjaran }}][{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]""
-                                                    name="matriks[{{ $tahunAjaran }}][{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]"
+                                                <input
+                                                    class="matriks w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                    type="text"
+                                                    id="matriks[{{ $idTanggalPenilaian }}][{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]""
+                                                    name="matriks[{{ $idTanggalPenilaian }}][{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]"
                                                     data-row="{{ $alternatif1['kode_alternatif'] }}"
-                                                    data-col="{{ $alternatif2['kode_alternatif'] }}">
-
-                                                    <option selected disabled></option>
-                                                    @for ($i = 1; $i <= 9; $i++)
-                                                        <option value="{{ $i }}"
-                                                            {{ $nilai && $nilai->nilai_alternatif == $i ? 'selected' : '' }}>
-                                                            {{ $i }}
-                                                        </option>
-                                                    @endfor
-                                                </select>
+                                                    data-col="{{ $alternatif2['kode_alternatif'] }}"
+                                                    value="{{ $nilai ? $nilai->nilai_alternatif : '0' }}"
+                                                    @readonly(true)>
                                             @else
                                                 <input
                                                     class="matriksHasil w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
-                                                    name="matriks[{{ $tahunAjaran }}][{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]"
+                                                    name="matriks[{{ $idTanggalPenilaian }}][{{ $dataKriteria->kode_kriteria }}][{{ $alternatif1['kode_alternatif'] }}][{{ $alternatif2['kode_alternatif'] }}]"
                                                     data-row="{{ $alternatif1['kode_alternatif'] }}"
                                                     data-col="{{ $alternatif2['kode_alternatif'] }}" type="text"
                                                     value="{{ $nilai ? $nilai->nilai_alternatif : '0' }}"
@@ -179,7 +173,7 @@
                                     <input
                                         class="w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
                                         type="text"
-                                        value="{{ $bobotPrioritasAlternatif[$tahunAjaran][$dataKriteria->kode_kriteria][$alternatif1['kode_alternatif']] }}"
+                                        value="{{ $bobotPrioritasAlternatif[$idTanggalPenilaian][$dataKriteria->kode_kriteria][$alternatif1['kode_alternatif']] }}"
                                         @readonly(true)>
                                 </td>
                             </tr>
@@ -198,4 +192,4 @@
 
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
