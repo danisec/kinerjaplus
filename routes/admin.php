@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(AlternatifController::class)->name('alternatif.')->middleware('auth', 'user-role:superadmin,admin')->group(function () {
+Route::controller(AlternatifController::class)->name('alternatif.')->middleware('auth', 'permission:karyawan')->group(function () {
     Route::get('/dashboard/data-alternatif', 'index')->name('index');
     Route::get('/dashboard/data-alternatif/view-alternatif/{id}', 'show')->name('show');
 
@@ -33,7 +33,7 @@ Route::controller(AlternatifController::class)->name('alternatif.')->middleware(
     Route::delete('/dashboard/data-alternatif/{id}', 'destroy')->name('destroy');
 });
 
-Route::controller(GroupKaryawanController::class)->name('groupKaryawan.')->middleware('auth', 'user-role:superadmin,admin')->group(function () {
+Route::controller(GroupKaryawanController::class)->name('groupKaryawan.')->middleware('auth', 'permission:group-karyawan')->group(function () {
     Route::get('/dashboard/data-group-alternatif', 'index')->name('index');
     Route::get('/dashboard/data-group-alternatif/view-group-alternatif/{id}', 'show')->name('show');
 
@@ -48,7 +48,7 @@ Route::controller(GroupKaryawanController::class)->name('groupKaryawan.')->middl
     Route::get('/dashboard/data-group-alternatif/ubah-group-alternatif/{idGroupKaryawan}/getAlternatif', 'getAlternatif')->name('getAlternatif');
 });
 
-Route::controller(GroupPenilaianController::class)->name('groupPenilaian.')->middleware('auth', 'user-role:superadmin,admin')->group(function () {
+Route::controller(GroupPenilaianController::class)->name('groupPenilaian.')->middleware('auth', 'role:superadmin|admin')->group(function () {
     Route::get('/dashboard/data-group-alternatif/group-penilaian/{id}', 'create')->name('create');
     Route::post('/dashboard/data-group-alternatif/group-penilaian/{id}', 'store')->name('store');
 
@@ -56,7 +56,7 @@ Route::controller(GroupPenilaianController::class)->name('groupPenilaian.')->mid
     Route::put('/dashboard/data-group-alternatif/group-penilaian/{id}/edit', 'update')->name('update');
 });
 
-Route::controller(KriteriaController::class)->name('kriteria.')->middleware('auth', 'user-role:superadmin,admin')->group(function () {
+Route::controller(KriteriaController::class)->name('kriteria.')->middleware('auth', 'permission:kriteria')->group(function () {
     Route::get('/dashboard/data-kriteria', 'index')->name('index');
     Route::get('/dashboard/data-kriteria/view-kriteria/{id}', 'show')->name('show');
 
@@ -69,7 +69,7 @@ Route::controller(KriteriaController::class)->name('kriteria.')->middleware('aut
     Route::delete('/dashboard/data-kriteria/{id}', 'destroy')->name('destroy');
 });
 
-Route::controller(SubkriteriaController::class)->name('subkriteria.')->middleware('auth', 'user-role:superadmin,admin')->group(function () {
+Route::controller(SubkriteriaController::class)->name('subkriteria.')->middleware('auth', 'permission:subkriteria')->group(function () {
     Route::get('/dashboard/data-subkriteria', 'index')->name('index');
     Route::get('/dashboard/data-subkriteria/view-subkriteria/{id}', 'show')->name('show');
 
@@ -84,7 +84,7 @@ Route::controller(SubkriteriaController::class)->name('subkriteria.')->middlewar
     Route::get('/dashboard/data-subkriteria/tambah-subkriteria/get-new-code-subkriteria', 'getnewCodeSubkriteria')->name('getnewCodeSubkriteria');
 });
 
-Route::controller(SkalaIndikatorController::class)->name('skalaIndikator.')->middleware('auth', 'user-role:superadmin,admin')->group(function () {
+Route::controller(SkalaIndikatorController::class)->name('skalaIndikator.')->middleware('auth', 'permission:skala-indikator')->group(function () {
     Route::get('/dashboard/data-skala-indikator', 'index')->name('index');
     Route::get('/dashboard/data-skala-indikator/view-skala-indikator/{id}', 'show')->name('show');
 
@@ -99,7 +99,7 @@ Route::controller(SkalaIndikatorController::class)->name('skalaIndikator.')->mid
     Route::get('/dashboard/data-skala-indikator/tambah-skala-indikator/{kodeSubkriteria}/getIndikatorSubkriteria', 'getIndikatorSubkriteria')->name('getIndikatorSubkriteria');
 });
 
-Route::controller(NilaiSkalaController::class)->name('nilaiSkala.')->middleware('auth', 'user-role:superadmin,admin')->group(function () {
+Route::controller(NilaiSkalaController::class)->name('nilaiSkala.')->middleware('auth', 'role:superadmin|admin')->group(function () {
     Route::get('/dashboard/data-skala-indikator/tambah-nilai-skala', 'create')->name('create');
     Route::post('/dashboard/data-skala-indikator/tambah-nilai-skala', 'store')->name('store');
 
