@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -108,4 +108,4 @@
         {{ $kriteria->links('vendor.pagination.tailwind') }}
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
