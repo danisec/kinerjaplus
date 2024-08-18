@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -6,7 +6,7 @@
                 <x-atoms.svg.arrow-right />
                 <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
                     href="{{ route('groupKaryawan.index') }}">
-                    Data Group Karyawan
+                    Data Group Pegawai
                 </a>
             </div>
         </li>
@@ -15,7 +15,7 @@
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
                 <span class="mx-2 text-base font-medium text-gray-500">
-                    Tambah Group Karyawan
+                    Tambah Group Pegawai
                 </span>
             </div>
         </li>
@@ -23,7 +23,7 @@
 
     <div class="mx-auto my-8 w-8/12">
         <h4 class="mb-6 text-2xl font-semibold text-gray-900">
-            Tambah Group Karyawan
+            Tambah Group Pegawai
         </h4>
 
         <form class="mt-8 space-y-6" action="{{ route('groupKaryawan.store') }}" method="POST">
@@ -31,11 +31,11 @@
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="nama group karyawan">
-                    Nama Group Karyawan
+                    Nama Group Pegawai
                 </label>
                 <input
                     class="@error('nama_group_karyawan') border-red-500 @enderror field-input-slate w-full capitalize"
-                    name="nama_group_karyawan" type="text" autofocus placeholder="Nama Group Karyawan" required />
+                    name="nama_group_karyawan" type="text" autofocus placeholder="Nama Group Pegawai" required />
 
                 @error('nama_group_karyawan')
                     <p class="invalid-feedback">
@@ -57,7 +57,7 @@
 
                         <div class="absolute z-10 w-96 rounded bg-slate-50 px-2 py-1 text-base text-gray-900"
                             x-show="showTooltip">
-                            Pilih kepala sekolah untuk validasi status penilaian, perbandingan karyawan,
+                            Pilih kepala sekolah untuk validasi status penilaian, perbandingan pegawai,
                             dan
                             perankingan.
                         </div>
@@ -86,7 +86,7 @@
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="nama karyawan">
-                    Nama Karyawan
+                    Nama Pegawai
                 </label>
                 <select class="@error('nama_alternatif') border-red-500 @enderror field-input-slate w-full"
                     id="namaKaryawan" name="kode_alternatif[]" multiple required>
@@ -114,4 +114,4 @@
         </form>
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
