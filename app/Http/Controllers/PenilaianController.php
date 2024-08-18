@@ -9,6 +9,7 @@ use App\Models\GroupPenilaian;
 use App\Models\Kriteria;
 use App\Models\Penilaian;
 use App\Models\PenilaianIndikator;
+use App\Models\TanggalPenilaian;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,13 +49,13 @@ class PenilaianController extends Controller
      */
     public function welcome()
     {
-        $getUserAlternatif = Auth::user()->alternatif->kode_alternatif;
+        $getUserAlternatif = Auth::user()->alternatif->kode_alternatif ?? null;
 
         // Dapatkan $getUserAlternatif berada di group karyawan mana
         $getAlternatifGroupKaryawan = null;
-        if (in_array(Auth::user()->role, ['kepala sekolah'])) {
+        if (Auth::user()->hasRole('kepala sekolah')) {
             $getAlternatifGroupKaryawan = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $getUserAlternatif)->first();
-        } elseif (in_array(Auth::user()->role, [
+        } elseif (Auth::user()->hasAnyRole([
                 'yayasan',
                 'deputi',
                 'guru',
@@ -66,10 +67,17 @@ class PenilaianController extends Controller
             $getAlternatifGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $getUserAlternatif)->first();
         }
 
+        // Check tanggal penilaian ada atau tidak, berdasarkan tahun ajaran, dan akhir tanggal penilaian
+        $checkTanggalPenilaian = TanggalPenilaian::where('tahun_ajaran', $this->tahunAjaran ?? null)
+            ->where('id_group_karyawan', $getAlternatifGroupKaryawan->id_group_karyawan ?? null)
+            ->where('akhir_tanggal_penilaian', '>=', now()->format('Y-m-d'))
+            ->first();
+
         return view('pages.guru.penilaian.index', [
             'title' => 'Penilaian',
             'tahunAjaran' => $this->tahunAjaran,
             'checkGroupKaryawan' => $getAlternatifGroupKaryawan,
+            'checkTanggalPenilaian' => $checkTanggalPenilaian,
         ]);
     }
 
@@ -86,9 +94,9 @@ class PenilaianController extends Controller
 
         // Dapatkan $getUserAlternatif berada di group karyawan mana
         $getAlternatifGroupKaryawan = null;
-        if (in_array(Auth::user()->role, ['kepala sekolah'])) {
+        if (Auth::user()->hasRole('kepala sekolah')) {
             $getAlternatifGroupKaryawan = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $getUserAlternatif)->first();
-        } elseif (in_array(Auth::user()->role, [
+        } elseif (Auth::user()->hasAnyRole([
                 'yayasan',
                 'deputi',
                 'guru',
@@ -100,10 +108,16 @@ class PenilaianController extends Controller
             $getAlternatifGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $getUserAlternatif)->first();
         }
 
+        // Check tanggal penilaian ada atau tidak, berdasarkan tahun ajaran, dan akhir tanggal penilaian
+        $checkTanggalPenilaian = TanggalPenilaian::where('tahun_ajaran', $this->tahunAjaran ?? null)
+            ->where('id_group_karyawan', $getAlternatifGroupKaryawan->id_group_karyawan ?? null)
+            ->where('akhir_tanggal_penilaian', '>=', now()->format('Y-m-d'))
+            ->first();
+
         // Ambil daftar alternatif_kedua yang sudah dinilai oleh alternatif_pertama $getUserAlternatif berdasarkan tahunAjaran
         $alternatifKeduaTerpilih = $penilaian
             ->where('alternatif_pertama', $getUserAlternatif)
-            ->where('tahun_ajaran', $tahunAjaran)
+            ->where('id_tanggal_penilaian', $checkTanggalPenilaian->id_tanggal_penilaian)
             ->pluck('alternatif_kedua')
             ->toArray();
 
@@ -157,6 +171,10 @@ class PenilaianController extends Controller
         // Menggabungkan data penilaian sendiri dengan data rekan
         $alternatifPenilaianArray = array_merge($alternatifPenilaianSendiri, $alternatifPenilaianRekan);
         
+        if ($checkTanggalPenilaian == null) {
+            return back();
+        }
+        
         return view('pages.guru.penilaian.create', [
             'title' => 'Tambah Penilaian',
             'alternatif' => Alternatif::orderBy('nama_alternatif', 'ASC')->get(),
@@ -165,6 +183,7 @@ class PenilaianController extends Controller
             'kriteria' => Kriteria::with(['subkriteria', 'subkriteria.indikatorSubkriteria.skalaIndikator.skalaIndikatorDetail'])->orderBy('kode_kriteria', 'ASC')->get(),
             'penilaian' => Penilaian::with(['alternatifPertama', 'alternatifKedua', 'penilaianIndikator', 'penilaianIndikator.indikatorSubkriteria'])->orderBy('alternatif_pertama', 'ASC')->get(),
             'tahunAjaran' => $this->tahunAjaran,
+            'checkTanggalPenilaian' => $checkTanggalPenilaian,
         ]);
     }
 
@@ -174,7 +193,7 @@ class PenilaianController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'tahun_ajaran' => 'required',
+            'id_tanggal_penilaian' => 'required',
             'alternatif_pertama' => 'required',
             'alternatif_kedua' => 'required',
             'status' => '',
@@ -190,7 +209,7 @@ class PenilaianController extends Controller
         try {
             $penilaian = Penilaian::where('alternatif_pertama', $validatedData['alternatif_pertama'])
                 ->where('alternatif_kedua', $validatedData['alternatif_kedua'])
-                ->where('tahun_ajaran', $this->tahunAjaran)
+                ->where('id_tanggal_penilaian', $validatedData['id_tanggal_penilaian'])
                 ->first();
             
             if ($penilaian) {
@@ -199,7 +218,7 @@ class PenilaianController extends Controller
             }
             
             $penilaian = Penilaian::insertGetId([
-                'tahun_ajaran' => $validatedData['tahun_ajaran'],
+                'id_tanggal_penilaian' => $validatedData['id_tanggal_penilaian'],
                 'alternatif_pertama' => $validatedData['alternatif_pertama'],
                 'alternatif_kedua' => $validatedData['alternatif_kedua'],
                 'status' => $validatedData['status'],
