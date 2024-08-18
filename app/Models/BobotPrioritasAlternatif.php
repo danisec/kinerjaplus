@@ -13,6 +13,11 @@ class BobotPrioritasAlternatif extends Model
     protected $guarded = ['id_bobot_prioritas_alternatif'];
     protected $primaryKey = 'id_bobot_prioritas_alternatif';
 
+    public function tanggalPenilaian()
+    {
+        return $this->belongsTo(TanggalPenilaian::class, 'id_tanggal_penilaian', 'id_tanggal_penilaian');
+    }
+
     public function kriteria()
     {
         return $this->belongsTo(Kriteria::class, 'id_kriteria', 'id_kriteria');
