@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +21,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $guarded = ['id'];
+    protected $guard_name = ['web', 'admin'];
 
     public function scopeFilter($query, array $filters)
     {  
@@ -53,15 +55,4 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    /**
-     * @param  integer  $value
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
-    protected function role(): Attribute
-    {
-        return new Attribute(
-            get: fn ($value) =>  ['superadmin', 'yayasan', 'deputi', 'kepala sekolah', 'guru', 'IT', 'admin', 'tata usaha tenaga pendidikan', 'tata usaha non tenaga pendidikan', 'kerohanian tenaga pendidikan', 'kerohanian non tenaga pendidikan'][$value],
-        );
-    }
 }
