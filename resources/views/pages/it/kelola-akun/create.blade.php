@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -69,10 +69,10 @@
                     required>
 
                     <option selected disabled hidden>Pilih Peran</option>
-                    @foreach ($role as $index => $item)
-                        <option class="capitalize" value="{{ $index }}"
-                            {{ old('role') == $item ? 'selected' : '' }}>
-                            {{ $item }}
+                    @foreach ($roles as $role)
+                        <option class="capitalize" value="{{ $role->name }}"
+                            {{ old('role') == $role->name ? 'selected' : '' }}>
+                            {{ $role->name }}
                         </option>
                     @endforeach
                 </select>
@@ -114,4 +114,4 @@
         </form>
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
