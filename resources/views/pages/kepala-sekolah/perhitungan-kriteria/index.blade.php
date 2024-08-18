@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -11,6 +11,14 @@
 
     <form action="{{ route('perhitunganKriteria.store') }}" method="POST">
         @csrf
+
+        <div class="my-6 w-full rounded-md bg-slate-100 p-8">
+            <a class="text-base font-medium text-gray-900 underline hover:text-blue-600"
+                href="{{ route('perhitunganKriteria.pedoman') }}" target="_blank" rel="noopener noreferrer">
+                Lihat pedoman cara pengisian matriks perbandingan berpasangan
+                (<span class="italic">pairwise comparison</span>).
+            </a>
+        </div>
 
         <div class="relative my-8 overflow-x-auto rounded-lg shadow-sm">
             <table class="w-full text-left text-base text-gray-900">
@@ -52,14 +60,21 @@
                                                 type="text" value="1" @readonly(true)>
                                         @else
                                             @if ($item->id_kriteria < $comparison->id_kriteria)
+                                                <input
+                                                    class="matriksHasil w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                    name="matriks[{{ $item->kode_kriteria }}][{{ $comparison->kode_kriteria }}]"
+                                                    data-row="{{ $item->kode_kriteria }}"
+                                                    data-col="{{ $comparison->kode_kriteria }}" type="text"
+                                                    value="" @readonly(true)>
+
                                                 <select
-                                                    class="w-20 rounded-md border border-slate-300 focus:bg-slate-100 focus:ring-slate-100"
+                                                    class="matriksHasil w-20 rounded-md border border-slate-300 focus:bg-slate-100 focus:ring-slate-100"
                                                     id="matriks[{{ $item->kode_kriteria }}][{{ $comparison->kode_kriteria }}]"
                                                     name="matriks[{{ $item->kode_kriteria }}][{{ $comparison->kode_kriteria }}]"
                                                     data-row="{{ $item->kode_kriteria }}"
-                                                    data-col="{{ $comparison->kode_kriteria }}" @required(true)>
+                                                    data-col="{{ $comparison->kode_kriteria }}">
 
-                                                    <option selected disabled></option>
+                                                    <option selected></option>
                                                     @for ($i = 1; $i <= 9; $i++)
                                                         <option value="{{ $i }}">{{ $i }}
                                                         </option>
@@ -71,7 +86,21 @@
                                                     name="matriks[{{ $item->kode_kriteria }}][{{ $comparison->kode_kriteria }}]"
                                                     data-row="{{ $item->kode_kriteria }}"
                                                     data-col="{{ $comparison->kode_kriteria }}" type="text"
-                                                    value="0" @readonly(true)>
+                                                    value="" @readonly(true)>
+
+                                                <select
+                                                    class="matriksHasil w-20 rounded-md border border-slate-300 focus:bg-slate-100 focus:ring-slate-100"
+                                                    id="matriks[{{ $item->kode_kriteria }}][{{ $comparison->kode_kriteria }}]"
+                                                    name="matriks[{{ $item->kode_kriteria }}][{{ $comparison->kode_kriteria }}]"
+                                                    data-row="{{ $item->kode_kriteria }}"
+                                                    data-col="{{ $comparison->kode_kriteria }}">
+
+                                                    <option selected></option>
+                                                    @for ($i = 1; $i <= 9; $i++)
+                                                        <option value="{{ $i }}">{{ $i }}
+                                                        </option>
+                                                    @endfor
+                                                </select>
                                             @endif
                                         @endif
                                     </td>
@@ -154,4 +183,4 @@
         </div>
     </form>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
