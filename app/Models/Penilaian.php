@@ -31,6 +31,11 @@ class Penilaian extends Model
         return $this->hasMany(PenilaianIndikator::class, 'id_penilaian', 'id_penilaian');
     }
 
+    public function tanggalPenilaian()
+    {
+        return $this->belongsTo(TanggalPenilaian::class, 'id_tanggal_penilaian', 'id_tanggal_penilaian');
+    }
+
     public function catatanKaryawan()
     {
         return $this->belongsTo(CatatanKaryawan::class, 'id_penilaian', 'id_penilaian');
