@@ -16,7 +16,7 @@ class GroupKaryawanController extends Controller
     public function index()
     {
         return view('pages.superadmin.group-karyawan.index', [
-            'title' => 'Group Karyawan',
+            'title' => 'Group Pegawai',
             'groupKaryawan' => GroupKaryawan::with(['alternatif', 'groupKaryawanDetail'])->orderBy('nama_group_karyawan', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
         ]);
     }
@@ -29,7 +29,9 @@ class GroupKaryawanController extends Controller
         // Dapatkan nama karyawan dengan role kepala sekolah di table users yang belum terdaftar di group karyawan
         $kepalaSekolah = Alternatif::with(['users', 'groupKaryawan'])
             ->whereHas('users', function($query) {
-                $query->where('role', '3');
+                $query->whereHas('roles', function($query) {
+                    $query->where('name', 'kepala sekolah');
+                });
             })
             ->whereNotIn('kode_alternatif', function($query) {
                 $query->select('kepala_sekolah')->from('group_karyawan');
@@ -39,7 +41,9 @@ class GroupKaryawanController extends Controller
         // Dapatkan nama karyawan yang belum terdaftar di group karyawan dan jangan tampilkan kepala sekolah
         $getRoleKepalaSekolah = Alternatif::with(['users'])
             ->whereHas('users', function($query) {
-                $query->where('role', '3');
+                $query->whereHas('roles', function($query) {
+                    $query->where('name', 'kepala sekolah');
+                });
             })
             ->pluck('kode_alternatif');
 
@@ -51,7 +55,7 @@ class GroupKaryawanController extends Controller
             ->get();
 
         return view('pages.superadmin.group-karyawan.create', [
-            'title' => 'Tambah Group Karyawan',
+            'title' => 'Tambah Group Pegawai',
             'kepalaSekolah' => $kepalaSekolah,
             'namaKaryawan' => $alternatif,
         ]);
@@ -105,7 +109,7 @@ class GroupKaryawanController extends Controller
         } catch (\Throwable $th) {
             DB::rollback();
 
-            $notif = notify()->error('Terjadi kesalahan saat menyimpan data group karyawan');
+            $notif = notify()->error('Terjadi kesalahan saat menyimpan data group pegawai');
             return back()->withInput()->with('notif', $notif);
         }
     }
@@ -116,7 +120,7 @@ class GroupKaryawanController extends Controller
     public function show($id)
     {
         return view('pages.superadmin.group-karyawan.show', [
-            'title' => 'Detail Group Karyawan',
+            'title' => 'Detail Group Pegawai',
             'groupKaryawan' => GroupKaryawan::with(['groupKaryawanDetail', 'groupKaryawanDetail.alternatif', 'groupPenilaian', 'groupPenilaian.alternatifPertama', 'groupPenilaian.groupPenilaianDetail', 'groupPenilaian.groupPenilaianDetail.alternatifKedua'])->where('id_group_karyawan', $id)->first(),
         ]);
     }
@@ -129,7 +133,9 @@ class GroupKaryawanController extends Controller
         // Dapatkan nama karyawan dengan role kepala sekolah di table users
         $kepalaSekolah = Alternatif::with(['users'])
             ->whereHas('users', function($query) {
-                $query->where('role', '3');
+                $query->whereHas('roles', function($query) {
+                    $query->where('name', 'kepala sekolah');
+                });
             })
             ->whereNotIn('kode_alternatif', function($query) {
                 $query->select('kode_alternatif')->from('group_karyawan_detail');
@@ -137,7 +143,7 @@ class GroupKaryawanController extends Controller
             ->get();
 
         return view('pages.superadmin.group-karyawan.edit', [
-            'title' => 'Ubah Group Karyawan',
+            'title' => 'Ubah Group Pegawai',
             'namaKaryawan' => Alternatif::get(),
             'kepalaSekolah' => $kepalaSekolah,
             'groupKaryawan' => GroupKaryawan::with(['alternatif', 'groupKaryawanDetail', 'groupKaryawanDetail.alternatif'])->where('id_group_karyawan', $id)->first(),
@@ -190,7 +196,7 @@ class GroupKaryawanController extends Controller
         } catch (\Throwable $th) {
             DB::rollback();
 
-            $notif = notify()->error('Terjadi kesalahan saat mengubah data group karyawan');
+            $notif = notify()->error('Terjadi kesalahan saat mengubah data group pegawai');
             return back()->withInput();
         }
     }
@@ -203,10 +209,10 @@ class GroupKaryawanController extends Controller
         try {
             GroupKaryawan::where('id_group_karyawan', $id)->delete();
 
-            $notif = notify()->success('Data group karyawan berhasil dihapus');
+            $notif = notify()->success('Data group pegawai berhasil dihapus');
             return back()->with('notif', $notif);
         } catch (\Throwable $th) {
-            $notif = notify()->error('Terjadi kesalahan saat menghapus data group karyawan');
+            $notif = notify()->error('Terjadi kesalahan saat menghapus data group pegawai');
             return back();
         }
     }
@@ -219,7 +225,9 @@ class GroupKaryawanController extends Controller
     {
         $getRoleKepalaSekolah = Alternatif::with(['users'])
             ->whereHas('users', function($query) {
-                $query->where('role', '3');
+                $query->whereHas('roles', function($query) {
+                    $query->where('name', 'kepala sekolah');
+                });
             })
             ->pluck('kode_alternatif');
 
