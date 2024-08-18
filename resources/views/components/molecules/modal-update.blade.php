@@ -20,7 +20,7 @@
 
         <h2 class="mb-1 text-2xl font-semibold">Konfirmasi</h2>
 
-        <p class="text-base font-normal text-gray-900">{{ $title }}</p>
+        <p class="text-base font-normal capitalize text-gray-900">{{ $title }}</p>
 
         <div class="mt-8 flex justify-start gap-4">
             <form id="{{ $modalId }}" action={{ $action }} method="POST">
