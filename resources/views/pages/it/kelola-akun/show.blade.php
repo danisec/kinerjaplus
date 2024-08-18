@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -47,7 +47,25 @@
                 <label class="mb-2 block text-base font-medium text-gray-900" for="role">
                     Peran Pengguna</label>
                 <input class="field-input-slate w-full capitalize" name="role" type="text"
-                    value="{{ $user->role }}" @disabled(true) @readonly(true)>
+                    value="{{ $user->roles->first()->name }}" @disabled(true) @readonly(true)>
+            </div>
+
+            <div>
+                <label class="mb-2 block text-base font-medium text-gray-900" for="role">
+                    Permission Pengguna</label>
+
+                <div class="field-input-slate w-full">
+                    <div class="textAreaHeight flex flex-row flex-wrap items-center gap-2">
+
+                        @foreach ($permission as $itemPermission)
+                            <option class="rounded-md bg-emerald-400 p-1 text-sm text-white"
+                                value="{{ $itemPermission->name }}" @disabled(true) @readonly(true)>
+                                {{ $itemPermission->name }}
+                            </option>
+                        @endforeach
+
+                    </div>
+                </div>
             </div>
 
             <div class="flex justify-center">
@@ -58,4 +76,4 @@
         </div>
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
