@@ -19,32 +19,46 @@ $(document).ready(function () {
     fetchChartData();
 
     $("#selectTahun, #selectNamaGroup").change(function () {
-        let tahunAjaran = $("#selectTahun").val();
+        let idTanggalPenilaian = $("#selectTahun").val();
+        let selectedOptionText = $(this).find("option:selected").data("text");
+
         let namaGroupKaryawan = $("#selectNamaGroup").val();
-        fetchChartData(tahunAjaran, namaGroupKaryawan);
+        fetchChartData(
+            idTanggalPenilaian,
+            selectedOptionText,
+            namaGroupKaryawan,
+        );
     });
 
-    function fetchChartData(tahunAjaran = null, namaGroupKaryawan = null) {
-        let currentTahunAjaran = $("#selectTahun").data("current-tahun");
+    function fetchChartData(
+        idTanggalPenilaian = null,
+        selectedOptionText = null,
+        namaGroupKaryawan = null,
+    ) {
+        let currentIdTanggalPenilaian = $("#selectTahun").data("current-tahun");
 
-        if (tahunAjaran === null) {
-            tahunAjaran = currentTahunAjaran;
+        if (idTanggalPenilaian === null) {
+            idTanggalPenilaian = currentIdTanggalPenilaian;
         }
 
         if (namaGroupKaryawan === null) {
             namaGroupKaryawan = $("#selectNamaGroup").data("nama-group");
         }
 
-        let tahunAjaranParts = tahunAjaran.split("/");
-        let firstYear = tahunAjaranParts[0];
-        let secondYear = tahunAjaranParts[1];
+        let currentTextIdTanggalPenilaian =
+            $("#selectTahun").data("current-text");
+
+        // Change currentTextIdTanggalPenilaian to capitalize
+        currentTextIdTanggalPenilaian = currentTextIdTanggalPenilaian
+            .toLowerCase()
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
 
         $.ajax({
             url:
                 "/dashboard/" +
-                firstYear +
-                "/" +
-                secondYear +
+                idTanggalPenilaian +
                 "/" +
                 namaGroupKaryawan +
                 "/getRankTahunAjaranGroupChart",
@@ -63,7 +77,11 @@ $(document).ready(function () {
                     };
                 });
 
-                showRankChart(dataKaryawan);
+                showRankChart(
+                    dataKaryawan,
+                    selectedOptionText,
+                    currentTextIdTanggalPenilaian,
+                );
             },
             error: function (xhr, status, error) {
                 console.error(error);
@@ -73,9 +91,7 @@ $(document).ready(function () {
         $.ajax({
             url:
                 "/dashboard/" +
-                firstYear +
-                "/" +
-                secondYear +
+                idTanggalPenilaian +
                 "/" +
                 namaGroupKaryawan +
                 "/getRankTahunAjaranGroupTable",
@@ -92,7 +108,7 @@ $(document).ready(function () {
                     response.pagination.perPage,
                 );
                 showPagination(
-                    tahunAjaran,
+                    idTanggalPenilaian,
                     namaGroupKaryawan,
                     response.pagination,
                 );
@@ -103,7 +119,11 @@ $(document).ready(function () {
         });
     }
 
-    function showRankChart(dataKaryawan) {
+    function showRankChart(
+        dataKaryawan,
+        selectedOptionText,
+        currentTextIdTanggalPenilaian,
+    ) {
         Highcharts.chart("topRanking", {
             chart: {
                 type: "column",
@@ -115,14 +135,22 @@ $(document).ready(function () {
             },
             subtitle: {
                 text:
-                    "5 Peringkat Teratas Kinerja Karyawan " +
+                    "5 Peringkat Teratas Kinerja Pegawai " +
                     ($("#selectNamaGroup").val()
                         ? $("#selectNamaGroup").val()
                         : $("#selectNamaGroup").data("nama-group")) +
                     " Tahun Ajaran " +
-                    ($("#selectTahun").val()
-                        ? $("#selectTahun").val()
-                        : $("#selectTahun").data("current-tahun")),
+                    (selectedOptionText
+                        ? selectedOptionText
+                              .toLowerCase()
+                              .split(" ")
+                              .map(
+                                  (word) =>
+                                      word.charAt(0).toUpperCase() +
+                                      word.slice(1),
+                              )
+                              .join(" ")
+                        : currentTextIdTanggalPenilaian),
                 align: "left",
             },
             xAxis: {
@@ -196,6 +224,9 @@ $(document).ready(function () {
                         <td class="px-6 py-4">
                             ${item.tahun_ajaran}
                         </td>
+                        <td class="px-6 py-4 capitalize">
+                            ${item.semester}
+                        </td>
                         <td class="px-6 py-4">
                             ${item.nama}
                         </td>
@@ -221,7 +252,7 @@ $(document).ready(function () {
         }
     }
 
-    function showPagination(tahunAjaran, namaGroupKaryawan, pagination) {
+    function showPagination(idTanggalPenilaian, namaGroupKaryawan, pagination) {
         let paginationLinks = $("#paginationLinks");
         paginationLinks.empty();
 
@@ -242,21 +273,15 @@ $(document).ready(function () {
             let page = $(this).data("page");
 
             // Memperbarui tampilan tabel berdasarkan halaman yang dipilih
-            updateTable(tahunAjaran, namaGroupKaryawan, page);
+            updateTable(idTanggalPenilaian, namaGroupKaryawan, page);
         });
     }
 
-    function updateTable(tahunAjaran, namaGroupKaryawan, page) {
-        let tahunAjaranParts = tahunAjaran.split("/");
-        let firstYear = tahunAjaranParts[0];
-        let secondYear = tahunAjaranParts[1];
-
+    function updateTable(idTanggalPenilaian, namaGroupKaryawan, page) {
         $.ajax({
             url:
                 "/dashboard/" +
-                firstYear +
-                "/" +
-                secondYear +
+                idTanggalPenilaian +
                 "/" +
                 namaGroupKaryawan +
                 "/getRankTahunAjaranGroupTable?page=" +
@@ -269,7 +294,7 @@ $(document).ready(function () {
                     response.pagination.perPage,
                 );
                 showPagination(
-                    tahunAjaran,
+                    idTanggalPenilaian,
                     namaGroupKaryawan,
                     response.pagination,
                 );
