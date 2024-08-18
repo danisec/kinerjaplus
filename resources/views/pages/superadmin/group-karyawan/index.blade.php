@@ -1,25 +1,25 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Data Group Karyawan</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Data Group Pegawai</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="my-8">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Data Group Karyawan</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Data Group Pegawai</h4>
 
         <div class="flex flex-row items-center justify-between">
             <div>
-                <x-molecules.search :placeholder="'Cari Group Karyawan'" :request="request('nama_group_karyawan')" :name="'nama_group_karyawan'" :value="request('nama_group_karyawan')" />
+                <x-molecules.search :placeholder="'Cari Group Pegawai'" :request="request('nama_group_karyawan')" :name="'nama_group_karyawan'" :value="request('nama_group_karyawan')" />
             </div>
 
             <div>
                 <a href="{{ route('groupKaryawan.create') }}">
-                    <x-atoms.button.button-primary :customClass="'h-12 w-56 rounded-md'" :type="'button'" :name="'Tambah Group Karyawan'" />
+                    <x-atoms.button.button-primary :customClass="'h-12 w-56 rounded-md'" :type="'button'" :name="'Tambah Group Pegawai'" />
                 </a>
             </div>
         </div>
@@ -33,7 +33,7 @@
                         No.
                     </th>
                     <th class="px-6 py-3" scope="col">
-                        Nama Group Karyawan
+                        Nama Group Pegawai
                     </th>
                     <th class="px-6 py-3" scope="col">
                         Kepala Sekolah
@@ -114,4 +114,4 @@
         {{ $groupKaryawan->links('vendor.pagination.tailwind') }}
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
