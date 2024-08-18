@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -6,6 +6,16 @@
                 <x-atoms.svg.arrow-right />
                 <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
                     href="{{ route('catatanKaryawan.index') }}">Catatan Karyawan</a>
+            </div>
+        </li>
+
+        <li aria-current="page">
+            <div class="flex items-center">
+                <x-atoms.svg.arrow-right />
+                <a class="ml-1 text-base font-medium capitalize text-gray-900 hover:text-blue-600"
+                    href="{{ route('catatanKaryawan.showTahun', ['firstYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 5), 'semester' => $tahunAjaranBreadcrumbs['semester']]) }}">Tahun
+                    Ajaran
+                    {{ $tahunAjaranBreadcrumbs['tahun_ajaran'] . ' - Semester ' . $tahunAjaranBreadcrumbs['semester'] }}</a>
             </div>
         </li>
 
@@ -30,13 +40,15 @@
             @csrf
 
             <input name="id_penilaian" type="hidden" value="{{ $catatanKaryawan->id_penilaian }}">
+            <input name="id_tanggal_penilaian" type="hidden" value="{{ $catatanKaryawan->id_tanggal_penilaian }}">
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="tahun ajaran">
                     Tahun Ajaran</label>
-                <input class="@error('tahun_ajaran') border-red-500 @enderror field-input-slate w-full"
-                    name="tahun_ajaran" type="text" value="{{ $catatanKaryawan->tahun_ajaran }}" required
-                    @readonly(true)>
+                <input class="@error('tahun_ajaran') border-red-500 @enderror field-input-slate w-full capitalize"
+                    name="tahun_ajaran" type="text"
+                    value="{{ $catatanKaryawan->tanggalPenilaian->tahun_ajaran . ' - Semester ' . $catatanKaryawan->tanggalPenilaian->semester }}"
+                    required @readonly(true)>
 
                 @error('tahun_ajaran')
                     <p class="invalid-feedback">
@@ -58,7 +70,8 @@
             </div>
 
             <div class="flex flex-row gap-4">
-                <a href="{{ url()->previous() }}">
+                <a
+                    href="{{ route('catatanKaryawan.showTahun', ['firstYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 5), 'semester' => $tahunAjaranBreadcrumbs['semester']]) }}">
                     <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
                 </a>
                 <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Ubah'" />
@@ -66,4 +79,4 @@
         </form>
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
