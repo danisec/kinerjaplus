@@ -1,24 +1,24 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
                 <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('alternatif.index') }}">Data Karyawan</a>
+                    href="{{ route('alternatif.index') }}">Data Pegawai</a>
             </div>
         </li>
 
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Tambah Karyawan</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Tambah Pegawai</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Karyawan</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Pegawai</h4>
 
         <form class="mt-8 space-y-6" action="{{ route('alternatif.store') }}" method="POST">
             @csrf
@@ -39,16 +39,16 @@
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="nama karyawan">
-                    Nama Karyawan</label>
-                <select class="@error('nama_alternatif') border-red-500 @enderror field-input-slate w-full"
+                    Nama Pegawai</label>
+                <select class="@error('nama_alternatif') border-red-500 @enderror field-input-slate w-full capitalize"
                     name="nama_alternatif" required>
 
-                    <option selected disabled hidden>Pilih Nama Karyawan</option>
+                    <option selected disabled hidden>Pilih Nama Pegawai</option>
                     @foreach ($namaKaryawan as $item)
-                        @if (!in_array($item->role, ['superadmin', 'admin', 'IT']) && !in_array($item->fullname, $pluckAlternatif))
+                        @if (!in_array($item->fullname, $pluckAlternatif))
                             <option class="capitalize" value="{{ $item->fullname }}"
                                 {{ old('nama_alternatif') == $item->fullname ? 'selected' : '' }}>
-                                {{ $item->fullname . ' - ' . $item->role }}
+                                {{ $item->fullname . ' - ' . $item->getRoleNames()->first() }}
                             </option>
                         @endif
                     @endforeach
@@ -143,4 +143,4 @@
         </form>
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
