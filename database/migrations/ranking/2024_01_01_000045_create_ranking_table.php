@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ranking', function (Blueprint $table) {
             $table->id('id_ranking');
-            $table->string('tahun_ajaran', 9);
+            $table->unsignedBigInteger('id_tanggal_penilaian');
             $table->string('kode_alternatif', 4);
             $table->double('nilai');
             $table->integer('rank');
