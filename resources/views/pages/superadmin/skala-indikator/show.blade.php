@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -60,4 +60,4 @@
 
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
