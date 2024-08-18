@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -6,7 +6,7 @@
                 <x-atoms.svg.arrow-right />
                 <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
                     href="{{ route('groupKaryawan.index') }}">
-                    Data Group Karyawan
+                    Data Group Pegawai
                 </a>
             </div>
         </li>
@@ -86,4 +86,4 @@
         window.groupKaryawanArray = @json($groupKaryawanArray);
     </script>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
