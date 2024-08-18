@@ -25,22 +25,10 @@ $(document).ready(function () {
             success: function (data) {
                 hideSkeletonLoading();
 
-                // let tahunAjaran = data.map(function (item) {
-                //     return item.tahun_ajaran;
-                // });
-
-                // let namaKaryawan = data.map(function (item) {
-                //     return item.nama;
-                // });
-                // let nilaiKaryawan = data.map(function (item) {
-                //     return item.nilai;
-                // });
-
-                // updateChart(tahunAjaran, namaKaryawan, nilaiKaryawan);
-
                 let dataKaryawan = data.map(function (item) {
                     return {
                         tahunAjaran: item.tahun_ajaran,
+                        semester: item.semester,
                         nama: item.nama,
                         nilai: item.nilai,
                         rank: item.rank,
@@ -67,14 +55,24 @@ $(document).ready(function () {
             },
             subtitle: {
                 text:
-                    "Kinerja Karyawan " +
+                    "Kinerja " +
                     $("#namaGroup").data("nama-group") +
                     " Per Tahun Ajaran",
                 align: "left",
             },
             xAxis: {
                 categories: dataKaryawan
-                    ? dataKaryawan.map((item) => item.tahunAjaran)
+                    ? dataKaryawan.map((item) =>
+                          (item.tahunAjaran + " - " + item.semester)
+                              .toLowerCase()
+                              .split(" ")
+                              .map(
+                                  (word) =>
+                                      word.charAt(0).toUpperCase() +
+                                      word.slice(1),
+                              )
+                              .join(" "),
+                      )
                     : [],
                 crosshair: true,
                 accessibility: {
