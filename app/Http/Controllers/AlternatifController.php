@@ -16,7 +16,10 @@ class AlternatifController extends Controller
 
     public function __construct()
     {
-        $this->namaKaryawan = User::where('role', '!=', 'superadmin')->orderBy('fullname', 'ASC')->get();
+        // Dapatkan nama karyawan kecuali superadmin, admin, dan IT
+        $this->namaKaryawan = User::whereHas('roles', function ($query) {
+            $query->whereNotIn('name', ['superadmin', 'admin', 'IT']);
+        })->orderBy('fullname', 'ASC')->get();
     }
 
     /**
@@ -25,7 +28,7 @@ class AlternatifController extends Controller
     public function index()
     {
         return view('pages.superadmin.alternatif.index', [
-            'title' => 'Karyawan',
+            'title' => 'Pegawai',
             'alternatif' => Alternatif::orderBy('id_alternatif', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
         ]);
     }
@@ -43,7 +46,7 @@ class AlternatifController extends Controller
         $newKodeAlternatif = $lastKodeAlaternatif ? ++$lastKodeAlaternatif->kode_alternatif : 'A1';
 
         return view('pages.superadmin.alternatif.create', [
-            'title' => 'Tambah Karyawan',
+            'title' => 'Tambah Pegawai',
             'pluckAlternatif' => $alternatif->pluck('nama_alternatif')->toArray(),
             'jenisKelamin' => explode("','", substr($enumJenisKelamin, 6, (strlen($enumJenisKelamin)-8))),
             'namaKaryawan' => $this->namaKaryawan,
@@ -84,10 +87,10 @@ class AlternatifController extends Controller
         try {
             Alternatif::create($validatedData);
 
-            $notif = notify()->success('Data karyawan berhasil ditambahkan');
+            $notif = notify()->success('Data pegawai berhasil ditambahkan');
             return redirect()->route('alternatif.index')->withInput()->with('notif', $notif);
         } catch (\Throwable $th) {
-            $notif = notify()->error('Terjadi kesalahan saat menyimpan data karyawan');
+            $notif = notify()->error('Terjadi kesalahan saat menyimpan data pegawai');
             return back()->withInput()->with('notif', $notif);
         }
     }
@@ -98,7 +101,7 @@ class AlternatifController extends Controller
     public function show($id)
     {
         return view('pages.superadmin.alternatif.show', [
-            'title' => 'Detail Karyawan',
+            'title' => 'Detail Pegawai',
             'alternatif' => Alternatif::where('id_alternatif', $id)->first(),
         ]);
     }
@@ -111,7 +114,7 @@ class AlternatifController extends Controller
         $enumJenisKelamin = DB::select("SHOW COLUMNS FROM alternatif WHERE Field = 'jenis_kelamin'")[0]->Type;
 
         return view('pages.superadmin.alternatif.edit', [
-            'title' => 'Ubah Karyawan',
+            'title' => 'Ubah Pegawai',
             'alternatif' => Alternatif::where('id_alternatif', $id)->first(),
             'jenisKelamin' => explode("','", substr($enumJenisKelamin, 6, (strlen($enumJenisKelamin)-8))),
             'namaKaryawan' => $this->namaKaryawan,
@@ -149,10 +152,10 @@ class AlternatifController extends Controller
             Alternatif::where('id_alternatif', $id)->update($validatedData);
             DB::commit();
 
-            $notif = notify()->success('Data karyawan berhasil diubah');
+            $notif = notify()->success('Data pegawai berhasil diubah');
             return redirect()->route('alternatif.index')->withInput()->with('notif', $notif);
         } catch (\Throwable $th) {
-            $notif = notify()->error('Terjadi kesalahan saat mengubah data karyawan');
+            $notif = notify()->error('Terjadi kesalahan saat mengubah data pegawai');
             return back()->withInput()->with('notif', $notif);
         }
     }
@@ -164,7 +167,7 @@ class AlternatifController extends Controller
     {
         Alternatif::where('id_alternatif', $id)->delete();
 
-        $notif = notify()->success('Data karyawan berhasil dihapus');
+        $notif = notify()->success('Data pegawai berhasil dihapus');
         return back()->with('notif', $notif);
     }
 }
