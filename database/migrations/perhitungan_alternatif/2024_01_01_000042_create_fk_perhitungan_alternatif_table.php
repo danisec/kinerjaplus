@@ -12,6 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('perhitungan_alternatif', function (Blueprint $table) {
+            $table->foreign('id_tanggal_penilaian', 'fk_perhitungan_alternatif_id_tanggal_penilaian')
+                ->references('id_tanggal_penilaian')
+                ->on('tanggal_penilaian')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+        });
+
+        Schema::table('perhitungan_alternatif', function (Blueprint $table) {
             $table->foreign('kode_kriteria', 'fk_perhitungan_alternatif_kode_kriteria')
                 ->references('kode_kriteria')
                 ->on('kriteria')
@@ -41,6 +49,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('perhitungan_alternatif', function (Blueprint $table) {
+            $table->dropForeign('fk_perhitungan_alternatif_id_tanggal_penilaian');
+        });
+
         Schema::table('perhitungan_alternatif', function (Blueprint $table) {
             $table->dropForeign('fk_perhitungan_alternatif_kode_kriteria');
         });
