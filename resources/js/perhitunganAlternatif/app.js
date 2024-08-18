@@ -1,4 +1,4 @@
-if (window.location.pathname == "/dashboard/perbandingan-alternatif") {
+if (window.location.pathname.includes("/dashboard/perbandingan-alternatif/")) {
     import("./calculateMatriks")
         .then((module) => {})
         .catch((error) => {
