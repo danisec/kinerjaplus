@@ -203,7 +203,7 @@ class GroupPenilaianController extends Controller
 
             DB::commit();
 
-            $notif = notify()->success('Data group karyawan berhasil diubah');
+            $notif = notify()->success('Data group pegawai berhasil diubah');
             return redirect()->route('groupKaryawan.index')->with('notif', $notif);
         } catch (\Throwable $th) {
             DB::rollback();
