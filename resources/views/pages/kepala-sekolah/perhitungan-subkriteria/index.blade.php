@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -11,6 +11,14 @@
 
     <form action="{{ route('perhitunganSubkriteria.store') }}" method="POST">
         @csrf
+
+        <div class="my-6 w-full rounded-md bg-slate-100 p-8">
+            <a class="text-base font-medium text-gray-900 underline hover:text-blue-600"
+                href="{{ route('perhitunganSubkriteria.pedoman') }}" target="_blank" rel="noopener noreferrer">
+                Lihat pedoman cara pengisian matriks perbandingan berpasangan
+                (<span class="italic">pairwise comparison</span>).
+            </a>
+        </div>
 
         @foreach ($subkriteria as $kodeKriteria => $subkriteriaItems)
             <div class="relative my-8 overflow-x-auto rounded-lg shadow-sm">
@@ -55,15 +63,21 @@
                                                     type="text" value="1" @readonly(true)>
                                             @else
                                                 @if ($item->id_subkriteria < $comparison->id_subkriteria)
+                                                    <input
+                                                        class="matriksHasil w-20 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                        name="matriks[{{ $item->kode_kriteria }}][{{ $item->kode_subkriteria }}][{{ $comparison->kode_subkriteria }}]"
+                                                        data-row="{{ $item->kode_subkriteria }}"
+                                                        data-col="{{ $comparison->kode_subkriteria }}" type="text"
+                                                        value="" @readonly(true)>
+
                                                     <select
-                                                        class="w-20 rounded-md border border-slate-300 focus:bg-slate-100 focus:ring-slate-100"
+                                                        class="matriksHasil w-20 rounded-md border border-slate-300 focus:bg-slate-100 focus:ring-slate-100"
                                                         id="matriks[{{ $item->kode_subkriteria }}][{{ $comparison->kode_subkriteria }}]"
                                                         name="matriks[{{ $item->kode_kriteria }}][{{ $item->kode_subkriteria }}][{{ $comparison->kode_subkriteria }}]"
                                                         data-row="{{ $item->kode_subkriteria }}"
-                                                        data-col="{{ $comparison->kode_subkriteria }}"
-                                                        @required(true)>
+                                                        data-col="{{ $comparison->kode_subkriteria }}">
 
-                                                        <option selected disabled></option>
+                                                        <option selected></option>
                                                         @for ($i = 1; $i <= 9; $i++)
                                                             <option value="{{ $i }}">{{ $i }}
                                                             </option>
@@ -75,7 +89,21 @@
                                                         name="matriks[{{ $item->kode_kriteria }}][{{ $item->kode_subkriteria }}][{{ $comparison->kode_subkriteria }}]"
                                                         data-row="{{ $item->kode_subkriteria }}"
                                                         data-col="{{ $comparison->kode_subkriteria }}" type="text"
-                                                        value="0" @readonly(true)>
+                                                        value="" @readonly(true)>
+
+                                                    <select
+                                                        class="matriksHasil w-20 rounded-md border border-slate-300 focus:bg-slate-100 focus:ring-slate-100"
+                                                        id="matriks[{{ $item->kode_subkriteria }}][{{ $comparison->kode_subkriteria }}]"
+                                                        name="matriks[{{ $item->kode_kriteria }}][{{ $item->kode_subkriteria }}][{{ $comparison->kode_subkriteria }}]"
+                                                        data-row="{{ $item->kode_subkriteria }}"
+                                                        data-col="{{ $comparison->kode_subkriteria }}">
+
+                                                        <option selected></option>
+                                                        @for ($i = 1; $i <= 9; $i++)
+                                                            <option value="{{ $i }}">{{ $i }}
+                                                            </option>
+                                                        @endfor
+                                                    </select>
                                                 @endif
                                             @endif
                                         </td>
@@ -114,7 +142,7 @@
                                                         data-row="{{ $subkriteria1->kode_subkriteria }}"
                                                         data-col="{{ $subkriteria2->kode_subkriteria }}">
 
-                                                        <option selected disabled></option>
+                                                        <option selected></option>
                                                         @for ($i = 1; $i <= 9; $i++)
                                                             <option value="{{ $i }}"
                                                                 {{ $nilai && $nilai->nilai_subkriteria == $i ? 'selected' : '' }}>
@@ -159,4 +187,4 @@
         </div>
     </form>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
