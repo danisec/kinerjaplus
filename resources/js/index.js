@@ -8,3 +8,4 @@ import "./perhitunganSubkriteria/app";
 import "./perhitunganAlternatif/app";
 import "./groupKaryawan/app";
 import "./penilaian/app";
+import "./kelolaAkun/app";
