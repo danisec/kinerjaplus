@@ -1,11 +1,16 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('penilaian.welcome') }}">Penilaian Tahun Ajaran {!! $tahunAjaran !!}</a>
+                @if ($checkTanggalPenilaian != null)
+                    <span class="mx-2 text-base font-medium capitalize text-gray-500">Penilaian Tahun Ajaran
+                        {!! $checkTanggalPenilaian->tahun_ajaran !!} - Semester {!! $checkTanggalPenilaian->semester !!}</span>
+                @else
+                    <span class="mx-2 text-base font-medium text-gray-500">Penilaian Tahun Ajaran
+                        {!! $tahunAjaran !!}</span>
+                @endif
             </div>
         </li>
 
@@ -22,7 +27,7 @@
         @if ($alternatifPenilaianArray == null)
             <div class="my-6 w-full rounded-md bg-slate-100 p-8">
                 <h2 class="text-center font-normal text-gray-900">Terima kasih Anda telah menyelesaikan penilaian untuk
-                    semua karyawan.
+                    semua pegawai.
                 </h2>
             </div>
         @else
@@ -36,7 +41,8 @@
             <form class="mt-12 space-y-6" action="{{ route('penilaian.store') }}" method="POST">
                 @csrf
 
-                <input name="tahun_ajaran" type="hidden" value="{{ $tahunAjaran }}" @required(true)>
+                <input name="id_tanggal_penilaian" type="hidden"
+                    value="{{ $checkTanggalPenilaian->id_tanggal_penilaian }}" @required(true)>
                 <div class="flex flex-row items-center gap-4">
                     <h4 class="text-2xl font-semibold text-gray-900">Berikan Penilaian Kepada</h4>
 
@@ -146,4 +152,4 @@
 
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
