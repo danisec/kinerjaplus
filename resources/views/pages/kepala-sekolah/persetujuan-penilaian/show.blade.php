@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -12,9 +12,9 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('persetujuanPenilaian.showTahun', ['firstYear' => $tahunAjaran[0], 'secondYear' => $tahunAjaran[1]]) }}">Tahun
-                    Ajaran {!! $tahunAjaran[0] !!}/{!! $tahunAjaran[1] !!}</a>
+                <a class="ml-1 text-base font-medium capitalize text-gray-900 hover:text-blue-600"
+                    href="{{ route('persetujuanPenilaian.showTahun', ['firstYear' => $tahunAjaran[0], 'secondYear' => $tahunAjaran[1], 'semester' => $tahunAjaran[2]]) }}">Tahun
+                    Ajaran {!! $tahunAjaran[0] !!}/{!! $tahunAjaran[1] !!} - Semester {!! $tahunAjaran[2] !!}</a>
             </div>
         </li>
 
@@ -29,10 +29,11 @@
     <div class="mx-auto my-8 w-full">
 
         <div class="mt-8 space-y-6">
-            <h4 class="text-2xl font-semibold text-gray-900">Detail Penilaian
+            <h4 class="text-2xl font-semibold capitalize text-gray-900">Detail Penilaian
                 {{ $penilaian->alternatifPertama->alternatifPertama->nama_alternatif }} Kepada
                 {{ $penilaian->alternatifKedua->alternatifPertama->nama_alternatif }} Tahun Ajaran
-                {{ $penilaian->tahun_ajaran }}</h4>
+                {{ $penilaian->tanggalPenilaian->tahun_ajaran }} - Semester {{ $penilaian->tanggalPenilaian->semester }}
+            </h4>
 
             <div>
                 @foreach ($kriteria as $item)
@@ -137,4 +138,4 @@
     </div>
 
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
