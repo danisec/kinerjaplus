@@ -25,6 +25,11 @@ class CatatanKaryawan extends Model
         });
     }
 
+    public function tanggalPenilaian()
+    {
+        return $this->belongsTo(TanggalPenilaian::class, 'id_tanggal_penilaian', 'id_tanggal_penilaian');
+    }
+
     public function penilaian()
     {
         return $this->belongsTo(Penilaian::class, 'id_penilaian', 'id_penilaian');
