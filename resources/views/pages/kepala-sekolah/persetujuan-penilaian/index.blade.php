@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -30,7 +30,10 @@
                         Tahun Ajaran
                     </th>
                     <th class="px-6 py-3" scope="col">
-                        Nama Group Karyawan
+                        Semester
+                    </th>
+                    <th class="px-6 py-3" scope="col">
+                        Nama Group Pegawai
                     </th>
                     <th class="flex justify-center px-6 py-3" scope="col">
                         Aksi
@@ -46,7 +49,10 @@
                                 {{ $index + 1 }}
                             </th>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $item['tahun'] }}
+                                {{ $item['tahunAjaran'] }}
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4 capitalize">
+                                {{ $item['semester'] }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
                                 {{ $item['namaGroupKaryawan'] }}
@@ -54,7 +60,7 @@
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
                                     <a class="font-medium text-gray-600"
-                                        href="{{ route('persetujuanPenilaian.showTahun', ['firstYear' => substr($item['tahun'], 0, 4), 'secondYear' => substr($item['tahun'], 5)]) }}"
+                                        href="{{ route('persetujuanPenilaian.showTahun', ['firstYear' => substr($item['tahunAjaran'], 0, 4), 'secondYear' => substr($item['tahunAjaran'], 5), 'semester' => $item['semester']]) }}"
                                         @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
                                         <x-atoms.svg.eye />
                                     </a>
@@ -84,4 +90,4 @@
         {{ $penilaianWithGroupKaryawan->links('vendor.pagination.tailwind') }}
     </div> --}}
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
