@@ -1,20 +1,20 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Catatan Karyawan</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Catatan Pegawai</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="my-8">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Catatan Karyawan Evaluasi Kinerja</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Catatan Pegawai Evaluasi Kinerja</h4>
 
         <div class="flex flex-row items-center justify-between">
             <div>
-                <x-molecules.search :placeholder="'Cari Tahun Catatan Karyawan'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
+                <x-molecules.search :placeholder="'Cari Tahun Catatan Pegawai'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
             </div>
 
             <div class="hidden">
@@ -36,7 +36,10 @@
                         Tahun Ajaran
                     </th>
                     <th class="px-6 py-3" scope="col">
-                        Nama Group Karyawan
+                        Semester
+                    </th>
+                    <th class="px-6 py-3" scope="col">
+                        Nama Group Pegawai
                     </th>
                     <th class="flex justify-center px-6 py-3" scope="col">
                         Aksi
@@ -54,13 +57,16 @@
                             <td class="whitespace-nowrap px-6 py-4">
                                 {{ $item['tahun'] }}
                             </td>
+                            <td class="whitespace-nowrap px-6 py-4 capitalize">
+                                {{ $item['semester'] }}
+                            </td>
                             <td class="whitespace-nowrap px-6 py-4">
                                 {{ $item['namaGroupKaryawan'] }}
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
                                     <a class="font-medium text-gray-600"
-                                        href="{{ route('catatanKaryawan.showTahun', ['firstYear' => substr($item['tahun'], 0, 4), 'secondYear' => substr($item['tahun'], 5)]) }}"
+                                        href="{{ route('catatanKaryawan.showTahun', ['firstYear' => substr($item['tahun'], 0, 4), 'secondYear' => substr($item['tahun'], 5), 'semester' => $item['semester']]) }}"
                                         @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
                                         <x-atoms.svg.eye />
                                     </a>
@@ -86,8 +92,4 @@
         </table>
     </div>
 
-    {{-- <div class="bg-white p-6">
-        {{ $catatanKaryawan->links('vendor.pagination.tailwind') }}
-    </div> --}}
-
-</x-layouts.app-dashboard>
+</x-app-dashboard>
