@@ -1,8 +1,8 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <div class="my-2">
         @if ($checkGroupKaryawan != null)
-            @if (in_array(Auth::user()->role, ['yayasan', 'deputi']))
+            @if (Auth::user()->hasRole(['yayasan', 'deputi']))
                 <div class="mb-12">
                     <div class="flex flex-row items-center gap-4">
                         <input id="kodeAlternatif" name="kode_alternatif" type="hidden"
@@ -106,27 +106,28 @@
                     {{ $selfRankings->links('vendor.pagination.tailwind') }}
                 </div>
             @endif
-        @else
-            <div class="flex flex-col items-center justify-center">
-                <h2>Anda belum terdaftar di group karyawan. Hubungi admin untuk mendaftarkan diri Anda ke dalam
-                    group karyawan.</h2>
-            </div>
         @endif
     </div>
 
-    @if (in_array(Auth::user()->role, ['yayasan', 'deputi']))
+    @if (Auth::user()->hasRole(['yayasan', 'deputi']))
         <div class="my-2">
             <div class="flex flex-row items-center gap-4">
-                <h4 class="text-xl font-bold text-gray-700">Ranking Kinerja Karyawan Tahun Ajaran
+                <h4 class="text-xl font-bold text-gray-700">Ranking Kinerja Pegawai Tahun Ajaran
                 </h4>
 
                 <div class="w-52">
-                    <select class="field-input-slate w-full" id="selectTahun" name="tahun_ajaran"
-                        data-current-tahun="{{ $currentTahunAjaran }}">
-                        <option selected disabled hidden>{{ $currentTahunAjaran }}</option>
-                        @foreach ($tahunAjaranRanking as $tahunAjaran)
-                            <option value="{{ $tahunAjaran }}">
-                                {{ $tahunAjaran }}
+                    <select class="field-input-slate w-full capitalize" id="selectTahun" name="tahun_ajaran"
+                        data-current-tahun="{{ $firstTanggalPenilaian->id_tanggal_penilaian ?? '' }}"
+                        data-current-text="{{ $firstTanggalPenilaian ? $firstTanggalPenilaian->tahun_ajaran . ' - ' . $firstTanggalPenilaian->semester : '' }}">
+
+                        <option selected disabled hidden>
+                            {{ $firstTanggalPenilaian ? $firstTanggalPenilaian->tahun_ajaran . ' - ' . $firstTanggalPenilaian->semester : '' }}
+                        </option>
+                        @foreach ($tanggalPenilaian as $itemTanggalPenilaian)
+                            <option
+                                data-text="{{ $itemTanggalPenilaian->tahun_ajaran . ' - ' . $itemTanggalPenilaian->semester }}"
+                                value="{{ $itemTanggalPenilaian->id_tanggal_penilaian }}">
+                                {{ $itemTanggalPenilaian->tahun_ajaran . ' - ' . $itemTanggalPenilaian->semester }}
                             </option>
                         @endforeach
                     </select>
@@ -135,6 +136,7 @@
                 <div class="w-64">
                     <select class="field-input-slate w-full" id="selectNamaGroup" name="nama_group_karyawan"
                         data-nama-group="{{ $firstNamaGroupKaryawan ? $firstNamaGroupKaryawan->nama_group_karyawan : '' }}">
+
                         <option selected disabled hidden>
                             {{ $firstNamaGroupKaryawan ? $firstNamaGroupKaryawan->nama_group_karyawan : '' }}</option>
                         @foreach ($namaGroupKaryawan as $nama)
@@ -177,7 +179,10 @@
                             Tahun Ajaran
                         </th>
                         <th class="px-6 py-3" scope="col">
-                            Nama Karyawan
+                            Semester
+                        </th>
+                        <th class="px-6 py-3" scope="col">
+                            Nama Pegawai
                         </th>
                         <th class="px-6 py-3" scope="col">
                             Nilai Kinerja
@@ -210,7 +215,10 @@
     @endif
 
     <script>
-        window.currentUser = @json(auth()->user());
+        window.currentUser = @json([
+            'user' => auth()->user(),
+            'roles' => auth()->user()->getRoleNames(),
+        ]);
     </script>
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -218,4 +226,4 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
