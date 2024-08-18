@@ -1,24 +1,24 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
                 <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('alternatif.index') }}">Data Karyawan</a>
+                    href="{{ route('alternatif.index') }}">Data Pegawai</a>
             </div>
         </li>
 
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Detail Karyawan</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Detail Pegawai</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Detail Karyawan</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Detail Pegawai</h4>
 
         <div class="mt-8 space-y-6">
             <div>
@@ -30,9 +30,10 @@
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="nama_alternatif">
-                    Nama Karyawan</label>
-                <input class="field-input-slate w-full" name="nama_alternatif" type="text"
-                    value="{{ $alternatif->nama_alternatif }}" @disabled(true) @readonly(true)>
+                    Nama Pegawai</label>
+                <input class="field-input-slate w-full capitalize" name="nama_alternatif" type="text"
+                    value="{{ $alternatif->nama_alternatif . ' - ' . $alternatif->users->getRoleNames()->first() }}"
+                    @disabled(true) @readonly(true)>
             </div>
 
             <div>
@@ -78,4 +79,4 @@
         </div>
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
