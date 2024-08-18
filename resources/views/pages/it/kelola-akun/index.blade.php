@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -17,13 +17,11 @@
                 <x-molecules.search :placeholder="'Cari Akun'" :request="request('nama_kriteria')" :name="'fullname'" :value="request('fullname')" />
             </div>
 
-            @if (Auth::user()->role === 'superadmin' || Auth::user()->role === 'IT')
-                <div>
-                    <a href="{{ route('kelolaAkun.create') }}">
-                        <x-atoms.button.button-primary :customClass="'h-12 w-36 rounded-md'" :type="'button'" :name="'Tambah Akun'" />
-                    </a>
-                </div>
-            @endif
+            <div>
+                <a href="{{ route('kelolaAkun.create') }}">
+                    <x-atoms.button.button-primary :customClass="'h-12 w-36 rounded-md'" :type="'button'" :name="'Tambah Akun'" />
+                </a>
+            </div>
         </div>
     </div>
 
@@ -138,4 +136,4 @@
         {{ $user->links('vendor.pagination.tailwind') }}
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
