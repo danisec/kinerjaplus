@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -30,7 +30,10 @@
                         Tahun Ajaran
                     </th>
                     <th class="px-6 py-3" scope="col">
-                        Nama Group Karyawan
+                        Semester
+                    </th>
+                    <th class="px-6 py-3" scope="col">
+                        Nama Group Pegawai
                     </th>
                     <th class="px-6 py-3 text-center" scope="colgroup">
                         Aksi
@@ -41,7 +44,7 @@
             @if ($penilaianGroupedByTahun != null && $penilaianGroupedByTahun->count() > 0)
                 @foreach ($penilaianWithGroupKaryawan as $index => $item)
                     <tbody>
-                        <tr class="border-b bg-white hover:bg-slate-100">
+                        <tr class="border-b bg-white capitalize hover:bg-slate-100">
                             <th class="whitespace-nowrap px-6 py-4 font-medium text-gray-900" scope="row">
                                 {{ $index + 1 }}
                             </th>
@@ -49,12 +52,15 @@
                                 {{ $item['tahun'] }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
+                                {{ $item['semester'] }}
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
                                 {{ $item['namaGroupKaryawan'] }}
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
                                     <a class="font-medium text-gray-600"
-                                        href="{{ route('riwayatPenilaian.showTahun', ['firstYear' => substr($item['tahun'], 0, 4), 'secondYear' => substr($item['tahun'], 5)]) }}"
+                                        href="{{ route('riwayatPenilaian.showTahun', ['firstYear' => substr($item['tahun'], 0, 4), 'secondYear' => substr($item['tahun'], 5), 'semester' => $item['semester']]) }}"
                                         @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
                                         <x-atoms.svg.eye />
                                     </a>
@@ -84,4 +90,4 @@
         {{ $penilaian->links('vendor.pagination.tailwind') }}
     </div> --}}
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
