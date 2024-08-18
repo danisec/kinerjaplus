@@ -16,28 +16,34 @@ $(document).ready(function () {
     fetchChartData();
 
     $("#selectTahun").change(function () {
-        let tahunAjaran = $(this).val();
-        fetchChartData(tahunAjaran);
+        let idTanggalPenilaian = $(this).val();
+        let selectedOptionText = $(this).find("option:selected").data("text");
+        fetchChartData(idTanggalPenilaian, selectedOptionText);
     });
 
-    function fetchChartData(tahunAjaran = null) {
-        let currentTahunAjaran = $("#selectTahun").data("current-tahun");
+    function fetchChartData(
+        idTanggalPenilaian = null,
+        selectedOptionText = null,
+    ) {
+        let currentIdTanggalPenilaian = $("#selectTahun").data("current-tahun");
 
-        if (tahunAjaran === null) {
-            tahunAjaran = currentTahunAjaran;
+        if (idTanggalPenilaian === null) {
+            idTanggalPenilaian = currentIdTanggalPenilaian;
         }
 
-        let tahunAjaranParts = tahunAjaran.split("/");
-        let firstYear = tahunAjaranParts[0];
-        let secondYear = tahunAjaranParts[1];
+        let currentTextIdTanggalPenilaian =
+            $("#selectTahun").data("current-text");
+
+        // Change currentTextIdTanggalPenilaian to capitalize
+        currentTextIdTanggalPenilaian = currentTextIdTanggalPenilaian
+            .toLowerCase()
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
 
         $.ajax({
             url:
-                "/dashboard/" +
-                firstYear +
-                "/" +
-                secondYear +
-                "/getRankTahunAjaranChart",
+                "/dashboard/" + idTanggalPenilaian + "/getRankTahunAjaranChart",
             type: "GET",
             success: function (data) {
                 hideSkeletonLoading();
@@ -50,7 +56,11 @@ $(document).ready(function () {
                     };
                 });
 
-                updateChart(dataKaryawan);
+                updateChart(
+                    dataKaryawan,
+                    selectedOptionText,
+                    currentTextIdTanggalPenilaian,
+                );
             },
             error: function (xhr, status, error) {
                 console.error(error);
@@ -58,7 +68,11 @@ $(document).ready(function () {
         });
     }
 
-    function updateChart(dataKaryawan) {
+    function updateChart(
+        dataKaryawan,
+        selectedOptionText,
+        currentTextIdTanggalPenilaian,
+    ) {
         Highcharts.chart("topRanking", {
             chart: {
                 type: "column",
@@ -69,13 +83,20 @@ $(document).ready(function () {
                 align: "left",
             },
             subtitle: {
-                // text: "5 Peringkat Teratas",
                 text:
-                    "5 Peringkat Teratas Kinerja Karyawan " +
+                    "5 Peringkat Teratas Kinerja Pegawai " +
                     " Tahun Ajaran " +
-                    ($("#selectTahun").val()
-                        ? $("#selectTahun").val()
-                        : $("#selectTahun").data("current-tahun")),
+                    (selectedOptionText
+                        ? selectedOptionText
+                              .toLowerCase()
+                              .split(" ")
+                              .map(
+                                  (word) =>
+                                      word.charAt(0).toUpperCase() +
+                                      word.slice(1),
+                              )
+                              .join(" ")
+                        : currentTextIdTanggalPenilaian),
                 align: "left",
             },
             xAxis: {
