@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -13,15 +13,15 @@
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
                 <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('persetujuanPenilaian.showTahun', ['firstYear' => substr($tahunAjaran, 0, 4), 'secondYear' => substr($tahunAjaran, 5)]) }}">Tahun
-                    Ajaran {!! $tahunAjaran !!}</a>
+                    href="{{ route('persetujuanPenilaian.showTahun', ['firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5), 'semester' => $tahunAjaran['semester']]) }}">Tahun
+                    Ajaran {!! $tahunAjaran['tahun_ajaran'] !!}</a>
             </div>
         </li>
 
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Tambah Catatan Karyawan</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Tambah Catatan Pegawai</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
@@ -33,25 +33,31 @@
             {!! $penilaian->alternatifKedua->alternatifPertama->nama_alternatif !!}
             <p class="text-sm font-normal text-gray-900"><span class="align-super text-red-600">&Star;</span>Buatkan
                 catatan
-                karyawan
+                pegawai
                 jika
                 status penilaian tidak
                 disetujui.</p>
         </h4>
 
         <form class="mt-8 space-y-6"
-            action="{{ route('persetujuanPenilaian.updateCatatan', $penilaian->id_penilaian) }}" method="POST">
+            action="{{ route('persetujuanPenilaian.updateCatatan', [$penilaian->id_penilaian, 'firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5), 'semester' => $tahunAjaran['semester']]) }}"
+            method="POST">
             @method('PUT')
             @csrf
 
             <input name="id_penilaian" type="hidden" value="{{ $penilaian->id_penilaian }}">
+            <input name="id_tanggal_penilaian" type="hidden" value="{{ $penilaian->id_tanggal_penilaian }}">
             <input name="status" type="hidden" value="Tidak Disetujui">
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="tahun ajaran">
                     Tahun Ajaran</label>
-                <input class="@error('tahun_ajaran') border-red-500 @enderror field-input-slate w-full"
-                    name="tahun_ajaran" type="text" value="{{ $tahunAjaran }}" required @readonly(true)>
+                <input name="tahun_ajaran" type="hidden" value="{{ $tahunAjaran['tahun_ajaran'] }}">
+
+                <input class="@error('tahun_ajaran') border-red-500 @enderror field-input-slate w-full capitalize"
+                    type="text"
+                    value="{{ $tahunAjaran['tahun_ajaran'] . ' - Semester ' . $tahunAjaran['semester'] }}" required
+                    @readonly(true)>
 
                 @error('tahun_ajaran')
                     <p class="invalid-feedback">
@@ -81,4 +87,4 @@
         </form>
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
