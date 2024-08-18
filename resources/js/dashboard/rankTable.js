@@ -15,8 +15,8 @@ $(document).ready(function () {
     fetchChartData();
 
     $("#selectTahun").change(function () {
-        let tahunAjaran = $(this).val();
-        fetchChartData(tahunAjaran);
+        let idTanggalPenilaian = $(this).val();
+        fetchChartData(idTanggalPenilaian);
     });
 
     $(document).on("click", ".pagination a", function (event) {
@@ -25,21 +25,21 @@ $(document).ready(function () {
         fetchChartData($("#selectTahun").val(), page);
     });
 
-    function fetchChartData(tahunAjaran = null, page = 1) {
+    function fetchChartData(idTanggalPenilaian = null, page = 1) {
         showSkeletonLoading();
 
-        let currentTahunAjaran = $("#selectTahun").data("current-tahun");
+        let currentIdTanggalPenilaian = $("#selectTahun").data("current-tahun");
 
-        if (tahunAjaran === null) {
-            tahunAjaran = currentTahunAjaran;
+        if (idTanggalPenilaian === null) {
+            idTanggalPenilaian = currentIdTanggalPenilaian;
         }
 
-        let tahunAjaranParts = tahunAjaran.split("/");
-        let firstYear = tahunAjaranParts[0];
-        let secondYear = tahunAjaranParts[1];
+        // let tahunAjaranParts = tahunAjaran.split("/");
+        // let firstYear = tahunAjaranParts[0];
+        // let secondYear = tahunAjaranParts[1];
 
         $.ajax({
-            url: `/dashboard/${firstYear}/${secondYear}/getRankTahunAjaranTable?page=${page}`,
+            url: `/dashboard/${idTanggalPenilaian}/getRankTahunAjaranTable?page=${page}`,
             type: "GET",
             success: function (response) {
                 hideSkeletonLoading();
@@ -72,6 +72,9 @@ $(document).ready(function () {
                         </td>
                         <td class="px-6 py-4">
                             ${item.tahun_ajaran}
+                        </td>
+                        <td class="px-6 py-4 capitalize">
+                            ${item.semester}
                         </td>
                         <td class="px-6 py-4">
                             ${item.nama}
