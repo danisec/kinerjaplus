@@ -1,30 +1,30 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
                 <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('groupKaryawan.index') }}">Data Group Karyawan</a>
+                    href="{{ route('groupKaryawan.index') }}">Data Group Pegawai</a>
             </div>
         </li>
 
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Detail Group Karyawan</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Detail Group Pegawai</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Detail Group Karyawan</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Detail Group Pegawai</h4>
 
         <div class="my-8 space-y-6">
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="nama group karyawan">
-                    Nama Group Karyawan</label>
+                    Nama Group Pegawai</label>
                 <input class="field-input-slate w-full capitalize" name="nama_group_karyawan" type="text"
                     value="{{ $groupKaryawan->nama_group_karyawan }}" @disabled(true) @readonly(true)>
             </div>
@@ -39,7 +39,7 @@
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="nama karyawan">
-                    Nama Karyawan</label>
+                    Nama Pegawai</label>
                 <div class="field-input-slate w-full">
                     <div class="textAreaHeight flex flex-row flex-wrap items-center gap-2">
                         @foreach ($groupKaryawan->groupKaryawanDetail as $item)
@@ -105,4 +105,4 @@
         </div>
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
