@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('catatan_karyawan', function (Blueprint $table) {
             $table->id('id_catatan_karyawan');
             $table->bigInteger('id_penilaian')->unsigned();
-            $table->string('tahun_ajaran', 9);
+            $table->unsignedBigInteger('id_tanggal_penilaian');
             $table->text('catatan');
             $table->timestamps();
         });
