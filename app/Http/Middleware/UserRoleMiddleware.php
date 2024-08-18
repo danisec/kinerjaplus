@@ -14,12 +14,12 @@ class UserRoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, ...$role): Response
-    {
-        if (Auth::check() && in_array(Auth::user()->role, $role)) {
-            return $next($request);
-        }
+    // public function handle(Request $request, Closure $next, ...$role): Response
+    // {
+    //     if (Auth::check() && in_array(Auth::user()->role, $role)) {
+    //         return $next($request);
+    //     }
         
-        return redirect()->route('dashboard.index');
-    }
+    //     return redirect()->route('dashboard.index');
+    // }
 }
