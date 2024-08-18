@@ -67,30 +67,30 @@ class PerhitunganAlternatifService
         return $totalBarisNormalisasiMatriks;
     }
 
-    public function bobotPrioritasAlternatif($totalBarisNormalisasiMatriks, $alternatifGroupedByGroupPenilaian, $tahunAjaran)
+    public function bobotPrioritasAlternatif($totalBarisNormalisasiMatriks, $alternatifGroupedByGroupPenilaian, $idTanggalPenilaian)
     {
         // count total alternatif
         $jumlahAlternatif = count($alternatifGroupedByGroupPenilaian);
-        $tahunAjaran = $tahunAjaran;
+        $idTanggalPenilaian = $idTanggalPenilaian;
         
         // calculate bobot prioritas alternatif
         $bobotPrioritasAlternatif = [];
         foreach ($totalBarisNormalisasiMatriks as $kodeKriteria => $matrixKriteria) {
             foreach ($matrixKriteria as $alternatifPertama => $total) {
-                $bobotPrioritasAlternatif[$tahunAjaran][$kodeKriteria][$alternatifPertama] = $total / $jumlahAlternatif;
+                $bobotPrioritasAlternatif[$idTanggalPenilaian][$kodeKriteria][$alternatifPertama] = $total / $jumlahAlternatif;
 
-                $bobotPrioritasAlternatif[$tahunAjaran][$kodeKriteria][$alternatifPertama] = substr($bobotPrioritasAlternatif[$tahunAjaran][$kodeKriteria][$alternatifPertama], 0, 6);
+                $bobotPrioritasAlternatif[$idTanggalPenilaian][$kodeKriteria][$alternatifPertama] = substr($bobotPrioritasAlternatif[$idTanggalPenilaian][$kodeKriteria][$alternatifPertama], 0, 6);
             }
         }
 
         // Store bobot prioritas alternatif to database
         try {
-            foreach ($bobotPrioritasAlternatif as $keyTahunAjaran => $valueTahunAjaran) {
-                foreach ($valueTahunAjaran as $kodeKriteria => $matriksKriteria) {
+            foreach ($bobotPrioritasAlternatif as $keyIdTanggalPenilaian => $valueIdTanggalPenilaian) {
+                foreach ($valueIdTanggalPenilaian as $kodeKriteria => $matriksKriteria) {
                     foreach ($matriksKriteria as $dataAlternatif => $bobotPrioritas) {
                         BobotPrioritasAlternatif::updateOrCreate(
                             [
-                                'tahun_ajaran' => $keyTahunAjaran,
+                                'id_tanggal_penilaian' => $keyIdTanggalPenilaian,
                                 'kode_kriteria' => $kodeKriteria,
                                 'kode_alternatif' => $dataAlternatif,
                             ],
