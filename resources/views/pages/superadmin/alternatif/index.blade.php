@@ -1,25 +1,25 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Data Karyawan</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Data Pegawai</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="my-8">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Data Karyawan</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Data Pegawai</h4>
 
         <div class="flex flex-row items-center justify-between">
             <div>
-                <x-molecules.search :placeholder="'Cari Karyawan'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
+                <x-molecules.search :placeholder="'Cari Pegawai'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
             </div>
 
             <div>
                 <a href="{{ route('alternatif.create') }}">
-                    <x-atoms.button.button-primary :customClass="'h-12 w-40 rounded-md'" :type="'button'" :name="'Tambah Karyawan'" />
+                    <x-atoms.button.button-primary :customClass="'h-12 w-40 rounded-md'" :type="'button'" :name="'Tambah Pegawai'" />
                 </a>
             </div>
         </div>
@@ -33,7 +33,7 @@
                         Kode Alternatif
                     </th>
                     <th class="px-6 py-3" scope="col">
-                        Nama Karyawan
+                        Nama Pegawai
                     </th>
                     <th class="flex justify-center px-6 py-3" scope="col">
                         Aksi
@@ -84,7 +84,7 @@
                                         <x-atoms.svg.trash />
                                     </button>
 
-                                    <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama karyawan : ' .
+                                    <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama pegawai : ' .
                                         $item->nama_alternatif .
                                         ' ?'" :action="route('alternatif.destroy', $item->id_alternatif)" />
                                 </div>
@@ -108,4 +108,4 @@
         {{ $alternatif->links('vendor.pagination.tailwind') }}
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
