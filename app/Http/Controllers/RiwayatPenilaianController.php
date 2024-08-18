@@ -6,6 +6,7 @@ use App\Models\GroupKaryawan;
 use App\Models\GroupKaryawanDetail;
 use App\Models\Kriteria;
 use App\Models\Penilaian;
+use App\Models\TanggalPenilaian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,6 +16,7 @@ class RiwayatPenilaianController extends Controller
      * Constructor
      */
     private $penilaian;
+    private $tahunAjaran;
 
     public function __construct()
     {
@@ -34,31 +36,39 @@ class RiwayatPenilaianController extends Controller
     public function index()
     {
         // Cari nama alternatif berdasarkan nama auth user
-        $checkAuthAlternatif = auth()->user()->alternatif->kode_alternatif;
+        $checkAuthAlternatif = auth()->user()->alternatif->kode_alternatif ?? null;
 
         // checkAuthAlternatif berada di dalam group karyawan yang mana
         $checkGroupKaryawanId = null;
-        if (Auth::user()->role == 'kepala sekolah') {
+        if (Auth::user()->hasRole('kepala sekolah')) {
             $checkGroupKaryawanId = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->value('id_group_karyawan');
-        } elseif (Auth::user()->role == 'guru') {
+        } elseif (Auth::user()->hasRole('guru')) {
             $checkGroupKaryawanId = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->value('id_group_karyawan');
         }
 
-        // Cari penilaian dari $checkAuthAlternatif berdasarkan tahun ajaran
-        $penilaianGroupedByTahun = Penilaian::select('tahun_ajaran')
-        ->orderBy('tahun_ajaran', 'DESC')
-        ->where('alternatif_pertama', $checkAuthAlternatif)
-        ->when(request()->has('search'), function ($query) {
-            $query->where('tahun_ajaran', 'like', '%' . request('search') . '%');
-        })
-        ->groupBy('tahun_ajaran')
-        ->pluck('tahun_ajaran');
+        // Check tanggal penilaian ada atau tidak, berdasarkan tahun ajaran, dan akhir tanggal penilaian
+        $checkTanggalPenilaian = TanggalPenilaian::where('tahun_ajaran', $this->tahunAjaran ?? null)
+            ->where('id_group_karyawan', $checkGroupKaryawanId ?? null)
+            ->first();
+
+        // Cari penilaian dari $checkAuthAlternatif berdasarkan $checkTanggalPenilaian->id_tanggal_penilaian
+        $penilaianGroupedByTahun = Penilaian::with('tanggalPenilaian')
+            ->where('alternatif_pertama', $checkAuthAlternatif)
+            ->where('id_tanggal_penilaian', $checkTanggalPenilaian->id_tanggal_penilaian ?? null)
+            ->get()->unique('id_tanggal_penilaian')
+            ->groupBy('id_tanggal_penilaian');
 
         // Menggabungkan tahun_ajaran dengan nama group karyawan
         $penilaianWithGroupKaryawan = [];
-        foreach ($penilaianGroupedByTahun as $tahun) {
-            $namaGroupKaryawan = GroupKaryawan::where('id_group_karyawan', $checkGroupKaryawanId)->value('nama_group_karyawan');
-            $penilaianWithGroupKaryawan[] = ['tahun' => $tahun, 'namaGroupKaryawan' => $namaGroupKaryawan];
+        foreach ($penilaianGroupedByTahun as $penilaian) {
+            foreach ($penilaian as $itemPenilaian) {
+                $namaGroupKaryawan = GroupKaryawan::where('id_group_karyawan', $checkGroupKaryawanId)->value('nama_group_karyawan');
+                $penilaianWithGroupKaryawan[] = [
+                    'tahun' => $itemPenilaian->tanggalPenilaian->tahun_ajaran,
+                    'semester' => $itemPenilaian->tanggalPenilaian->semester,
+                    'namaGroupKaryawan' => $namaGroupKaryawan
+                ];
+            }
         }
         
         return view('pages.guru.riwayat-penilaian.index', [
@@ -89,13 +99,15 @@ class RiwayatPenilaianController extends Controller
      */
     public function show($id)
     {
-        $getTahunAjaran = Penilaian::where('id_penilaian', $id)->value('tahun_ajaran');
-        $tahunAjaran = explode('/', $getTahunAjaran);
+        $getTahunAjaran = Penilaian::with(['tanggalPenilaian'])->where('id_penilaian', $id)->get();
+
+        $tahunAjaran = explode('/', $getTahunAjaran->first()->tanggalPenilaian->tahun_ajaran);
+        $tahunAjaran[] = $getTahunAjaran->first()->tanggalPenilaian->semester;
 
         return view('pages.guru.riwayat-penilaian.show', [
             'title' => 'Detail Data Penilaian',
             'kriteria' => Kriteria::with(['subkriteria', 'subkriteria.indikatorSubkriteria'])->orderBy('kode_kriteria', 'ASC')->get(),
-            'penilaian' => Penilaian::with(['alternatifPertama.alternatifPertama', 'alternatifKedua',  'alternatifKedua.alternatifPertama.users', 'penilaianIndikator', 'penilaianIndikator.skalaIndikatorDetail'])->where('id_penilaian', $id)->first(),
+            'penilaian' => Penilaian::with(['tanggalPenilaian', 'alternatifPertama.alternatifPertama', 'alternatifKedua',  'alternatifKedua.alternatifPertama.users', 'penilaianIndikator', 'penilaianIndikator.skalaIndikatorDetail'])->where('id_penilaian', $id)->first(),
             'tahunAjaran' => $tahunAjaran,
         ]);
     }
@@ -103,16 +115,45 @@ class RiwayatPenilaianController extends Controller
     /**
      * Display the specified resource.
      */
-    public function showTahun($firstYear, $secondYear)
+    public function showTahun($firstYear, $secondYear, $semester)
     {
-        // Cari nama alternatif berdasarkan nama auth user
-        $checkAuthAlternatif = auth()->user()->alternatif->kode_alternatif;
+        $tahunAjaran = $this->tahunAjaran;
 
-        $tahunAjaranBreadcrumbs = $firstYear . '/' . $secondYear;
+        // Cari nama alternatif berdasarkan group karyawan yang mana nama alternatif sama dengan nama auth user
+        $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif;
+        
+        // checkAuthAlternatif berada di dalam group karyawan yang mana
+        $checkGroupKaryawanId = null;
+        if (Auth::user()->hasRole('kepala sekolah')) {
+            $checkGroupKaryawanId = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->value('id_group_karyawan');
+        } elseif (Auth::user()->hasAnyRole([
+                'yayasan',
+                'deputi',
+                'guru',
+                'tata usaha tenaga pendidikan',
+                'tata usaha non tenaga pendidikan',
+                'kerohanian tenaga pendidikan',
+                'kerohanian non tenaga pendidikan',
+            ])) {
+            $checkGroupKaryawanId = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->value('id_group_karyawan');
+        }
+
+        // Check tanggal penilaian ada atau tidak, berdasarkan tahun ajaran, dan akhir tanggal penilaian
+        $checkTanggalPenilaian = TanggalPenilaian::where('tahun_ajaran', $tahunAjaran ?? null)
+            ->where('id_group_karyawan', $checkGroupKaryawanId)
+            ->first();
+
+        // Buat breadcrumbs tahun ajaran dan semester dalam bentuk array
+        $tahunAjaranBreadcrumbs = [
+            'tahun_ajaran' => $firstYear . '/' . $secondYear,
+            'semester' => $semester,
+        ];      
+
+        $penilaian = Penilaian::with(['tanggalPenilaian', 'alternatifPertama.alternatifPertama'])->where('alternatif_pertama', $checkAuthAlternatif)->orderBy('alternatif_pertama', 'ASC')->where('id_tanggal_penilaian', $checkTanggalPenilaian->id_tanggal_penilaian)->filter(request(['search']))->paginate(10)->withQueryString();
 
         return view('pages.guru.riwayat-penilaian.show-tahun', [
             'title' => 'Detail Data Penilaian',
-            'penilaian' => Penilaian::with(['alternatifPertama.alternatifPertama'])->where('alternatif_pertama', $checkAuthAlternatif)->orderBy('alternatif_pertama', 'ASC')->where('tahun_ajaran', "$firstYear/$secondYear")->filter(request(['search']))->paginate(10)->withQueryString(),
+            'penilaian' => $penilaian,
             'tahunAjaranBreadcrumbs' => $tahunAjaranBreadcrumbs,
         ]);
     }
