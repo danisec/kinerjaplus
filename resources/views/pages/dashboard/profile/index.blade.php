@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -56,10 +56,10 @@
                 <label class="mb-2 block text-base font-medium text-gray-900" for="role">
                     Peran Pengguna</label>
                 <input class="field-input-slate w-full capitalize" name="role" type="text"
-                    value="{{ $profile->role }}" @disabled(true) @readonly(true)>
+                    value="{{ $profile->getRoleNames()->first() }}" @disabled(true) @readonly(true)>
             </div>
         </div>
 
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
