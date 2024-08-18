@@ -118,6 +118,44 @@ class PerhitunganKriteriaController extends Controller
     /**
      * Display the specified resource.
      */
+    public function pedoman()
+    {
+        $intensitasKepentingan = [
+            [
+                'nilai' => '1',
+                'definisi' => 'Elemen yang satu sama pentingnya dibanding dengan elemen yang lain (equal importance).'
+            ],
+            [
+                'nilai' => '3',
+                'definisi' => 'Elemen yang satu sedikit lebih penting dari pada elemen yang lain (moderate more importance).'
+            ],
+            [
+                'nilai' => '5',
+                'definisi' => 'Elemen yang satu jelas lebih penting dari pada elemen yang lain (essential, strong more importance).'
+            ],
+            [
+                'nilai' => '7',
+                'definisi' => 'Elemen yang satu sangat jelas lebih penting dari pada elemen yang lain (demonstrated importance).'
+            ],
+            [
+                'nilai' => '9',
+                'definisi' => 'Elemen yang satu mutlak lebih penting dari pada elemen yang lain (absolutely more importance).'
+            ],
+            [
+                'nilai' => '2, 4, 6, 8',
+                'definisi' => 'Apabila ragu-ragu antara dua nilai yang berdekatan (grey area).'
+            ],
+        ];
+
+        return view('pages.kepala-sekolah.perhitungan-kriteria.pedoman', [
+            'title' => 'Pedoman Pengisian Perbandingan Kriteria',
+            'intensitasKepentingan' => $intensitasKepentingan,
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
     public function show(PerhitunganKriteria $perhitunganKriteria)
     {
         //
