@@ -21,6 +21,11 @@ class Ranking extends Model
         'rank',
     ];
 
+    public function tanggalPenilaian()
+    {
+        return $this->belongsTo(TanggalPenilaian::class, 'id_tanggal_penilaian', 'id_tanggal_penilaian');
+    }
+
     public function alternatif()
     {
         return $this->belongsTo(GroupPenilaian::class, 'kode_alternatif', 'alternatif_pertama');
