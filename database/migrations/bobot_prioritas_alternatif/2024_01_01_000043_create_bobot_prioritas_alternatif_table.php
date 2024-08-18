@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bobot_prioritas_alternatif', function (Blueprint $table) {
             $table->id('id_bobot_prioritas_alternatif');
-            $table->string('tahun_ajaran', 9);
+            $table->unsignedBigInteger('id_tanggal_penilaian');
             $table->string('kode_kriteria', 3);
             $table->string('kode_alternatif', 4);
             $table->double('bobot_prioritas');

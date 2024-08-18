@@ -12,6 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bobot_prioritas_alternatif', function (Blueprint $table) {
+            $table->foreign('id_tanggal_penilaian', 'fk_bobot_prioritas_alternatif_id_tanggal_penilaian')
+                ->references('id_tanggal_penilaian')
+                ->on('tanggal_penilaian')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+        });
+
+        Schema::table('bobot_prioritas_alternatif', function (Blueprint $table) {
             $table->foreign('kode_kriteria', 'fk_bobot_prioritas_alternatif_kriteria')
                 ->references('kode_kriteria')
                 ->on('kriteria')
@@ -33,6 +41,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('bobot_prioritas_alternatif', function (Blueprint $table) {
+            $table->dropForeign('fk_bobot_prioritas_alternatif_id_tanggal_penilaian');
+        });
+
         Schema::table('bobot_prioritas_alternatif', function (Blueprint $table) {
             $table->dropForeign('fk_bobot_prioritas_alternatif_kriteria');
         });
