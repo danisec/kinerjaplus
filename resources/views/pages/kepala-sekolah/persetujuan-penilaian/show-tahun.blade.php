@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -12,15 +12,16 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Tahun Ajaran
-                    {{ $tahunAjaranBreadcrumbs }}</span>
+                <span class="mx-2 text-base font-medium capitalize text-gray-500">Tahun Ajaran
+                    {{ $tahunAjaranBreadcrumbs['tahun_ajaran'] }} - Semester
+                    {{ $tahunAjaranBreadcrumbs['semester'] }}</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="my-8">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Persetujuan Penilaian Evaluasi Kinerja
-            {{ $tahunAjaranBreadcrumbs }}</h4>
+        <h4 class="mb-6 text-2xl font-semibold capitalize text-gray-900">Persetujuan Penilaian Evaluasi Kinerja
+            {{ $tahunAjaranBreadcrumbs['tahun_ajaran'] }} - Semester {{ $tahunAjaranBreadcrumbs['semester'] }}</h4>
 
         <div class="flex flex-row items-center justify-between">
             <div>
@@ -38,6 +39,9 @@
                     </th>
                     <th class="px-6 py-3" scope="col" rowspan="2">
                         Tahun Ajaran
+                    </th>
+                    <th class="px-6 py-3" scope="col" rowspan="2">
+                        Semester
                     </th>
                     <th class="px-6 py-3" scope="col" rowspan="2">
                         Nama Pemberi Nilai
@@ -71,7 +75,10 @@
                                 {{ ($penilaian->currentPage() - 1) * $penilaian->perPage() + $loop->iteration }}
                             </th>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $item->tahun_ajaran }}
+                                {{ $item->tanggalPenilaian->tahun_ajaran }}
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4 capitalize">
+                                {{ $item->tanggalPenilaian->semester }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
                                 {{ $item->alternatifPertama->alternatifPertama->nama_alternatif }}
@@ -121,7 +128,9 @@
                                         ' Kepada ' .
                                         $item->alternatifKedua->alternatifPertama->nama_alternatif .
                                         ' Tahun Ajaran ' .
-                                        $item->tahun_ajaran .
+                                        $item->tanggalPenilaian->tahun_ajaran .
+                                        ' - Semester ' .
+                                        $item->tanggalPenilaian->semester .
                                         ' ?'" :action="route('persetujuanPenilaian.update', $item->id_penilaian)" :modalId="'modal_' . $item->id_penilaian">
 
                                         <div class="flex flex-row items-center gap-4">
@@ -139,7 +148,7 @@
                                             <div>
                                                 @if ($item->catatanKaryawan != null)
                                                     <a
-                                                        href="{{ route('catatanKaryawan.edit', $item->catatanKaryawan->id_catatan_karyawan) }}">
+                                                        href="{{ route('catatanKaryawan.edit', ['id' => $item->catatanKaryawan->id_catatan_karyawan, 'firstYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 5), 'semester' => $tahunAjaranBreadcrumbs['semester']]) }}">
                                                         <button
                                                             class="updateStatusButton rounded-md bg-red-700 px-8 py-2.5 text-white hover:bg-red-600 focus:bg-red-600 focus:ring-red-600"
                                                             data-status="Tidak Disetujui" type="button">
@@ -148,7 +157,7 @@
                                                     </a>
                                                 @else
                                                     <a
-                                                        href="{{ route('persetujuanPenilaian.createCatatan', ['firstYear' => substr($tahunAjaranBreadcrumbs, 0, 4), 'secondYear' => substr($tahunAjaranBreadcrumbs, 5), 'id' => $item->id_penilaian]) }}">
+                                                        href="{{ route('persetujuanPenilaian.createCatatan', ['firstYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 5), 'semester' => $tahunAjaranBreadcrumbs['semester'], 'id' => $item->id_penilaian]) }}">
                                                         <button
                                                             class="updateStatusButton rounded-md bg-red-700 px-8 py-2.5 text-white hover:bg-red-600 focus:bg-red-600 focus:ring-red-600"
                                                             data-status="Tidak Disetujui" type="button">
@@ -193,4 +202,4 @@
         });
     </script>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
