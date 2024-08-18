@@ -5,7 +5,7 @@
             <div class="flex flex-row gap-2">
                 <p class="text-base font-normal text-gray-900">{{ Auth::user()->fullname }}</p>
                 <span
-                    class="rounded-md bg-emerald-400 p-1 text-xs font-normal text-white">{{ Auth::user()->role }}</span>
+                    class="rounded-md bg-emerald-400 p-1 text-xs font-normal text-white">{{ Auth::user()->getRoleNames()->first() }}</span>
             </div>
 
             <div x-data="{ isOpen: false }">
