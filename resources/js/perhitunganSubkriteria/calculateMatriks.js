@@ -18,5 +18,10 @@ $(document).ready(function () {
         if (calculatedInput.val() === "0") {
             calculatedInput.val(calculatedValue);
         }
+
+        // Buatkan kondisi NaN jika inputan kosong
+        if (isNaN(calculatedValue)) {
+            calculatedInput.val("");
+        }
     });
 });
