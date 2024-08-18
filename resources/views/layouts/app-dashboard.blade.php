@@ -1,4 +1,4 @@
-<x-layouts.app-layout title="{{ $title }}">
+<x-app-layout title="{{ $title }}">
 
     <div class="relative h-screen">
         <x-organism.aside />
@@ -15,4 +15,4 @@
 
     </div>
 
-</x-layouts.app-layout>
+</x-app-layout>
