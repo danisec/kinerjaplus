@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -12,15 +12,16 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Tahun Ajaran
-                    {{ $tahunAjaranBreadcrumbs }}</span>
+                <span class="mx-2 text-base font-medium capitalize text-gray-500">Tahun Ajaran
+                    {{ $tahunAjaranBreadcrumbs['tahun_ajaran'] }} - Semester
+                    {{ $tahunAjaranBreadcrumbs['semester'] }}</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="my-8">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Riwayat Penilaian Evaluasi Kinerja
-            {{ $tahunAjaranBreadcrumbs }}</h4>
+        <h4 class="mb-6 text-2xl font-semibold capitalize text-gray-900">Riwayat Penilaian Evaluasi Kinerja
+            {{ $tahunAjaranBreadcrumbs['tahun_ajaran'] }} - Semester {{ $tahunAjaranBreadcrumbs['semester'] }}</h4>
 
         <div class="flex flex-row items-center justify-between">
             <div>
@@ -38,6 +39,9 @@
                     </th>
                     <th class="px-6 py-3" scope="col" rowspan="2">
                         Tahun Ajaran
+                    </th>
+                    <th class="px-6 py-3" scope="col" rowspan="2">
+                        Semester
                     </th>
                     <th class="px-6 py-3" scope="col" rowspan="2">
                         Nama Pemberi Nilai
@@ -71,7 +75,10 @@
                                 {{ ($penilaian->currentPage() - 1) * $penilaian->perPage() + $loop->iteration }}
                             </th>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $item->tahun_ajaran }}
+                                {{ $item->tanggalPenilaian->tahun_ajaran }}
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4 capitalize">
+                                {{ $item->tanggalPenilaian->semester }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
                                 {{ $item->alternatifPertama->alternatifPertama->nama_alternatif }}
@@ -129,4 +136,4 @@
         {{ $penilaian->links('vendor.pagination.tailwind') }}
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
