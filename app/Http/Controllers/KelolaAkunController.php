@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class KelolaAkunController extends Controller
 {
@@ -14,19 +16,7 @@ class KelolaAkunController extends Controller
 
     public function __construct()
     {
-        $this->role = [
-            '0' => 'superadmin',
-            '6' => 'admin',
-            '1' => 'yayasan',
-            '2' => 'deputi',
-            '3' => 'kepala sekolah',
-            '4' => 'guru',
-            '7' => 'tata usaha tenaga pendidikan', 
-            '8' => 'tata usaha non tenaga pendidikan',
-            '9' => 'kerohanian tenaga pendidikan', 
-            '10' => 'kerohanian non tenaga pendidikan',
-            '5' => 'IT',
-        ];
+        $this->roles = Role::all();
     }
 
     /**
@@ -36,7 +26,13 @@ class KelolaAkunController extends Controller
     {      
         return view('pages.it.kelola-akun.index', [
             'title' => 'Kelola Akun',
-            'user' => User::orderBy('role', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
+            'user' => User::join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+                ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                ->select('users.*', 'roles.name as role')
+                ->orderBy('users.created_at', 'ASC')
+                ->filter(request(['search']))
+                ->paginate(10)
+                ->withQueryString(),
         ]);
     }
 
@@ -47,7 +43,7 @@ class KelolaAkunController extends Controller
     {
         return view('pages.it.kelola-akun.create', [
             'title' => 'Tambah Akun',
-            'role' => $this->role,
+            'roles' => $this->roles,
         ]);
     }
 
@@ -60,7 +56,7 @@ class KelolaAkunController extends Controller
             'fullname' => 'required|max:255',
             'username' => 'required', 'min:4', 'max:255', 'unique:users',
             'email' => 'required|email:dns|unique:users',
-            'role' => 'required',
+            'role' => 'required|exists:roles,name',
             'password' => 'required|min:8|max:255',
         ],[
             'fullname.required' => 'Nama lengkap harus diisi',
@@ -79,13 +75,15 @@ class KelolaAkunController extends Controller
         ]);
 
         try {
-            User::create([
+            $user = User::create([
                 'fullname' => $validatedData['fullname'],
                 'username' => $validatedData['username'],
                 'email' => $validatedData['email'],
-                'role' => $validatedData['role'],
                 'password' => bcrypt($validatedData['password']),
             ]);
+
+            // Assign role using spatie/laravel-permission
+            $user->assignRole($validatedData['role']);
 
             $notif = notify()->success('Akun berhasil ditambahkan');
             return redirect()->route('kelolaAkun.index')->withInput()->with('notif', $notif);
@@ -100,9 +98,13 @@ class KelolaAkunController extends Controller
      */
     public function show(string $id)
     {
+        // Dapatkan semua permission yang ada pada user tersebut
+        $permission = User::findOrFail($id)->getAllPermissions();
+
         return view('pages.it.kelola-akun.show', [
             'title' => 'Detail Akun',
             'user' => User::findOrFail($id),
+            'permission' => $permission,
         ]);
     }
 
@@ -111,10 +113,14 @@ class KelolaAkunController extends Controller
      */
     public function edit(string $id)
     {
+        // Dapatkan semua permission yang ada
+        $permission = Permission::whereNotIn('name', ['perbandingan-kriteria', 'perbandingan-subkriteria', 'view perbandingan-kriteria', 'view perbandingan-subkriteria', 'perbandingan-karyawan'])->get();
+        
         return view('pages.it.kelola-akun.edit', [
             'title' => 'Ubah Akun',
             'user' => User::findOrFail($id),
-            'role' => $this->role,
+            'roles' => $this->roles,
+            'permission' => $permission,
         ]);
     }
 
@@ -127,13 +133,17 @@ class KelolaAkunController extends Controller
             'fullname' => 'max:255',
             'username' => 'min:4', 'max:255',
             'email' => 'email:dns',
-            'role' => 'required',
+            'role' => 'required|exists:roles,name',
+            'permission' => 'required|array',
+            'permission.*' => 'exists:permissions,id',
             'password' => 'nullable|min:8|max:255',
         ],[
             'fullname.max' => 'Nama lengkap maksimal 255 karakter',
             'username.min' => 'Nama pengguna minimal 4 karakter',
             'username.max' => 'Nama pengguna maksimal 255 karakter',
             'email.email' => 'Email tidak valid',
+            'permission.required' => 'Permission harus dipilih',
+            'permission.*.exists' => 'Permission yang dipilih tidak valid',
             'password.min' => 'Password minimal 8 karakter',
             'password.max' => 'Password maksimal 255 karakter',
         ]);
@@ -146,7 +156,6 @@ class KelolaAkunController extends Controller
                     'fullname' => $validatedData['fullname'],
                     'username' => $validatedData['username'],
                     'email' => $validatedData['email'],
-                    'role' => $validatedData['role'],
                     'password' => bcrypt($validatedData['password']),
                 ]);
             } else {
@@ -154,9 +163,15 @@ class KelolaAkunController extends Controller
                     'fullname' => $validatedData['fullname'],
                     'username' => $validatedData['username'],
                     'email' => $validatedData['email'],
-                    'role' => $validatedData['role'],
                 ]);
             }
+
+            // Sync roles using Spatie
+            $user->syncRoles($validatedData['role']);
+
+            // Sync permissions using Spatie
+            $permissions = Permission::whereIn('id', $validatedData['permission'])->pluck('name')->toArray();
+            $user->syncPermissions($permissions);
 
             $notif = notify()->success('Akun berhasil diubah');
             return redirect()->route('kelolaAkun.index')->withInput()->with('notif', $notif);
