@@ -12,6 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('penilaian', function (Blueprint $table) {
+            $table->foreign('id_tanggal_penilaian', 'fk_id_tanggal_penilaian_tanggal_penilaian')
+                ->references('id_tanggal_penilaian')
+                ->on('tanggal_penilaian')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+        });
+
+        Schema::table('penilaian', function (Blueprint $table) {
             $table->foreign('alternatif_pertama', 'fk_alternatif_pertama_group_penilaian')
                 ->references('alternatif_pertama')
                 ->on('group_penilaian')
@@ -33,6 +41,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('penilaian', function (Blueprint $table) {
+            $table->dropForeign('fk_id_tanggal_penilaian_tanggal_penilaian');
+        });
+
         Schema::table('penilaian', function (Blueprint $table) {
             $table->dropForeign('fk_alternatif_pertama_group_penilaian');
         });
