@@ -31,11 +31,12 @@ class aside extends Component
                     'M21.5 5.5C21.5 7.15685 20.1569 8.5 18.5 8.5C16.8431 8.5 15.5 7.15685 15.5 5.5C15.5 3.84315 16.8431 2.5 18.5 2.5C20.1569 2.5 21.5 3.84315 21.5 5.5Z',
                     'M21.4955 11C21.4955 11 21.5 11.3395 21.5 12C21.5 16.4784 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4784 2.5 12C2.5 7.52169 2.5 5.28252 3.89124 3.89127C5.28249 2.50003 7.52166 2.50003 12 2.50003L13 2.5',
                 ],
+                'permission' => 'dashboard',
             ],
         ];
 
         $sideNavData = [
-            'Karyawan' => [
+            'Pegawai' => [
                 'url' => 'data-alternatif',
                 'viewBox' => '0 0 24 24',
                 'paths' => [
@@ -44,9 +45,10 @@ class aside extends Component
                     'M15 9.5L19 9.5',
                     'M15 13.5H17',
                 ],
+                'permission' => 'karyawan',
             ],
 
-            'Group Karyawan' => [
+            'Group Pegawai' => [
                 'url' => 'data-group-alternatif',
                 'viewBox' => '0 0 24 24',
                 'paths' => [
@@ -55,6 +57,7 @@ class aside extends Component
                     'M8.0838 15.1112C7.06203 15.743 4.38299 17.0331 6.0147 18.6474C6.81178 19.436 7.69952 20 8.81563 20H15.1844C16.3005 20 17.1882 19.436 17.9853 18.6474C19.617 17.0331 16.938 15.743 15.9162 15.1112C13.5201 13.6296 10.4799 13.6296 8.0838 15.1112Z',
                     'M15.5 7.5C15.5 9.433 13.933 11 12 11C10.067 11 8.5 9.433 8.5 7.5C8.5 5.567 10.067 4 12 4C13.933 4 15.5 5.567 15.5 7.5Z',
                 ],
+                'permission' => 'group-karyawan',
             ],
 
             'Kriteria' => [
@@ -69,6 +72,7 @@ class aside extends Component
                     'M11 12L17 12',
                     'M11 17L17 17',
                 ],
+                'permission' => 'kriteria',
             ],
 
             'Subkriteria' => [
@@ -79,6 +83,7 @@ class aside extends Component
                     'M16.8538 7.43306C16.8538 8.24714 16.1901 8.90709 15.3714 8.90709C14.5527 8.90709 13.889 8.24714 13.889 7.43306C13.889 6.61898 14.5527 5.95904 15.3714 5.95904C16.1901 5.95904 16.8538 6.61898 16.8538 7.43306Z',
                     'M12 20.9463L11.0477 21.2056C8.35403 21.9391 7.00722 22.3059 5.94619 21.6833C4.88517 21.0608 4.52429 19.6921 3.80253 16.9547L2.78182 13.0834C2.06006 10.346 1.69918 8.97731 2.31177 7.89904C2.84167 6.96631 4 7.00027 5.5 7.00015',
                 ],
+                'permission' => 'subkriteria',
             ],
 
             'Skala Indikator' => [
@@ -87,6 +92,7 @@ class aside extends Component
                 'paths' => [
                     'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
                 ],
+                'permission' => 'skala-indikator',
             ],
         ];
 
@@ -95,6 +101,7 @@ class aside extends Component
                 'url' => 'data-penilaian',
                 'viewBox' => '0 0 24 24',
                 'path' => 'M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008z',
+                'permission' => 'penilaian',
             ],
         ];
 
@@ -107,6 +114,7 @@ class aside extends Component
                     'M12 8V12L14 14',
                     'M21.9551 13C21.9848 12.6709 22 12.3373 22 12M15 22C15.3416 21.8876 15.6753 21.7564 16 21.6078M20.7906 17C20.9835 16.6284 21.1555 16.2433 21.305 15.8462M18.1925 20.2292C18.5369 19.9441 18.8631 19.6358 19.1688 19.3065',
                 ],
+                'permission' => 'riwayat-penilaian',
             ],
         ];
 
@@ -117,8 +125,10 @@ class aside extends Component
                 'paths' => [
                     'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
                 ],
+                'permission' => 'persetujuan-penilaian',
             ],
-            'Catatan Karyawan' => [
+
+            'Catatan Pegawai' => [
                 'url' => 'data-catatan-karyawan',
                 'viewBox' => '0 0 24 24',
                 'paths' => [
@@ -128,34 +138,37 @@ class aside extends Component
                     'M6.98047 13.0156H10.9805',
                     'M6.98047 17.0156H14.9805',
                 ],
+                'permission' => 'catatan-karyawan',
             ],
         ];
 
-        if (in_array(Auth::user()->role, ['yayasan', 'deputi', 'kepala sekolah', 'guru', 'tata usaha tenaga pendidikan', 'tata usaha non tenaga pendidikan', 'kerohanian tenaga pendidikan', 'kerohanian non tenaga pendidikan'])) {
+        if (Auth::user()->hasAnyRole(['yayasan', 'deputi', 'kepala sekolah', 'guru', 'tata usaha tenaga pendidikan', 'tata usaha non tenaga pendidikan', 'kerohanian tenaga pendidikan', 'kerohanian non tenaga pendidikan'])) {
             $sideNavPenilaian = [
                 'Penilaian' => [
                     'url' => 'penilaian/introduction',
                     'viewBox' => '0 0 24 24',
                     'path' => 'M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008z',
+                    'permission' => 'penilaian',
                 ],
             ];
         }
 
-        if (in_array(Auth::user()->role, ['yayasan', 'deputi', 'kepala sekolah','guru', 'tata usaha tenaga pendidikan', 'tata usaha non tenaga pendidikan', 'kerohanian tenaga pendidikan', 'kerohanian non tenaga pendidikan'])) {
+        if (Auth::user()->hasAnyRole(['yayasan', 'deputi', 'kepala sekolah','guru', 'tata usaha tenaga pendidikan', 'tata usaha non tenaga pendidikan', 'kerohanian tenaga pendidikan', 'kerohanian non tenaga pendidikan'])) {
             $sideNavGuru = [
                 'Riwayat Penilaian' => [
                     'url' => 'riwayat-penilaian',
                     'viewBox' => '0 0 24 24',
                     'paths' => [
-                    'M12 22C6.47711 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C16.4776 2 20.2257 4.94289 21.5 9H19',
-                    'M12 8V12L14 14',
-                    'M21.9551 13C21.9848 12.6709 22 12.3373 22 12M15 22C15.3416 21.8876 15.6753 21.7564 16 21.6078M20.7906 17C20.9835 16.6284 21.1555 16.2433 21.305 15.8462M18.1925 20.2292C18.5369 19.9441 18.8631 19.6358 19.1688 19.3065',
-                ],
+                        'M12 22C6.47711 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C16.4776 2 20.2257 4.94289 21.5 9H19',
+                        'M12 8V12L14 14',
+                        'M21.9551 13C21.9848 12.6709 22 12.3373 22 12M15 22C15.3416 21.8876 15.6753 21.7564 16 21.6078M20.7906 17C20.9835 16.6284 21.1555 16.2433 21.305 15.8462M18.1925 20.2292C18.5369 19.9441 18.8631 19.6358 19.1688 19.3065',
+                    ],
+                    'permission' => 'riwayat-penilaian',
                 ],
             ];
         }
 
-        if (in_array(Auth::user()->role, ['kepala sekolah'])) {
+        if (Auth::user()->hasRole('kepala sekolah')) {
             $sideNavKepalaSekolah = [
                 'Persetujuan Penilaian' => [
                     'url' => 'persetujuan-penilaian',
@@ -163,8 +176,10 @@ class aside extends Component
                     'paths' => [
                         'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
                     ],
+                    'permission' => 'persetujuan-penilaian',
                 ],
-                'Catatan Karyawan' => [
+
+                'Catatan Pegawai' => [
                     'url' => 'catatan-karyawan',
                     'viewBox' => '0 0 24 24',
                     'paths' => [
@@ -174,6 +189,7 @@ class aside extends Component
                         'M6.98047 13.0156H10.9805',
                         'M6.98047 17.0156H14.9805',
                     ],
+                    'permission' => 'catatan-karyawan',
                 ],
             ];
         }
@@ -182,35 +198,45 @@ class aside extends Component
             'Kriteria' => [
                 'url' => 'perbandingan-kriteria'
             ],
+
             'Subkriteria' => [
                 'url' => 'perbandingan-subkriteria'
             ],
-            'Karyawan' => [
+            
+            'Pegawai' => [
                 'url' => 'perbandingan-alternatif/introduction'
             ],
         ];
 
-        if (in_array(Auth::user()->role, ['kepala sekolah'])) {
+        if (Auth::user()->hasRole('kepala sekolah')) {
             $sideNavPerhitungan = [
                 'Kriteria' => [
-                    'url' => 'perbandingan-kriteria/hasil-perbandingan-kriteria'
+                    'url' => 'perbandingan-kriteria/hasil-perbandingan-kriteria',
+                    'permission' => 'view perbandingan-kriteria',
                 ],
+
                 'Subkriteria' => [
-                    'url' => 'perbandingan-subkriteria/hasil-perbandingan-subkriteria'
+                    'url' => 'perbandingan-subkriteria/hasil-perbandingan-subkriteria',
+                    'permission' => 'view perbandingan-subkriteria',
                 ],
-                'Karyawan' => [
-                    'url' => 'perbandingan-alternatif/introduction'
+
+                'Pegawai' => [
+                    'url' => 'perbandingan-alternatif/introduction',
+                    'permission' => 'perbandingan-karyawan',
                 ],
             ];
         }
 
-        if (in_array(Auth::user()->role, ['superadmin'])) {
+        if (Auth::user()->hasRole('superadmin')) {
             $sideNavPerhitungan = [
                 'Kriteria' => [
-                    'url' => 'perbandingan-kriteria'
+                    'url' => 'perbandingan-kriteria',
+                    'permission' => 'perbandingan-kriteria',
                 ],
+
                 'Subkriteria' => [
-                    'url' => 'perbandingan-subkriteria'
+                    'url' => 'perbandingan-subkriteria',
+                    'permission' => 'perbandingan-subkriteria',
                 ],
             ];
         }
@@ -225,7 +251,8 @@ class aside extends Component
                     'M2 22H22',
                     'M9 16C9 14.5858 9 13.8787 9.43934 13.4393C9.87868 13 10.5858 13 12 13C13.4142 13 14.1213 13 14.5607 13.4393C15 13.8787 15 14.5858 15 16V22H9V16Z',
                     'M12.6911 2.57767L13.395 3.99715C13.491 4.19475 13.7469 4.38428 13.9629 4.42057L15.2388 4.6343C16.0547 4.77141 16.2467 5.36824 15.6587 5.957L14.6668 6.95709C14.4989 7.12646 14.4069 7.4531 14.4589 7.68699L14.7428 8.925C14.9668 9.90492 14.4509 10.284 13.591 9.77185L12.3951 9.05808C12.1791 8.92903 11.8232 8.92903 11.6032 9.05808L10.4073 9.77185C9.5514 10.284 9.03146 9.90089 9.25543 8.925L9.5394 7.68699C9.5914 7.4531 9.49941 7.12646 9.33143 6.95709L8.33954 5.957C7.7556 5.36824 7.94358 4.77141 8.75949 4.6343L10.0353 4.42057C10.2473 4.38428 10.5033 4.19475 10.5993 3.99715L11.3032 2.57767C11.6872 1.80744 12.3111 1.80744 12.6911 2.57767Z',
-                ]
+                ],
+                'permission' => 'perankingan',
             ]
         ];
 
@@ -237,6 +264,7 @@ class aside extends Component
                     'M16.3083 4.38394C15.7173 4.38394 15.4217 4.38394 15.1525 4.28405C15.1151 4.27017 15.0783 4.25491 15.042 4.23828C14.781 4.11855 14.5721 3.90959 14.1541 3.49167C13.1922 2.52977 12.7113 2.04882 12.1195 2.00447C12.04 1.99851 11.96 1.99851 11.8805 2.00447C11.2887 2.04882 10.8077 2.52977 9.84585 3.49166C9.42793 3.90959 9.21897 4.11855 8.95797 4.23828C8.92172 4.25491 8.88486 4.27017 8.84747 4.28405C8.57825 4.38394 8.28273 4.38394 7.69171 4.38394H7.58269C6.07478 4.38394 5.32083 4.38394 4.85239 4.85239C4.38394 5.32083 4.38394 6.07478 4.38394 7.58269V7.69171C4.38394 8.28273 4.38394 8.57825 4.28405 8.84747C4.27017 8.88486 4.25491 8.92172 4.23828 8.95797C4.11855 9.21897 3.90959 9.42793 3.49166 9.84585C2.52977 10.8077 2.04882 11.2887 2.00447 11.8805C1.99851 11.96 1.99851 12.04 2.00447 12.1195C2.04882 12.7113 2.52977 13.1922 3.49166 14.1541C3.90959 14.5721 4.11855 14.781 4.23828 15.042C4.25491 15.0783 4.27017 15.1151 4.28405 15.1525C4.38394 15.4217 4.38394 15.7173 4.38394 16.3083V16.4173C4.38394 17.9252 4.38394 18.6792 4.85239 19.1476C5.32083 19.6161 6.07478 19.6161 7.58269 19.6161H7.69171C8.28273 19.6161 8.57825 19.6161 8.84747 19.7159C8.88486 19.7298 8.92172 19.7451 8.95797 19.7617C9.21897 19.8815 9.42793 20.0904 9.84585 20.5083C10.8077 21.4702 11.2887 21.9512 11.8805 21.9955C11.96 22.0015 12.04 22.0015 12.1195 21.9955C12.7113 21.9512 13.1922 21.4702 14.1541 20.5083C14.5721 20.0904 14.781 19.8815 15.042 19.7617C15.0783 19.7451 15.1151 19.7298 15.1525 19.7159C15.4217 19.6161 15.7173 19.6161 16.3083 19.6161H16.4173C17.9252 19.6161 18.6792 19.6161 19.1476 19.1476C19.6161 18.6792 19.6161 17.9252 19.6161 16.4173V16.3083C19.6161 15.7173 19.6161 15.4217 19.7159 15.1525C19.7298 15.1151 19.7451 15.0783 19.7617 15.042C19.8815 14.781 20.0904 14.5721 20.5083 14.1541C21.4702 13.1922 21.9512 12.7113 21.9955 12.1195C22.0015 12.04 22.0015 11.96 21.9955 11.8805C21.9512 11.2887 21.4702 10.8077 20.5083 9.84585C20.0904 9.42793 19.8815 9.21897 19.7617 8.95797C19.7451 8.92172 19.7298 8.88486 19.7159 8.84747C19.6161 8.57825 19.6161 8.28273 19.6161 7.69171V7.58269C19.6161 6.07478 19.6161 5.32083 19.1476 4.85239C18.6792 4.38394 17.9252 4.38394 16.4173 4.38394H16.3083Z',
                     'M8.5 16.5C9.19863 15.2923 10.5044 14.4797 12 14.4797C13.4956 14.4797 14.8014 15.2923 15.5 16.5M14 10C14 11.1046 13.1046 12 12 12C10.8955 12 10 11.1046 10 10C10 8.89544 10.8955 8.00001 12 8.00001C13.1046 8.00001 14 8.89544 14 10Z',
                 ],
+                'permission' => 'kelola-akun',
             ]
         ];
         
