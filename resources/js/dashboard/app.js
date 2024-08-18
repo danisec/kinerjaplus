@@ -1,16 +1,20 @@
-// Memeriksa apakah currentUser dan role pengguna
+// Periksa apakah currentUser dan role pengguna
 if (
     window.currentUser &&
-    (window.currentUser.role === "yayasan" ||
-        window.currentUser.role === "deputi" ||
-        window.currentUser.role === "kepala sekolah" ||
-        window.currentUser.role === "guru" ||
-        window.currentUser.role === "tata usaha tenaga pendidikan" ||
-        window.currentUser.role === "tata usaha non tenaga pendidikan" ||
-        window.currentUser.role === "kerohanian tenaga pendidikan" ||
-        window.currentUser.role === "kerohanian non tenaga pendidikan")
+    window.currentUser.roles.some((role) =>
+        [
+            "yayasan",
+            "deputi",
+            "kepala sekolah",
+            "guru",
+            "tata usaha tenaga pendidikan",
+            "tata usaha non tenaga pendidikan",
+            "kerohanian tenaga pendidikan",
+            "kerohanian non tenaga pendidikan",
+        ].includes(role),
+    )
 ) {
-    // Memeriksa apakah pengguna berada di dashboard
+    // Periksa apakah pengguna berada di dashboard
     if (
         window.location.pathname === "/dashboard" ||
         window.location.pathname === "/dashboard/"
@@ -26,12 +30,16 @@ if (
 
 if (
     window.currentUser &&
-    (window.currentUser.role === "kepala sekolah" ||
-        window.currentUser.role === "guru" ||
-        window.currentUser.role === "tata usaha tenaga pendidikan" ||
-        window.currentUser.role === "tata usaha non tenaga pendidikan" ||
-        window.currentUser.role === "kerohanian tenaga pendidikan" ||
-        window.currentUser.role === "kerohanian non tenaga pendidikan")
+    window.currentUser.roles.some((role) =>
+        [
+            "kepala sekolah",
+            "guru",
+            "tata usaha tenaga pendidikan",
+            "tata usaha non tenaga pendidikan",
+            "kerohanian tenaga pendidikan",
+            "kerohanian non tenaga pendidikan",
+        ].includes(role),
+    )
 ) {
     // Memeriksa apakah pengguna berada di dashboard
     if (
@@ -57,8 +65,9 @@ if (
 // Memeriksa apakah currentUser ada dan role-nya adalah "yayasan", "deputi"
 if (
     window.currentUser &&
-    (window.currentUser.role === "yayasan" ||
-        window.currentUser.role === "deputi")
+    window.currentUser.roles.some((role) =>
+        ["yayasan", "deputi"].includes(role),
+    )
 ) {
     // Memeriksa apakah pengguna berada di dashboard
     if (
