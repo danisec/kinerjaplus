@@ -1,8 +1,8 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <div class="my-2">
         @if ($checkGroupKaryawan != null)
-            @if (in_array(Auth::user()->role, [
+            @if (Auth::user()->hasAnyRole([
                     'kepala sekolah',
                     'guru',
                     'tata usaha tenaga pendidikan',
@@ -15,7 +15,7 @@
                         <input id="kodeAlternatif" name="kode_alternatif" type="hidden"
                             value="{{ $checkGroupKaryawan->alternatif->kode_alternatif }}">
                         <h4 class="text-xl font-bold text-gray-700" id="namaGroup"
-                            data-nama-group="{{ $checkGroupKaryawan->alternatif->nama_alternatif }}">Kinerja Karyawan
+                            data-nama-group="{{ $checkGroupKaryawan->alternatif->nama_alternatif }}">Kinerja
                             {!! $checkGroupKaryawan->alternatif->nama_alternatif !!} Per Tahun Ajaran
                         </h4>
                     </div>
@@ -49,13 +49,16 @@
                                 </th>
                                 <th class="px-6 py-3" scope="col">
                                     <div class="flex flex-row items-center gap-0.5">
-                                        @sortablelink('tahun_ajaran', 'Tahun Ajaran')
+                                        @sortablelink('id_tanggal_penilaian', 'Tahun Ajaran')
 
                                         <x-atoms.svg.arrow-down @class(['mt-0.5 h-4 w-4']) />
                                     </div>
                                 </th>
                                 <th class="px-6 py-3" scope="col">
-                                    Nama Karyawan
+                                    Semester
+                                </th>
+                                <th class="px-6 py-3" scope="col">
+                                    Nama Pegawai
                                 </th>
                                 <th class="px-6 py-3" scope="col">
                                     <div class="flex flex-row items-center gap-0.5">
@@ -83,7 +86,10 @@
                                             {{ ($selfRankings->currentPage() - 1) * $selfRankings->perPage() + $loop->iteration }}
                                         </th>
                                         <td class="whitespace-nowrap px-6 py-4">
-                                            {{ $item->tahun_ajaran }}
+                                            {{ $item->tanggalPenilaian->tahun_ajaran }}
+                                        </td>
+                                        <td class="whitespace-nowrap px-6 py-4 capitalize">
+                                            {{ $item->tanggalPenilaian->semester }}
                                         </td>
                                         <td class="whitespace-nowrap px-6 py-4">
                                             {{ $item->alternatif->alternatifPertama->nama_alternatif }}
@@ -114,7 +120,7 @@
                 </div>
             @endif
 
-            @if (in_array(Auth::user()->role, [
+            @if (Auth::user()->hasAnyRole([
                     'kepala sekolah',
                     'guru',
                     'tata usaha tenaga pendidikan',
@@ -125,17 +131,23 @@
                 <div class="my-12">
                     <div class="flex flex-row items-center gap-4">
                         <h4 class="text-xl font-bold text-gray-700" id="namaGroup"
-                            data-nama-group="{{ $checkGroupKaryawan->nama_group_karyawan }}">Ranking Kinerja Karyawan
+                            data-nama-group="{{ $checkGroupKaryawan->nama_group_karyawan }}">Ranking Kinerja
                             {!! $checkGroupKaryawan->nama_group_karyawan !!} Tahun Ajaran
                         </h4>
 
                         <div class="w-52">
-                            <select class="field-input-slate w-full" id="selectTahun" name="tahun_ajaran"
-                                data-current-tahun="{{ $currentTahunAjaran }}">
-                                <option selected disabled hidden>{{ $currentTahunAjaran }}</option>
-                                @foreach ($tahunAjaranRanking as $tahunAjaran)
-                                    <option value="{{ $tahunAjaran }}">
-                                        {{ $tahunAjaran }}
+                            <select class="field-input-slate w-full capitalize" id="selectTahun" name="tahun_ajaran"
+                                data-current-tahun="{{ $firstTanggalPenilaian->id_tanggal_penilaian ?? '' }}"
+                                data-current-text="{{ $firstTanggalPenilaian ? $firstTanggalPenilaian->tahun_ajaran . ' - ' . $firstTanggalPenilaian->semester : '' }}">
+
+                                <option selected disabled hidden>
+                                    {{ $firstTanggalPenilaian ? $firstTanggalPenilaian->tahun_ajaran . ' - ' . $firstTanggalPenilaian->semester : '' }}
+                                </option>
+                                @foreach ($tanggalPenilaian as $itemTanggalPenilaian)
+                                    <option
+                                        data-text="{{ $itemTanggalPenilaian->tahun_ajaran . ' - ' . $itemTanggalPenilaian->semester }}"
+                                        value="{{ $itemTanggalPenilaian->id_tanggal_penilaian }}">
+                                        {{ $itemTanggalPenilaian->tahun_ajaran . ' - ' . $itemTanggalPenilaian->semester }}
                                     </option>
                                 @endforeach
                             </select>
@@ -163,7 +175,7 @@
                 </div>
             @endif
 
-            @if (in_array(Auth::user()->role, [
+            @if (Auth::user()->hasAnyRole([
                     'kepala sekolah',
                     'guru',
                     'tata usaha tenaga pendidikan',
@@ -182,7 +194,10 @@
                                     Tahun Ajaran
                                 </th>
                                 <th class="px-6 py-3" scope="col">
-                                    Nama Karyawan
+                                    Semester
+                                </th>
+                                <th class="px-6 py-3" scope="col">
+                                    Nama Pegawai
                                 </th>
                                 <th class="px-6 py-3" scope="col">
                                     Nilai Kinerja
@@ -214,15 +229,19 @@
                 </div>
             @endif
         @else
-            <div class="flex flex-col items-center justify-center">
-                <h2>Anda belum terdaftar di group karyawan. Hubungi admin untuk mendaftarkan diri Anda ke dalam
-                    group karyawan.</h2>
+            <div class="my-6 w-full rounded-md bg-slate-100 p-8">
+                <p class="text-base font-medium text-gray-900">Anda belum terdaftar di group pegawai. Hubungi admin
+                    untuk mendaftarkan diri Anda ke dalam
+                    group pegawai.</p>
             </div>
         @endif
     </div>
 
     <script>
-        window.currentUser = @json(auth()->user());
+        window.currentUser = @json([
+            'user' => auth()->user(),
+            'roles' => auth()->user()->getRoleNames(),
+        ]);
     </script>
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -230,4 +249,4 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
