@@ -1,4 +1,4 @@
-<x-layouts.app-dashboard title="{{ $title }}">
+<x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
         <li aria-current="page">
@@ -268,7 +268,7 @@
             </div>
         @endforeach
 
-        @if (in_array(Auth::user()->role, ['superadmin']))
+        @if (Auth::user()->hasRole('superadmin'))
             @if ($consistencyRatio['Consistency Ratio (CR)'][$kodeKriteria] >= 0.1)
                 <div class="flex justify-start">
                     <a href="{{ route('perhitunganSubkriteria.index') }}">
@@ -280,4 +280,4 @@
 
     </div>
 
-</x-layouts.app-dashboard>
+</x-app-dashboard>
