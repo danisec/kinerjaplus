@@ -19,9 +19,10 @@ class PerhitunganAlternatifJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(array $matriks)
+    public function __construct(array $matriks, $idTanggalPenilaian)
     {
         $this->matriks = $matriks;
+        $this->idTanggalPenilaian = $idTanggalPenilaian;
     }
 
     /**
@@ -32,13 +33,13 @@ class PerhitunganAlternatifJob implements ShouldQueue
          try {
             PerhitunganAlternatif::truncate();
 
-            foreach ($this->matriks as $tahunAjaran => $dataTahunAjaran) {
-                foreach ($dataTahunAjaran as $kodeKriteria => $dataKriteria) {
+            foreach ($this->matriks as $idTanggalPenilaian => $dataIdTanggalPenilaian) {
+                foreach ($dataIdTanggalPenilaian as $kodeKriteria => $dataKriteria) {
                     foreach ($dataKriteria as $alternatifPertama => $dataAlternatif) {
                         foreach ($dataAlternatif as $alternatifKedua => $nilaiAlternatif) {
                             PerhitunganAlternatif::updateOrCreate(
                                 [
-                                    'tahun_ajaran' => $tahunAjaran,
+                                    'id_tanggal_penilaian' => $idTanggalPenilaian,
                                     'kode_kriteria' => $kodeKriteria,
                                     'alternatif_pertama' => $alternatifPertama,
                                     'alternatif_kedua' => $alternatifKedua,
