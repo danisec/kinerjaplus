@@ -1,4 +1,4 @@
-<x-layouts.app-layout title="{{ $title }}">
+<x-app-layout title="{{ $title }}">
 
     <section class="bg-slate-50">
         <div class="mx-auto flex min-h-screen max-w-lg flex-col justify-center">
@@ -55,4 +55,4 @@
         </div>
     </section>
 
-</x-layouts.app-layout>
+</x-app-layout>
