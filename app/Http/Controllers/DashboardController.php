@@ -39,7 +39,7 @@ class DashboardController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {        
+    {
         // Dapatkan id_tanggal_penilaian yang unik dan urutkan dari yang terbesar
         $tanggalPenilaian = TanggalPenilaian::with('groupKaryawan')->orderBy('id_tanggal_penilaian', 'DESC')->get();
 
