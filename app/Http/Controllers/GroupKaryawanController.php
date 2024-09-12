@@ -47,12 +47,7 @@ class GroupKaryawanController extends Controller
             })
             ->pluck('kode_alternatif');
 
-        $alternatif = Alternatif::whereNotIn('kode_alternatif', function($query) {
-                $query->select('kode_alternatif')->from('group_karyawan_detail');
-            })
-            ->whereNotIn('kode_alternatif', $getRoleKepalaSekolah)
-            ->orderBy('nama_alternatif', 'ASC')
-            ->get();
+        $alternatif = Alternatif::orderBy('nama_alternatif', 'ASC')->get();
 
         return view('pages.superadmin.group-karyawan.create', [
             'title' => 'Tambah Group Pegawai',
