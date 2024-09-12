@@ -50,13 +50,13 @@ class CatatanKaryawanController extends Controller
             $query->where('id_group_karyawan', $checkGroupKaryawanId);
         })
         ->join('tanggal_penilaian', 'catatan_karyawan.id_tanggal_penilaian', '=', 'tanggal_penilaian.id_tanggal_penilaian')
-        ->select('tanggal_penilaian.tahun_ajaran', 'tanggal_penilaian.semester')
         ->orderBy('tanggal_penilaian.tahun_ajaran', 'DESC')
         ->when(request()->has('search'), function ($query) {
         $query->where('tanggal_penilaian.tahun_ajaran', 'like', '%' . request('search') . '%')
               ->orWhere('tanggal_penilaian.semester', 'like', '%' . request('search') . '%');
         })
-        ->get()->unique('id_tanggal_penilaian');
+        ->get()
+        ->unique('id_tanggal_penilaian');
 
         // Menggabungkan tahun_ajaran dengan nama group karyawan
         $catatanWithGroupKaryawan = [];
