@@ -45,7 +45,10 @@ class aside extends Component
                     'M15 9.5L19 9.5',
                     'M15 13.5H17',
                 ],
-                'permission' => 'karyawan',
+                'permission' => [
+                    'view' => 'view pegawai',
+                    'manage' => 'kelola pegawai',
+                ],
             ],
 
             'Group Pegawai' => [
@@ -57,7 +60,10 @@ class aside extends Component
                     'M8.0838 15.1112C7.06203 15.743 4.38299 17.0331 6.0147 18.6474C6.81178 19.436 7.69952 20 8.81563 20H15.1844C16.3005 20 17.1882 19.436 17.9853 18.6474C19.617 17.0331 16.938 15.743 15.9162 15.1112C13.5201 13.6296 10.4799 13.6296 8.0838 15.1112Z',
                     'M15.5 7.5C15.5 9.433 13.933 11 12 11C10.067 11 8.5 9.433 8.5 7.5C8.5 5.567 10.067 4 12 4C13.933 4 15.5 5.567 15.5 7.5Z',
                 ],
-                'permission' => 'group-karyawan',
+                'permission' => [
+                    'view' => 'view group pegawai',
+                    'manage' => 'kelola group pegawai',
+                ],
             ],
 
             'Kriteria' => [
@@ -72,7 +78,10 @@ class aside extends Component
                     'M11 12L17 12',
                     'M11 17L17 17',
                 ],
-                'permission' => 'kriteria',
+                'permission' => [
+                    'view' => 'view kriteria',
+                    'manage' => 'kelola kriteria',
+                ],
             ],
 
             'Subkriteria' => [
@@ -83,7 +92,10 @@ class aside extends Component
                     'M16.8538 7.43306C16.8538 8.24714 16.1901 8.90709 15.3714 8.90709C14.5527 8.90709 13.889 8.24714 13.889 7.43306C13.889 6.61898 14.5527 5.95904 15.3714 5.95904C16.1901 5.95904 16.8538 6.61898 16.8538 7.43306Z',
                     'M12 20.9463L11.0477 21.2056C8.35403 21.9391 7.00722 22.3059 5.94619 21.6833C4.88517 21.0608 4.52429 19.6921 3.80253 16.9547L2.78182 13.0834C2.06006 10.346 1.69918 8.97731 2.31177 7.89904C2.84167 6.96631 4 7.00027 5.5 7.00015',
                 ],
-                'permission' => 'subkriteria',
+                'permission' => [
+                    'view' => 'view subkriteria',
+                    'manage' => 'kelola subkriteria',
+                ],
             ],
 
             'Skala Indikator' => [
@@ -92,44 +104,47 @@ class aside extends Component
                 'paths' => [
                     'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
                 ],
-                'permission' => 'skala-indikator',
+                'permission' => [
+                    'view' => 'view skala indikator',
+                    'manage' => 'kelola skala indikator',
+                ],
             ],
         ];
 
         $sideNavPenilaian = [
             'Penilaian' => [
-                'url' => 'data-penilaian',
+                'url' => 'penilaian/introduction',
                 'viewBox' => '0 0 24 24',
                 'path' => 'M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008z',
                 'permission' => 'penilaian',
             ],
         ];
 
-        $sideNavGuru = [
+        $sideNavRiwayatPenilaian = [
             'Riwayat Penilaian' => [
-                'url' => 'data-riwayat-penilaian',
+                'url' => 'riwayat-penilaian',
                 'viewBox' => '0 0 24 24',
                 'paths' => [
                     'M12 22C6.47711 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C16.4776 2 20.2257 4.94289 21.5 9H19',
                     'M12 8V12L14 14',
                     'M21.9551 13C21.9848 12.6709 22 12.3373 22 12M15 22C15.3416 21.8876 15.6753 21.7564 16 21.6078M20.7906 17C20.9835 16.6284 21.1555 16.2433 21.305 15.8462M18.1925 20.2292C18.5369 19.9441 18.8631 19.6358 19.1688 19.3065',
                 ],
-                'permission' => 'riwayat-penilaian',
+                'permission' => 'riwayat penilaian',
             ],
         ];
 
         $sideNavKepalaSekolah = [
             'Persetujuan Penilaian' => [
-                'url' => 'data-persetujuan-penilaian',
+                'url' => 'persetujuan-penilaian',
                 'viewBox' => '0 0 24 24',
                 'paths' => [
                     'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
                 ],
-                'permission' => 'persetujuan-penilaian',
+                'permission' => 'persetujuan penilaian',
             ],
 
             'Catatan Pegawai' => [
-                'url' => 'data-catatan-karyawan',
+                'url' => 'catatan-karyawan',
                 'viewBox' => '0 0 24 24',
                 'paths' => [
                     'M14.9805 7.01562C14.9805 7.01562 15.4805 7.51562 15.9805 8.51562C15.9805 8.51562 17.5687 6.01562 18.9805 5.51562',
@@ -138,108 +153,44 @@ class aside extends Component
                     'M6.98047 13.0156H10.9805',
                     'M6.98047 17.0156H14.9805',
                 ],
-                'permission' => 'catatan-karyawan',
+                'permission' => 'catatan pegawai',
             ],
         ];
-
-        if (Auth::user()->hasAnyRole(['yayasan', 'deputi', 'kepala sekolah', 'guru', 'tata usaha tenaga pendidikan', 'tata usaha non tenaga pendidikan', 'kerohanian tenaga pendidikan', 'kerohanian non tenaga pendidikan'])) {
-            $sideNavPenilaian = [
-                'Penilaian' => [
-                    'url' => 'penilaian/introduction',
-                    'viewBox' => '0 0 24 24',
-                    'path' => 'M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008z',
-                    'permission' => 'penilaian',
-                ],
-            ];
-        }
-
-        if (Auth::user()->hasAnyRole(['yayasan', 'deputi', 'kepala sekolah','guru', 'tata usaha tenaga pendidikan', 'tata usaha non tenaga pendidikan', 'kerohanian tenaga pendidikan', 'kerohanian non tenaga pendidikan'])) {
-            $sideNavGuru = [
-                'Riwayat Penilaian' => [
-                    'url' => 'riwayat-penilaian',
-                    'viewBox' => '0 0 24 24',
-                    'paths' => [
-                        'M12 22C6.47711 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C16.4776 2 20.2257 4.94289 21.5 9H19',
-                        'M12 8V12L14 14',
-                        'M21.9551 13C21.9848 12.6709 22 12.3373 22 12M15 22C15.3416 21.8876 15.6753 21.7564 16 21.6078M20.7906 17C20.9835 16.6284 21.1555 16.2433 21.305 15.8462M18.1925 20.2292C18.5369 19.9441 18.8631 19.6358 19.1688 19.3065',
-                    ],
-                    'permission' => 'riwayat-penilaian',
-                ],
-            ];
-        }
-
-        if (Auth::user()->hasRole('kepala sekolah')) {
-            $sideNavKepalaSekolah = [
-                'Persetujuan Penilaian' => [
-                    'url' => 'persetujuan-penilaian',
-                    'viewBox' => '0 0 24 24',
-                    'paths' => [
-                        'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
-                    ],
-                    'permission' => 'persetujuan-penilaian',
-                ],
-
-                'Catatan Pegawai' => [
-                    'url' => 'catatan-karyawan',
-                    'viewBox' => '0 0 24 24',
-                    'paths' => [
-                        'M14.9805 7.01562C14.9805 7.01562 15.4805 7.51562 15.9805 8.51562C15.9805 8.51562 17.5687 6.01562 18.9805 5.51562',
-                        'M9.99485 2.02141C7.49638 1.91562 5.56612 2.20344 5.56612 2.20344C4.34727 2.29059 2.01146 2.97391 2.01148 6.9646C2.0115 10.9214 1.98564 15.7993 2.01148 17.744C2.01148 18.932 2.7471 21.7034 5.29326 21.8519C8.3881 22.0324 13.9627 22.0708 16.5205 21.8519C17.2051 21.8133 19.4846 21.2758 19.7731 18.7957C20.072 16.2264 20.0125 14.4407 20.0125 14.0157',
-                        'M21.9999 7.01562C21.9999 9.77705 19.7591 12.0156 16.995 12.0156C14.231 12.0156 11.9902 9.77705 11.9902 7.01562C11.9902 4.2542 14.231 2.01562 16.995 2.01562C19.7591 2.01562 21.9999 4.2542 21.9999 7.01562Z',
-                        'M6.98047 13.0156H10.9805',
-                        'M6.98047 17.0156H14.9805',
-                    ],
-                    'permission' => 'catatan-karyawan',
-                ],
-            ];
-        }
 
         $sideNavPerhitungan = [
             'Kriteria' => [
-                'url' => 'perbandingan-kriteria'
+                'url' => [
+                    'view' => 'perbandingan-kriteria/hasil-perbandingan-kriteria',
+                    'manage' => 'perbandingan-kriteria',
+                ],
+                'permission' => [
+                    'view' => 'view perbandingan kriteria',
+                    'manage' => 'perbandingan kriteria',
+                ],
             ],
 
             'Subkriteria' => [
-                'url' => 'perbandingan-subkriteria'
+                'url' => [
+                    'view' => 'perbandingan-subkriteria/hasil-perbandingan-subkriteria',
+                    'manage' => 'perbandingan-subkriteria',
+                ],
+                'permission' => [
+                    'view' => 'view perbandingan subkriteria',
+                    'manage' => 'perbandingan subkriteria',
+                ],
             ],
             
             'Pegawai' => [
-                'url' => 'perbandingan-alternatif/introduction'
+                'url' => [
+                    'view' => 'perbandingan-alternatif/introduction',
+                    'manage' => 'perbandingan-alternatif/introduction',
+                ],
+                'permission' => [
+                    'view' => 'view perbandingan pegawai',
+                    'manage' => 'perbandingan pegawai',
+                ],
             ],
         ];
-
-        if (Auth::user()->hasRole('kepala sekolah')) {
-            $sideNavPerhitungan = [
-                'Kriteria' => [
-                    'url' => 'perbandingan-kriteria/hasil-perbandingan-kriteria',
-                    'permission' => 'view perbandingan-kriteria',
-                ],
-
-                'Subkriteria' => [
-                    'url' => 'perbandingan-subkriteria/hasil-perbandingan-subkriteria',
-                    'permission' => 'view perbandingan-subkriteria',
-                ],
-
-                'Pegawai' => [
-                    'url' => 'perbandingan-alternatif/introduction',
-                    'permission' => 'perbandingan-karyawan',
-                ],
-            ];
-        }
-
-        if (Auth::user()->hasRole('superadmin')) {
-            $sideNavPerhitungan = [
-                'Kriteria' => [
-                    'url' => 'perbandingan-kriteria',
-                    'permission' => 'perbandingan-kriteria',
-                ],
-
-                'Subkriteria' => [
-                    'url' => 'perbandingan-subkriteria',
-                    'permission' => 'perbandingan-subkriteria',
-                ],
-            ];
-        }
 
         $sideNavPerankingan = [
             'Perankingan' => [
@@ -256,7 +207,7 @@ class aside extends Component
             ]
         ];
 
-        $sideNavUser = [
+        $sideNavKelolaAkun = [
             'Kelola Akun' => [
                 'url' => 'kelola-akun',
                 'viewBox' => '0 0 24 24',
@@ -264,10 +215,13 @@ class aside extends Component
                     'M16.3083 4.38394C15.7173 4.38394 15.4217 4.38394 15.1525 4.28405C15.1151 4.27017 15.0783 4.25491 15.042 4.23828C14.781 4.11855 14.5721 3.90959 14.1541 3.49167C13.1922 2.52977 12.7113 2.04882 12.1195 2.00447C12.04 1.99851 11.96 1.99851 11.8805 2.00447C11.2887 2.04882 10.8077 2.52977 9.84585 3.49166C9.42793 3.90959 9.21897 4.11855 8.95797 4.23828C8.92172 4.25491 8.88486 4.27017 8.84747 4.28405C8.57825 4.38394 8.28273 4.38394 7.69171 4.38394H7.58269C6.07478 4.38394 5.32083 4.38394 4.85239 4.85239C4.38394 5.32083 4.38394 6.07478 4.38394 7.58269V7.69171C4.38394 8.28273 4.38394 8.57825 4.28405 8.84747C4.27017 8.88486 4.25491 8.92172 4.23828 8.95797C4.11855 9.21897 3.90959 9.42793 3.49166 9.84585C2.52977 10.8077 2.04882 11.2887 2.00447 11.8805C1.99851 11.96 1.99851 12.04 2.00447 12.1195C2.04882 12.7113 2.52977 13.1922 3.49166 14.1541C3.90959 14.5721 4.11855 14.781 4.23828 15.042C4.25491 15.0783 4.27017 15.1151 4.28405 15.1525C4.38394 15.4217 4.38394 15.7173 4.38394 16.3083V16.4173C4.38394 17.9252 4.38394 18.6792 4.85239 19.1476C5.32083 19.6161 6.07478 19.6161 7.58269 19.6161H7.69171C8.28273 19.6161 8.57825 19.6161 8.84747 19.7159C8.88486 19.7298 8.92172 19.7451 8.95797 19.7617C9.21897 19.8815 9.42793 20.0904 9.84585 20.5083C10.8077 21.4702 11.2887 21.9512 11.8805 21.9955C11.96 22.0015 12.04 22.0015 12.1195 21.9955C12.7113 21.9512 13.1922 21.4702 14.1541 20.5083C14.5721 20.0904 14.781 19.8815 15.042 19.7617C15.0783 19.7451 15.1151 19.7298 15.1525 19.7159C15.4217 19.6161 15.7173 19.6161 16.3083 19.6161H16.4173C17.9252 19.6161 18.6792 19.6161 19.1476 19.1476C19.6161 18.6792 19.6161 17.9252 19.6161 16.4173V16.3083C19.6161 15.7173 19.6161 15.4217 19.7159 15.1525C19.7298 15.1151 19.7451 15.0783 19.7617 15.042C19.8815 14.781 20.0904 14.5721 20.5083 14.1541C21.4702 13.1922 21.9512 12.7113 21.9955 12.1195C22.0015 12.04 22.0015 11.96 21.9955 11.8805C21.9512 11.2887 21.4702 10.8077 20.5083 9.84585C20.0904 9.42793 19.8815 9.21897 19.7617 8.95797C19.7451 8.92172 19.7298 8.88486 19.7159 8.84747C19.6161 8.57825 19.6161 8.28273 19.6161 7.69171V7.58269C19.6161 6.07478 19.6161 5.32083 19.1476 4.85239C18.6792 4.38394 17.9252 4.38394 16.4173 4.38394H16.3083Z',
                     'M8.5 16.5C9.19863 15.2923 10.5044 14.4797 12 14.4797C13.4956 14.4797 14.8014 15.2923 15.5 16.5M14 10C14 11.1046 13.1046 12 12 12C10.8955 12 10 11.1046 10 10C10 8.89544 10.8955 8.00001 12 8.00001C13.1046 8.00001 14 8.89544 14 10Z',
                 ],
-                'permission' => 'kelola-akun',
+                'permission' => [
+                    'view' => 'view kelola akun',
+                    'manage' => 'kelola akun',
+                ],
             ]
         ];
         
-        return view('components.organism.aside', compact('sideNavDashboard', 'sideNavData', 'sideNavPenilaian', 'sideNavGuru', 'sideNavKepalaSekolah', 'sideNavPerhitungan', 'sideNavPerankingan', 'sideNavUser'));
+        return view('components.organism.aside', compact('sideNavDashboard', 'sideNavData', 'sideNavPenilaian', 'sideNavRiwayatPenilaian', 'sideNavKepalaSekolah', 'sideNavPerhitungan', 'sideNavPerankingan', 'sideNavKelolaAkun'));
     }
 }
