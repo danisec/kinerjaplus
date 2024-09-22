@@ -17,11 +17,13 @@
                 <x-molecules.search :placeholder="'Cari Pegawai'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
             </div>
 
-            <div>
-                <a href="{{ route('alternatif.create') }}">
-                    <x-atoms.button.button-primary :customClass="'h-12 w-40 rounded-md'" :type="'button'" :name="'Tambah Pegawai'" />
-                </a>
-            </div>
+            @can('direct.permission', 'kelola pegawai')
+                <div>
+                    <a href="{{ route('alternatif.create') }}">
+                        <x-atoms.button.button-primary :customClass="'h-12 w-40 rounded-md'" :type="'button'" :name="'Tambah Pegawai'" />
+                    </a>
+                </div>
+            @endcan
         </div>
     </div>
 
@@ -52,42 +54,47 @@
                                 {{ $item->nama_alternatif }}
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
-                                <div x-data="{ showTooltip: false }">
-                                    <a class="font-medium text-gray-600"
-                                        href="{{ route('alternatif.show', $item->id_alternatif) }}"
-                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                                        <x-atoms.svg.eye />
-                                    </a>
+                                @if (Auth::user()->hasAnyDirectPermission(['view pegawai', 'kelola pegawai']) ||
+                                        Auth::user()->canany(['view pegawai', 'kelola pegawai']))
+                                    <div x-data="{ showTooltip: false }">
+                                        <a class="font-medium text-gray-600"
+                                            href="{{ route('alternatif.show', $item->id_alternatif) }}"
+                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                            <x-atoms.svg.eye />
+                                        </a>
 
-                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
-                                        x-show="showTooltip">
-                                        Detail
+                                        <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
+                                            x-show="showTooltip">
+                                            Detail
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
 
-                                <div x-data="{ showTooltip: false }">
-                                    <a class="font-medium text-blue-600"
-                                        href="{{ route('alternatif.edit', $item->id_alternatif) }}"
-                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                                        <x-atoms.svg.pen />
-                                    </a>
+                                @can('direct.permission', 'kelola pegawai')
+                                    <div x-data="{ showTooltip: false }">
+                                        <a class="font-medium text-blue-600"
+                                            href="{{ route('alternatif.edit', $item->id_alternatif) }}"
+                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                            <x-atoms.svg.pen />
+                                        </a>
 
-                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
-                                        x-show="showTooltip">
-                                        <span>Ubah</span>
+                                        <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
+                                            x-show="showTooltip">
+                                            <span>Ubah</span>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div x-data="{ isOpen: false }">
-                                    <button class="text-red-600 focus:outline-none" type="button"
-                                        @click="isOpen = true">
-                                        <x-atoms.svg.trash />
-                                    </button>
+                                    <div x-data="{ isOpen: false }">
+                                        <button class="text-red-600 focus:outline-none" type="button"
+                                            @click="isOpen = true">
+                                            <x-atoms.svg.trash />
+                                        </button>
 
-                                    <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama pegawai : ' .
-                                        $item->nama_alternatif .
-                                        ' ?'" :action="route('alternatif.destroy', $item->id_alternatif)" />
-                                </div>
+                                        <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama pegawai : ' .
+                                            $item->nama_alternatif .
+                                            ' ?'" :action="route('alternatif.destroy', $item->id_alternatif)" />
+                                    </div>
+                                @endcan
                             </td>
                         </tr>
                     </tbody>
