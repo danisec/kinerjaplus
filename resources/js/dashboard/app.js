@@ -1,17 +1,8 @@
-// Periksa apakah currentUser dan role pengguna
+// Self Rank Chart Yayasan, Deputi, Kepala Sekolah
 if (
     window.currentUser &&
     window.currentUser.roles.some((role) =>
-        [
-            "yayasan",
-            "deputi",
-            "kepala sekolah",
-            "guru",
-            "tata usaha tenaga pendidikan",
-            "tata usaha non tenaga pendidikan",
-            "kerohanian tenaga pendidikan",
-            "kerohanian non tenaga pendidikan",
-        ].includes(role),
+        ["yayasan", "deputi", "kepala sekolah"].includes(role),
     )
 ) {
     // Periksa apakah pengguna berada di dashboard
@@ -28,11 +19,11 @@ if (
     }
 }
 
+// Self Rank Chart Guru, Tata Usaha Tenaga Pendidikan, Tata Usaha Non Tenaga Pendidikan, Kerohanian Tenaga Pendidikan, Kerohanian Non Tenaga Pendidikan
 if (
     window.currentUser &&
     window.currentUser.roles.some((role) =>
         [
-            "kepala sekolah",
             "guru",
             "tata usaha tenaga pendidikan",
             "tata usaha non tenaga pendidikan",
@@ -40,6 +31,25 @@ if (
             "kerohanian non tenaga pendidikan",
         ].includes(role),
     )
+) {
+    // Periksa apakah pengguna berada di dashboard
+    if (
+        window.location.pathname === "/dashboard" ||
+        window.location.pathname === "/dashboard/"
+    ) {
+        // Mengimpor selfRankChart
+        import("./selfRankChartGuru")
+            .then((module) => {})
+            .catch((error) => {
+                console.error("Gagal mengimpor selfRankChartGuru");
+            });
+    }
+}
+
+// Rank Chart & Rank Table Kepala Sekolah
+if (
+    window.currentUser &&
+    window.currentUser.roles.some((role) => ["kepala sekolah"].includes(role))
 ) {
     // Memeriksa apakah pengguna berada di dashboard
     if (
@@ -62,7 +72,7 @@ if (
     }
 }
 
-// Memeriksa apakah currentUser ada dan role-nya adalah "yayasan", "deputi"
+// Rank Group Chart Yayasan, Deputi
 if (
     window.currentUser &&
     window.currentUser.roles.some((role) =>
