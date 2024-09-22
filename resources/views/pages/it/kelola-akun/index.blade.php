@@ -17,11 +17,13 @@
                 <x-molecules.search :placeholder="'Cari Akun'" :request="request('nama_kriteria')" :name="'fullname'" :value="request('fullname')" />
             </div>
 
-            <div>
-                <a href="{{ route('kelolaAkun.create') }}">
-                    <x-atoms.button.button-primary :customClass="'h-12 w-36 rounded-md'" :type="'button'" :name="'Tambah Akun'" />
-                </a>
-            </div>
+            @can('direct.permission', 'kelola akun')
+                <div>
+                    <a href="{{ route('kelolaAkun.create') }}">
+                        <x-atoms.button.button-primary :customClass="'h-12 w-36 rounded-md'" :type="'button'" :name="'Tambah Akun'" />
+                    </a>
+                </div>
+            @endcan
         </div>
     </div>
 
@@ -80,42 +82,47 @@
                                 </p>
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
-                                <div x-data="{ showTooltip: false }">
-                                    <a class="font-medium text-gray-600"
-                                        href="{{ route('kelolaAkun.show', $item->id) }}"
-                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                                        <x-atoms.svg.eye />
-                                    </a>
+                                @if (Auth::user()->hasAnyDirectPermission(['view kelola akun', 'kelola akun']) ||
+                                        Auth::user()->canany(['view kelola akun', 'kelola akun']))
+                                    <div x-data="{ showTooltip: false }">
+                                        <a class="font-medium text-gray-600"
+                                            href="{{ route('kelolaAkun.show', $item->id) }}"
+                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                            <x-atoms.svg.eye />
+                                        </a>
 
-                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
-                                        x-show="showTooltip">
-                                        Detail
+                                        <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
+                                            x-show="showTooltip">
+                                            Detail
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
 
-                                <div x-data="{ showTooltip: false }">
-                                    <a class="font-medium text-blue-600"
-                                        href="{{ route('kelolaAkun.edit', $item->id) }}"
-                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                                        <x-atoms.svg.pen />
-                                    </a>
+                                @can('direct.permission', 'kelola akun')
+                                    <div x-data="{ showTooltip: false }">
+                                        <a class="font-medium text-blue-600"
+                                            href="{{ route('kelolaAkun.edit', $item->id) }}"
+                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                            <x-atoms.svg.pen />
+                                        </a>
 
-                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
-                                        x-show="showTooltip">
-                                        <span>Ubah</span>
+                                        <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
+                                            x-show="showTooltip">
+                                            <span>Ubah</span>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div x-data="{ isOpen: false }">
-                                    <button class="text-red-600 focus:outline-none" type="button"
-                                        @click="isOpen = true">
-                                        <x-atoms.svg.trash />
-                                    </button>
+                                    <div x-data="{ isOpen: false }">
+                                        <button class="text-red-600 focus:outline-none" type="button"
+                                            @click="isOpen = true">
+                                            <x-atoms.svg.trash />
+                                        </button>
 
-                                    <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama akun : ' .
-                                        $item->fullname .
-                                        '?'" :action="route('kelolaAkun.destroy', $item->id)" />
-                                </div>
+                                        <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama akun : ' .
+                                            $item->fullname .
+                                            '?'" :action="route('kelolaAkun.destroy', $item->id)" />
+                                    </div>
+                                @endcan
                             </td>
                         </tr>
                     </tbody>
