@@ -131,7 +131,7 @@
                                         $item->tanggalPenilaian->tahun_ajaran .
                                         ' - Semester ' .
                                         $item->tanggalPenilaian->semester .
-                                        ' ?'" :action="route('persetujuanPenilaian.update', $item->id_penilaian)" :modalId="'modal_' . $item->id_penilaian">
+                                        '?'" :action="route('persetujuanPenilaian.update', $item->id_penilaian)" :modalId="'modal_' . $item->id_penilaian">
 
                                         <div class="flex flex-row items-center gap-4">
                                             <input id="status_{{ $item->id_penilaian }}" name="status" type="hidden"
