@@ -17,11 +17,13 @@
                 <x-molecules.search :placeholder="'Cari Group Pegawai'" :request="request('nama_group_karyawan')" :name="'nama_group_karyawan'" :value="request('nama_group_karyawan')" />
             </div>
 
-            <div>
-                <a href="{{ route('groupKaryawan.create') }}">
-                    <x-atoms.button.button-primary :customClass="'h-12 w-56 rounded-md'" :type="'button'" :name="'Tambah Group Pegawai'" />
-                </a>
-            </div>
+            @can('direct.permission', 'kelola group pegawai')
+                <div>
+                    <a href="{{ route('groupKaryawan.create') }}">
+                        <x-atoms.button.button-primary :customClass="'h-12 w-56 rounded-md'" :type="'button'" :name="'Tambah Group Pegawai'" />
+                    </a>
+                </div>
+            @endcan
         </div>
     </div>
 
@@ -58,42 +60,47 @@
                                 {{ $item->alternatif->nama_alternatif }}
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
-                                <div x-data="{ showTooltip: false }">
-                                    <a class="font-medium text-gray-600"
-                                        href="{{ route('groupKaryawan.show', $item->id_group_karyawan) }}"
-                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                                        <x-atoms.svg.eye />
-                                    </a>
+                                @if (Auth::user()->hasAnyDirectPermission(['view group pegawai', 'kelola group pegawai']) ||
+                                        Auth::user()->canany(['view group pegawai', 'kelola group pegawai']))
+                                    <div x-data="{ showTooltip: false }">
+                                        <a class="font-medium text-gray-600"
+                                            href="{{ route('groupKaryawan.show', $item->id_group_karyawan) }}"
+                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                            <x-atoms.svg.eye />
+                                        </a>
 
-                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
-                                        x-show="showTooltip">
-                                        Detail
+                                        <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
+                                            x-show="showTooltip">
+                                            Detail
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
 
-                                <div x-data="{ showTooltip: false }">
-                                    <a class="font-medium text-blue-600"
-                                        href="{{ route('groupKaryawan.edit', $item->id_group_karyawan) }}"
-                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                                        <x-atoms.svg.pen />
-                                    </a>
+                                @can('direct.permission', 'kelola group pegawai')
+                                    <div x-data="{ showTooltip: false }">
+                                        <a class="font-medium text-blue-600"
+                                            href="{{ route('groupKaryawan.edit', $item->id_group_karyawan) }}"
+                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                            <x-atoms.svg.pen />
+                                        </a>
 
-                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
-                                        x-show="showTooltip">
-                                        <span>Ubah</span>
+                                        <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
+                                            x-show="showTooltip">
+                                            <span>Ubah</span>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div x-data="{ isOpen: false }">
-                                    <button class="text-red-600 focus:outline-none" type="button"
-                                        @click="isOpen = true">
-                                        <x-atoms.svg.trash />
-                                    </button>
+                                    <div x-data="{ isOpen: false }">
+                                        <button class="text-red-600 focus:outline-none" type="button"
+                                            @click="isOpen = true">
+                                            <x-atoms.svg.trash />
+                                        </button>
 
-                                    <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus group karyawan : ' .
-                                        $item->nama_group_karyawan .
-                                        ' ?'" :action="route('groupKaryawan.destroy', $item->id_group_karyawan)" />
-                                </div>
+                                        <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus group pegawai : ' .
+                                            $item->nama_group_karyawan .
+                                            ' ?'" :action="route('groupKaryawan.destroy', $item->id_group_karyawan)" />
+                                    </div>
+                                @endcan
                             </td>
                         </tr>
                     </tbody>
