@@ -124,8 +124,10 @@
                                         ' Kepada ' .
                                         $item->penilaian->alternatifKedua->alternatifPertama->nama_alternatif .
                                         ' Tahun Ajaran ' .
-                                        $item->tahun_ajaran .
-                                        ' ?'" :action="route('catatanKaryawan.destroy', $item->id_catatan_karyawan)" />
+                                        $item->tanggalPenilaian->tahun_ajaran .
+                                        ' - Semester ' .
+                                        ucfirst(strtolower($item->tanggalPenilaian->semester)) .
+                                        '?'" :action="route('catatanKaryawan.destroy', $item->id_catatan_karyawan)" />
                                 </div>
                             </td>
                         </tr>
