@@ -5,20 +5,20 @@
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
                 <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('groupKaryawan.index') }}">Data Group Karyawan</a>
+                    href="{{ route('groupKaryawan.index') }}">Data Group Pegawai</a>
             </div>
         </li>
 
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Ubah Group Karyawan</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Ubah Group Pegawai</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Ubah Group Karyawan</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Ubah Group Pegawai</h4>
 
         <form class="mt-8 space-y-6" action="{{ route('groupKaryawan.update', $groupKaryawan->id_group_karyawan) }}"
             method="POST">
@@ -52,7 +52,7 @@
 
                         <div class="absolute z-10 w-96 rounded bg-slate-50 px-2 py-1 text-base text-gray-900"
                             x-show="showTooltip">
-                            Pilih kepala sekolah untuk validasi status penilaian, perbandingan karyawan,
+                            Pilih kepala sekolah untuk validasi status penilaian, perbandingan pegawai,
                             dan
                             perankingan.
                         </div>
@@ -81,7 +81,7 @@
                 <input id="idGroupKaryawan" type="hidden" value="{{ $groupKaryawan->id_group_karyawan }}">
 
                 <label class="mb-2 block text-base font-medium text-gray-900" for="nama karyawan">
-                    Nama Karyawan</label>
+                    Nama Pegawai</label>
                 <select class="@error('nama_alternatif') border-red-500 @enderror field-input-slate w-full"
                     id="namaKaryawan" name="kode_alternatif[]" multiple required>
 
@@ -104,7 +104,7 @@
                 <a href="{{ route('groupKaryawan.index') }}">
                     <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
                 </a>
-                <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Ubah'" />
+                <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Selanjutnya'" />
             </div>
         </form>
     </div>
