@@ -20,89 +20,125 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(AlternatifController::class)->name('alternatif.')->middleware('auth', 'permission:karyawan')->group(function () {
-    Route::get('/dashboard/data-alternatif', 'index')->name('index');
-    Route::get('/dashboard/data-alternatif/view-alternatif/{id}', 'show')->name('show');
+Route::controller(AlternatifController::class)->name('alternatif.')->middleware('auth')->group(function () {
+    // Route permission 'view pegawai|kelola pegawai'
+    Route::middleware('direct.permission:view pegawai,kelola pegawai')->group(function () {
+        Route::get('/dashboard/data-alternatif', 'index')->name('index');
+        Route::get('/dashboard/data-alternatif/view-alternatif/{id}', 'show')->name('show');
+    });
 
-    Route::get('/dashboard/data-alternatif/tambah-alternatif', 'create')->name('create');
-    Route::post('/dashboard/data-alternatif', 'store')->name('store');
+    // Route permission 'kelola pegawai'
+    Route::middleware('direct.permission:kelola pegawai')->group(function () {
+        Route::get('/dashboard/data-alternatif/tambah-alternatif', 'create')->name('create');
+        Route::post('/dashboard/data-alternatif', 'store')->name('store');
 
-    Route::get('/dashboard/data-alternatif/ubah-alternatif/{id}/edit', 'edit')->name('edit');
-    Route::put('/dashboard/data-alternatif/{id}', 'update')->name('update');
+        Route::get('/dashboard/data-alternatif/ubah-alternatif/{id}/edit', 'edit')->name('edit');
+        Route::put('/dashboard/data-alternatif/{id}', 'update')->name('update');
 
-    Route::delete('/dashboard/data-alternatif/{id}', 'destroy')->name('destroy');
+        Route::delete('/dashboard/data-alternatif/{id}', 'destroy')->name('destroy');
+    });
 });
 
-Route::controller(GroupKaryawanController::class)->name('groupKaryawan.')->middleware('auth', 'permission:group-karyawan')->group(function () {
-    Route::get('/dashboard/data-group-alternatif', 'index')->name('index');
-    Route::get('/dashboard/data-group-alternatif/view-group-alternatif/{id}', 'show')->name('show');
+Route::controller(GroupKaryawanController::class)->name('groupKaryawan.')->middleware('auth')->group(function () {
+    // Route permission 'view group pegawai|kelola group pegawai'
+    Route::middleware('direct.permission:view group pegawai,kelola group pegawai')->group(function () {
+        Route::get('/dashboard/data-group-alternatif', 'index')->name('index');
+        Route::get('/dashboard/data-group-alternatif/view-group-alternatif/{id}', 'show')->name('show');
+    });
 
-    Route::get('/dashboard/data-group-alternatif/tambah-group-alternatif', 'create')->name('create');
-    Route::post('/dashboard/data-group-alternatif', 'store')->name('store');
+    // Route permission 'kelola group pegawai'
+    Route::middleware('direct.permission:kelola group pegawai')->group(function () {
+        Route::get('/dashboard/data-group-alternatif/tambah-group-alternatif', 'create')->name('create');
+        Route::post('/dashboard/data-group-alternatif', 'store')->name('store');
 
-    Route::get('/dashboard/data-group-alternatif/ubah-group-alternatif/{id}/edit', 'edit')->name('edit');
-    Route::put('/dashboard/data-group-alternatif/{id}', 'update')->name('update');
+        Route::get('/dashboard/data-group-alternatif/ubah-group-alternatif/{id}/edit', 'edit')->name('edit');
+        Route::put('/dashboard/data-group-alternatif/{id}', 'update')->name('update');
 
-    Route::delete('/dashboard/data-group-alternatif/{id}', 'destroy')->name('destroy');
+        Route::delete('/dashboard/data-group-alternatif/{id}', 'destroy')->name('destroy');
 
-    Route::get('/dashboard/data-group-alternatif/ubah-group-alternatif/{idGroupKaryawan}/getAlternatif', 'getAlternatif')->name('getAlternatif');
+        Route::get('/dashboard/data-group-alternatif/ubah-group-alternatif/{idGroupKaryawan}/getAlternatif', 'getAlternatif')->name('getAlternatif');
+    });
 });
 
-Route::controller(GroupPenilaianController::class)->name('groupPenilaian.')->middleware('auth', 'role:superadmin|admin')->group(function () {
-    Route::get('/dashboard/data-group-alternatif/group-penilaian/{id}', 'create')->name('create');
-    Route::post('/dashboard/data-group-alternatif/group-penilaian/{id}', 'store')->name('store');
+Route::controller(GroupPenilaianController::class)->name('groupPenilaian.')->middleware('auth')->group(function () {
+    // Route permission 'kelola group pegawai'
+    Route::middleware('direct.permission:kelola group pegawai')->group(function () {
+        Route::get('/dashboard/data-group-alternatif/group-penilaian/{id}', 'create')->name('create');
+        Route::post('/dashboard/data-group-alternatif/group-penilaian/{id}', 'store')->name('store');
 
-    Route::get('/dashboard/data-group-alternatif/group-penilaian/{id}/edit', 'edit')->name('edit');
-    Route::put('/dashboard/data-group-alternatif/group-penilaian/{id}/edit', 'update')->name('update');
+        Route::get('/dashboard/data-group-alternatif/group-penilaian/{id}/edit', 'edit')->name('edit');
+        Route::put('/dashboard/data-group-alternatif/group-penilaian/{id}/edit', 'update')->name('update');
+    });
 });
 
-Route::controller(KriteriaController::class)->name('kriteria.')->middleware('auth', 'permission:kriteria')->group(function () {
-    Route::get('/dashboard/data-kriteria', 'index')->name('index');
-    Route::get('/dashboard/data-kriteria/view-kriteria/{id}', 'show')->name('show');
+Route::controller(KriteriaController::class)->name('kriteria.')->middleware('auth')->group(function () {
+    // Route permission 'view kriteria|kelola kriteria'
+    Route::middleware('direct.permission:view kriteria,kelola kriteria')->group(function () {
+        Route::get('/dashboard/data-kriteria', 'index')->name('index');
+        Route::get('/dashboard/data-kriteria/view-kriteria/{id}', 'show')->name('show');
+    });
 
-    Route::get('/dashboard/data-kriteria/tambah-kriteria', 'create')->name('create');
-    Route::post('/dashboard/data-kriteria', 'store')->name('store');
+    // Route permission 'kelola kriteria'
+    Route::middleware('direct.permission:kelola kriteria')->group(function () {
+        Route::get('/dashboard/data-kriteria/tambah-kriteria', 'create')->name('create');
+        Route::post('/dashboard/data-kriteria', 'store')->name('store');
 
-    Route::get('/dashboard/data-kriteria/ubah-kriteria/{id}/edit', 'edit')->name('edit');
-    Route::put('/dashboard/data-kriteria/{id}', 'update')->name('update');
+        Route::get('/dashboard/data-kriteria/ubah-kriteria/{id}/edit', 'edit')->name('edit');
+        Route::put('/dashboard/data-kriteria/{id}', 'update')->name('update');
 
-    Route::delete('/dashboard/data-kriteria/{id}', 'destroy')->name('destroy');
+        Route::delete('/dashboard/data-kriteria/{id}', 'destroy')->name('destroy');
+    });
 });
 
-Route::controller(SubkriteriaController::class)->name('subkriteria.')->middleware('auth', 'permission:subkriteria')->group(function () {
-    Route::get('/dashboard/data-subkriteria', 'index')->name('index');
-    Route::get('/dashboard/data-subkriteria/view-subkriteria/{id}', 'show')->name('show');
+Route::controller(SubkriteriaController::class)->name('subkriteria.')->middleware('auth')->group(function () {
+    // Route permission 'view subkriteria|kelola subkriteria'
+    Route::middleware('direct.permission:view subkriteria,kelola subkriteria')->group(function () {
+        Route::get('/dashboard/data-subkriteria', 'index')->name('index');
+        Route::get('/dashboard/data-subkriteria/view-subkriteria/{id}', 'show')->name('show');
+    });
 
-    Route::get('/dashboard/data-subkriteria/tambah-subkriteria', 'create')->name('create');
-    Route::post('/dashboard/data-subkriteria', 'store')->name('store');
+    // Route permission 'kelola subkriteria'
+    Route::middleware('direct.permission:kelola subkriteria')->group(function () {
+        Route::get('/dashboard/data-subkriteria/tambah-subkriteria', 'create')->name('create');
+        Route::post('/dashboard/data-subkriteria', 'store')->name('store');
 
-    Route::get('/dashboard/data-subkriteria/ubah-subkriteria/{id}/edit', 'edit')->name('edit');
-    Route::put('/dashboard/data-subkriteria/{id}', 'update')->name('update');
+        Route::get('/dashboard/data-subkriteria/ubah-subkriteria/{id}/edit', 'edit')->name('edit');
+        Route::put('/dashboard/data-subkriteria/{id}', 'update')->name('update');
 
-    Route::delete('/dashboard/data-subkriteria/{id}', 'destroy')->name('destroy');
+        Route::delete('/dashboard/data-subkriteria/{id}', 'destroy')->name('destroy');
 
-    Route::get('/dashboard/data-subkriteria/tambah-subkriteria/get-new-code-subkriteria', 'getnewCodeSubkriteria')->name('getnewCodeSubkriteria');
+        Route::get('/dashboard/data-subkriteria/tambah-subkriteria/get-new-code-subkriteria', 'getnewCodeSubkriteria')->name('getnewCodeSubkriteria');
+    });
 });
 
-Route::controller(SkalaIndikatorController::class)->name('skalaIndikator.')->middleware('auth', 'permission:skala-indikator')->group(function () {
-    Route::get('/dashboard/data-skala-indikator', 'index')->name('index');
-    Route::get('/dashboard/data-skala-indikator/view-skala-indikator/{id}', 'show')->name('show');
+Route::controller(SkalaIndikatorController::class)->name('skalaIndikator.')->middleware('auth')->group(function () {
+    // Route permission 'view skala indikator|kelola skala indikator'
+    Route::middleware('direct.permission:view skala indikator,kelola skala indikator')->group(function () {
+        Route::get('/dashboard/data-skala-indikator', 'index')->name('index');
+        Route::get('/dashboard/data-skala-indikator/view-skala-indikator/{id}', 'show')->name('show');
+    });
 
-    Route::get('/dashboard/data-skala-indikator/tambah-skala-indikator', 'create')->name('create');
-    Route::post('/dashboard/data-skala-indikator', 'store')->name('store');
+    // Route permission 'kelola skala indikator'
+    Route::middleware('direct.permission:kelola skala indikator')->group(function () {
+        Route::get('/dashboard/data-skala-indikator/tambah-skala-indikator', 'create')->name('create');
+        Route::post('/dashboard/data-skala-indikator', 'store')->name('store');
 
-    Route::get('/dashboard/data-skala-indikator/ubah-skala-indikator/{id}/edit', 'edit')->name('edit');
-    Route::put('/dashboard/data-skala-indikator/{id}', 'update')->name('update');
+        Route::get('/dashboard/data-skala-indikator/ubah-skala-indikator/{id}/edit', 'edit')->name('edit');
+        Route::put('/dashboard/data-skala-indikator/{id}', 'update')->name('update');
 
-    Route::delete('/dashboard/data-skala-indikator/{id}', 'destroy')->name('destroy');
+        Route::delete('/dashboard/data-skala-indikator/{id}', 'destroy')->name('destroy');
 
-    Route::get('/dashboard/data-skala-indikator/tambah-skala-indikator/{kodeSubkriteria}/getIndikatorSubkriteria', 'getIndikatorSubkriteria')->name('getIndikatorSubkriteria');
+        Route::get('/dashboard/data-skala-indikator/tambah-skala-indikator/{kodeSubkriteria}/getIndikatorSubkriteria', 'getIndikatorSubkriteria')->name('getIndikatorSubkriteria');
+    });
 });
 
-Route::controller(NilaiSkalaController::class)->name('nilaiSkala.')->middleware('auth', 'role:superadmin|admin')->group(function () {
-    Route::get('/dashboard/data-skala-indikator/tambah-nilai-skala', 'create')->name('create');
-    Route::post('/dashboard/data-skala-indikator/tambah-nilai-skala', 'store')->name('store');
+Route::controller(NilaiSkalaController::class)->name('nilaiSkala.')->middleware('auth')->group(function () {
+    // Route permission 'kelola skala indikator'
+    Route::middleware('direct.permission:kelola skala indikator')->group(function () {
+        Route::get('/dashboard/data-skala-indikator/tambah-nilai-skala', 'create')->name('create');
+        Route::post('/dashboard/data-skala-indikator/tambah-nilai-skala', 'store')->name('store');
 
-    Route::get('/dashboard/data-skala-indikator/ubah-nilai-skala/edit', 'edit')->name('edit');
-    Route::put('/dashboard/data-skala-indikator/ubah-nilai-skala/edit', 'update')->name('update');
+        Route::get('/dashboard/data-skala-indikator/ubah-nilai-skala/edit', 'edit')->name('edit');
+        Route::put('/dashboard/data-skala-indikator/ubah-nilai-skala/edit', 'update')->name('update');
+    });
 });
