@@ -294,16 +294,14 @@ class PenilaianController extends Controller
         // Mendapatkan kriteria berdasarkan kode_alternatif yang dipilih
          $kodeAlternatif = $request->kode_alternatif;
 
-        // Ambil role user berdasarkan kode_alternatif yang dipilih
-        $user = User::whereHas(
-            'alternatif',
-            function ($query) use ($kodeAlternatif) {
+        // Check role $kodeAlternatif yang dipilih menggunakan spatie/laravel-permission
+         $user = User::whereHas('alternatif', function ($query) use ($kodeAlternatif) {
                 $query->where('kode_alternatif', $kodeAlternatif);
-            }
-        )->first();
+            })->first();
 
+        // Cek apakah user memiliki salah satu dari role 'tata usaha non tenaga pendidikan' atau 'kerohanian non tenaga pendidikan'
         $kriteria = Kriteria::with('subkriteria.indikatorSubkriteria.skalaIndikator.skalaIndikatorDetail')
-            ->when($user && in_array($user->role, ['tata usaha non tenaga pendidikan', 'kerohanian non tenaga pendidikan']), function ($query) {
+            ->when($user && $user->hasAnyRole(['tata usaha non tenaga pendidikan', 'kerohanian non tenaga pendidikan']), function ($query) {
                 $query->where('kode_kriteria', '!=', 'K2');
             })
             ->get();
