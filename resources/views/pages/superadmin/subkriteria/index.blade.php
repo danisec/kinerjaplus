@@ -17,11 +17,13 @@
                 <x-molecules.search :placeholder="'Cari Subkriteria'" :request="request('nama_subkriteria')" :name="'nama_subkriteria'" :value="request('nama_subkriteria')" />
             </div>
 
-            <div>
-                <a href="{{ route('subkriteria.create') }}">
-                    <x-atoms.button.button-primary :customClass="'h-12 w-44 rounded-md'" :type="'button'" :name="'Tambah Subkriteria'" />
-                </a>
-            </div>
+            @can('direct.permission', 'kelola subkriteria')
+                <div>
+                    <a href="{{ route('subkriteria.create') }}">
+                        <x-atoms.button.button-primary :customClass="'h-12 w-44 rounded-md'" :type="'button'" :name="'Tambah Subkriteria'" />
+                    </a>
+                </div>
+            @endcan
         </div>
     </div>
 
@@ -52,42 +54,47 @@
                                 {{ $item->nama_subkriteria }}
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
-                                <div x-data="{ showTooltip: false }">
-                                    <a class="font-medium text-gray-600"
-                                        href="{{ route('subkriteria.show', $item->id_subkriteria) }}"
-                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                                        <x-atoms.svg.eye />
-                                    </a>
+                                @if (Auth::user()->hasAnyDirectPermission(['view subkriteria', 'kelola subkriteria']) ||
+                                        Auth::user()->canany(['view subkriteria', 'kelola subkriteria']))
+                                    <div x-data="{ showTooltip: false }">
+                                        <a class="font-medium text-gray-600"
+                                            href="{{ route('subkriteria.show', $item->id_subkriteria) }}"
+                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                            <x-atoms.svg.eye />
+                                        </a>
 
-                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
-                                        x-show="showTooltip">
-                                        Detail
+                                        <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
+                                            x-show="showTooltip">
+                                            Detail
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
 
-                                <div x-data="{ showTooltip: false }">
-                                    <a class="font-medium text-blue-600"
-                                        href="{{ route('subkriteria.edit', $item->id_subkriteria) }}"
-                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                                        <x-atoms.svg.pen />
-                                    </a>
+                                @can('direct.permission', 'kelola subkriteria')
+                                    <div x-data="{ showTooltip: false }">
+                                        <a class="font-medium text-blue-600"
+                                            href="{{ route('subkriteria.edit', $item->id_subkriteria) }}"
+                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                            <x-atoms.svg.pen />
+                                        </a>
 
-                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
-                                        x-show="showTooltip">
-                                        <span>Ubah</span>
+                                        <div class="absolute rounded bg-gray-100 px-2 py-1 text-sm text-gray-900"
+                                            x-show="showTooltip">
+                                            <span>Ubah</span>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div x-data="{ isOpen: false }">
-                                    <button class="text-red-600 focus:outline-none" type="button"
-                                        @click="isOpen = true">
-                                        <x-atoms.svg.trash />
-                                    </button>
+                                    <div x-data="{ isOpen: false }">
+                                        <button class="text-red-600 focus:outline-none" type="button"
+                                            @click="isOpen = true">
+                                            <x-atoms.svg.trash />
+                                        </button>
 
-                                    <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama subkriteria : ' .
-                                        $item->nama_subkriteria .
-                                        ' ?'" :action="route('subkriteria.destroy', $item->id_subkriteria)" />
-                                </div>
+                                        <x-molecules.modal-delete :title="'Apakah Anda akan yakin ingin menghapus nama subkriteria : ' .
+                                            $item->nama_subkriteria .
+                                            ' ?'" :action="route('subkriteria.destroy', $item->id_subkriteria)" />
+                                    </div>
+                                @endcan
                             </td>
                         </tr>
                     </tbody>
