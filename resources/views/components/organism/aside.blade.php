@@ -7,60 +7,99 @@
                 <x-atoms.logo class="text-2xl font-bold" />
             </a>
 
+            @php
+                $user = Auth::user();
+                $hasDirectPermissions = $user->getDirectPermissions()->isNotEmpty();
+            @endphp
+
             <ul class="space-y-2 font-medium">
                 <li class="flex flex-col gap-2.5">
                     @foreach ($sideNavDashboard as $name => $data)
-                        @if (Auth::user()->can($data['permission']))
-                            <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
-                                href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') }}">
-
-                                <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
-                                    xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-                                    viewBox="{{ $data['viewBox'] }}" stroke-width="1.5" stroke="currentColor">
-                                    @foreach ($data['paths'] as $path)
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $path }}" />
-                                    @endforeach
-                                </svg>
-
-                                <span>{{ $name }}</span>
-                            </a>
+                        @if ($hasDirectPermissions)
+                            {{-- Cek jika pengguna memiliki direct permission --}}
+                            @if ($user->hasDirectPermission($data['permission']))
+                                <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
+                                    href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') }}">
+                                    <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
+                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                                        viewBox="{{ $data['viewBox'] }}" stroke-width="1.5" stroke="currentColor">
+                                        @foreach ($data['paths'] as $path)
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="{{ $path }}" />
+                                        @endforeach
+                                    </svg>
+                                    <span>{{ $name }}</span>
+                                </a>
+                            @endif
+                        @else
+                            {{-- Jika tidak ada direct permission, cek melalui role permissions --}}
+                            @if ($user->hasPermissionTo($data['permission']))
+                                <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
+                                    href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') }}">
+                                    <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
+                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                                        viewBox="{{ $data['viewBox'] }}" stroke-width="1.5" stroke="currentColor">
+                                        @foreach ($data['paths'] as $path)
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="{{ $path }}" />
+                                        @endforeach
+                                    </svg>
+                                    <span>{{ $name }}</span>
+                                </a>
+                            @endif
                         @endif
                     @endforeach
                 </li>
 
                 <li class="flex flex-col gap-2.5">
                     @foreach ($sideNavData as $name => $data)
-                        @if (Auth::user()->can($data['permission']))
-                            <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
-                                href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
+                        @if ($hasDirectPermissions)
+                            {{-- Cek jika pengguna memiliki direct permission --}}
+                            @if (Auth::user()->hasDirectPermission($data['permission']['view']) ||
+                                    Auth::user()->hasDirectPermission($data['permission']['manage']))
+                                <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
+                                    href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
 
-                                <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
-                                    xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-                                    viewBox="{{ $data['viewBox'] }}" stroke-width="1.5" stroke="currentColor">
-                                    @foreach ($data['paths'] as $path)
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $path }}" />
-                                    @endforeach
-                                </svg>
+                                    <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
+                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                                        viewBox="{{ $data['viewBox'] }}" stroke-width="1.5" stroke="currentColor">
+                                        @foreach ($data['paths'] as $path)
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="{{ $path }}" />
+                                        @endforeach
+                                    </svg>
 
-                                <span>{{ $name }}</span>
-                            </a>
+                                    <span>{{ $name }}</span>
+                                </a>
+                            @endif
+                        @else
+                            {{-- Jika tidak ada direct permission, cek melalui role permissions --}}
+                            @if (Auth::user()->hasPermissionTo($data['permission']['view']) ||
+                                    Auth::user()->hasPermissionTo($data['permission']['manage']))
+                                <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
+                                    href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
+
+                                    <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
+                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                                        viewBox="{{ $data['viewBox'] }}" stroke-width="1.5" stroke="currentColor">
+                                        @foreach ($data['paths'] as $path)
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="{{ $path }}" />
+                                        @endforeach
+                                    </svg>
+
+                                    <span>{{ $name }}</span>
+                                </a>
+                            @endif
                         @endif
                     @endforeach
                 </li>
 
-                @if (Auth::user()->hasAnyRole([
-                        'yayasan',
-                        'deputi',
-                        'kepala sekolah',
-                        'guru',
-                        'tata usaha tenaga pendidikan',
-                        'tata usaha non tenaga pendidikan',
-                        'kerohanian tenaga pendidikan',
-                        'kerohanian non tenaga pendidikan',
-                    ]))
-                    <li class="flex flex-col gap-2.5">
-                        @foreach ($sideNavPenilaian as $name => $data)
-                            @if (Auth::user()->can($data['permission']))
+                <li class="flex flex-col gap-2.5">
+                    @foreach ($sideNavPenilaian as $name => $data)
+                        @if ($hasDirectPermissions)
+                            {{-- Cek jika pengguna memiliki direct permission --}}
+                            @if (Auth::user()->hasDirectPermission($data['permission']))
                                 <a class="{{ request()->segment(2) == $data['url'] || request()->segment(2) == 'penilaian'
                                     ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold'
                                     : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
@@ -75,12 +114,32 @@
                                     <span>{{ $name }}</span>
                                 </a>
                             @endif
-                        @endforeach
-                    </li>
+                        @else
+                            {{-- Jika tidak ada direct permission, cek melalui role permissions --}}
+                            @if (Auth::user()->hasPermissionTo($data['permission']))
+                                <a class="{{ request()->segment(2) == $data['url'] || request()->segment(2) == 'penilaian'
+                                    ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold'
+                                    : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
+                                    href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
 
-                    <li class="flex flex-col gap-2.5">
-                        @foreach ($sideNavGuru as $name => $data)
-                            @if (Auth::user()->can($data['permission']))
+                                    <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
+                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                                        viewBox="{{ $data['viewBox'] }}" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $data['path'] }}" />
+                                    </svg>
+
+                                    <span>{{ $name }}</span>
+                                </a>
+                            @endif
+                        @endif
+                    @endforeach
+                </li>
+
+                <li class="flex flex-col gap-2.5">
+                    @foreach ($sideNavRiwayatPenilaian as $name => $data)
+                        @if ($hasDirectPermissions)
+                            {{-- Cek jika pengguna memiliki direct permission --}}
+                            @if (Auth::user()->hasDirectPermission($data['permission']))
                                 <a class="{{ request()->segment(2) == $data['url']
                                     ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold'
                                     : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
@@ -98,34 +157,90 @@
                                     <span>{{ $name }}</span>
                                 </a>
                             @endif
-                        @endforeach
-                    </li>
+                        @else
+                            {{-- Jika tidak ada direct permission, cek melalui role permissions --}}
+                            @if (Auth::user()->hasPermissionTo($data['permission']))
+                                <a class="{{ request()->segment(2) == $data['url']
+                                    ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold'
+                                    : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
+                                    href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
 
+                                    <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
+                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        fill="none" viewBox="{{ $data['viewBox'] }}" stroke-width="1.5"
+                                        stroke="currentColor">
+                                        @foreach ($data['paths'] as $path)
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="{{ $path }}" />
+                                        @endforeach
+                                    </svg>
+
+                                    <span>{{ $name }}</span>
+                                </a>
+                            @endif
+                        @endif
+                    @endforeach
+                </li>
+
+                @canany(['persetujuan penilaian', 'catatan pegawai'])
                     <li class="flex flex-col gap-2.5">
                         @foreach ($sideNavKepalaSekolah as $name => $data)
-                            @if (Auth::user()->can($data['permission']))
-                                <a class="{{ request()->segment(2) == $data['url']
-                                    ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold'
-                                    : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
-                                    href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
+                            @if ($hasDirectPermissions)
+                                {{-- Cek jika pengguna memiliki direct permission --}}
+                                @if (Auth::user()->hasDirectPermission($data['permission']))
+                                    <a class="{{ request()->segment(2) == $data['url']
+                                        ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold'
+                                        : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
+                                        href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
 
-                                    <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
-                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-                                        viewBox="{{ $data['viewBox'] }}" stroke-width="1.5" stroke="currentColor">
-                                        @foreach ($data['paths'] as $path)
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="{{ $path }}" />
-                                        @endforeach
-                                    </svg>
+                                        <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
+                                            xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            fill="none" viewBox="{{ $data['viewBox'] }}" stroke-width="1.5"
+                                            stroke="currentColor">
+                                            @foreach ($data['paths'] as $path)
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="{{ $path }}" />
+                                            @endforeach
+                                        </svg>
 
-                                    <span>{{ $name }}</span>
-                                </a>
+                                        <span>{{ $name }}</span>
+                                    </a>
+                                @endif
+                            @else
+                                {{-- Jika tidak ada direct permission, cek melalui role permissions --}}
+                                @if (Auth::user()->hasPermissionTo($data['permission']))
+                                    <a class="{{ request()->segment(2) == $data['url']
+                                        ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold'
+                                        : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
+                                        href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
+
+                                        <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
+                                            xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            fill="none" viewBox="{{ $data['viewBox'] }}" stroke-width="1.5"
+                                            stroke="currentColor">
+                                            @foreach ($data['paths'] as $path)
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="{{ $path }}" />
+                                            @endforeach
+                                        </svg>
+
+                                        <span>{{ $name }}</span>
+                                    </a>
+                                @endif
                             @endif
                         @endforeach
                     </li>
-                @endif
+                @endcanany
 
-                @if (Auth::user()->hasAnyRole('superadmin', 'kepala sekolah'))
+                @canany([
+                    'perbandingan kriteria',
+                    'view perbandingan kriteria',
+                    'perbandingan subkriteria',
+                    'view
+                    perbandingan subkriteria',
+                    'perbandingan pegawai',
+                    'view perbandingan pegawai',
+                    ])
                     <li class="flex flex-col gap-2.5" x-data="{ isOpen: localStorage.getItem('navSideDropDown') === 'true' || false }">
                         <a class="flex flex-row items-center gap-2 rounded-lg p-2 text-base text-gray-900 hover:bg-slate-100"
                             href="#" @click="isOpen = !isOpen; localStorage.setItem('navSideDropDown', isOpen)">
@@ -160,21 +275,95 @@
                             x-transition:leave-end="transform opacity-0 scale-95">
 
                             @foreach ($sideNavPerhitungan as $name => $data)
-                                @if (Auth::user()->can($data['permission']))
-                                    <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-200/80 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-200/80' }} ml-2 flex w-11/12 flex-row gap-2 text-base"
-                                        href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
+                                @if ($hasDirectPermissions)
+                                    {{-- Cek jika pengguna memiliki direct permission --}}
+                                    @if (Auth::user()->hasDirectPermission($data['permission']['view']))
+                                        <a class="{{ request()->segment(2) == $data['url']['view'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-200/80 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-200/80' }} ml-2 flex w-11/12 flex-row gap-2 text-base"
+                                            href="{{ route('dashboard.index') . '/' . $data['url']['view'] }}">
+                                            <span>{{ $name }}</span>
+                                        </a>
+                                    @endif
 
-                                        <span>{{ $name }}</span>
-                                    </a>
+                                    @if (Auth::user()->hasDirectPermission($data['permission']['manage']))
+                                        <a class="{{ request()->segment(2) == $data['url']['manage'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-200/80 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-200/80' }} ml-2 flex w-11/12 flex-row gap-2 text-base"
+                                            href="{{ route('dashboard.index') . '/' . $data['url']['manage'] }}">
+                                            <span>{{ $name }}</span>
+                                        </a>
+                                    @endif
+                                @else
+                                    {{-- Jika tidak ada direct permission, cek melalui role permissions --}}
+                                    @if (Auth::user()->hasAnyPermission($data['permission']['view']))
+                                        <a class="{{ request()->segment(2) == $data['url']['view'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-200/80 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-200/80' }} ml-2 flex w-11/12 flex-row gap-2 text-base"
+                                            href="{{ route('dashboard.index') . '/' . $data['url']['view'] }}">
+                                            <span>{{ $name }}</span>
+                                        </a>
+                                    @endif
+
+                                    @if (Auth::user()->hasAnyPermission($data['permission']['manage']))
+                                        <a class="{{ request()->segment(2) == $data['url']['manage'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-200/80 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-200/80' }} ml-2 flex w-11/12 flex-row gap-2 text-base"
+                                            href="{{ route('dashboard.index') . '/' . $data['url']['manage'] }}">
+                                            <span>{{ $name }}</span>
+                                        </a>
+                                    @endif
                                 @endif
                             @endforeach
                         </ul>
                     </li>
-                @endif
+                @endcanany
 
                 <li class="flex flex-col gap-2.5">
                     @foreach ($sideNavPerankingan as $name => $data)
-                        @if (Auth::user()->can($data['permission']))
+                        @if ($hasDirectPermissions)
+                            {{-- Cek jika pengguna memiliki direct permission --}}
+                            @if (Auth::user()->hasDirectPermission($data['permission']))
+                                <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
+                                    href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
+
+                                    <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
+                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        fill="none" viewBox="{{ $data['viewBox'] }}" stroke-width="1.5"
+                                        stroke="currentColor">
+                                        @foreach ($data['paths'] as $path)
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="{{ $path }}" />
+                                        @endforeach
+                                    </svg>
+
+                                    <span>{{ $name }}</span>
+                                </a>
+                            @endif
+                        @else
+                            {{-- Jika tidak ada direct permission, cek melalui role permissions --}}
+                            @if (Auth::user()->hasPermissionTo($data['permission']))
+                                <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
+                                    href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
+
+                                    <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
+                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        fill="none" viewBox="{{ $data['viewBox'] }}" stroke-width="1.5"
+                                        stroke="currentColor">
+                                        @foreach ($data['paths'] as $path)
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="{{ $path }}" />
+                                        @endforeach
+                                    </svg>
+
+                                    <span>{{ $name }}</span>
+                                </a>
+                            @endif
+                        @endif
+                    @endforeach
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <li class="flex flex-col gap-2.5">
+                @foreach ($sideNavKelolaAkun as $name => $data)
+                    @if ($hasDirectPermissions)
+                        {{-- Cek jika pengguna memiliki direct permission --}}
+                        @if (Auth::user()->hasDirectPermission($data['permission']['view']) ||
+                                Auth::user()->hasDirectPermission($data['permission']['manage']))
                             <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
                                 href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
 
@@ -190,29 +379,25 @@
                                 <span>{{ $name }}</span>
                             </a>
                         @endif
-                    @endforeach
-                </li>
+                    @else
+                        {{-- Jika tidak ada direct permission, cek melalui role permissions --}}
+                        @if (Auth::user()->hasPermissionTo($data['permission']['view']) ||
+                                Auth::user()->hasPermissionTo($data['permission']['manage']))
+                            <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
+                                href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
 
-            </ul>
-        </div>
+                                <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
+                                    xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                                    viewBox="{{ $data['viewBox'] }}" stroke-width="1.5" stroke="currentColor">
+                                    @foreach ($data['paths'] as $path)
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="{{ $path }}" />
+                                    @endforeach
+                                </svg>
 
-        <div>
-            <li class="flex flex-col gap-2.5">
-                @foreach ($sideNavUser as $name => $data)
-                    @if (Auth::user()->can($data['permission']))
-                        <a class="{{ request()->segment(2) == $data['url'] ? 'items-center rounded-lg p-2 text-gray-900 bg-slate-100 font-bold' : 'items-center rounded-lg p-2 text-gray-900 hover:bg-slate-100' }} flex flex-row gap-2 text-base"
-                            href="{{ $data['url'] == 'dashboard' ? route('dashboard.index') : route('dashboard.index') . '/' . $data['url'] }}">
-
-                            <svg class="{{ request()->segment(2) == $data['url'] ? 'text-gray-900 transition duration-75' : 'text-gray-700 group-hover:text-gray-700' }}"
-                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-                                viewBox="{{ $data['viewBox'] }}" stroke-width="1.5" stroke="currentColor">
-                                @foreach ($data['paths'] as $path)
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ $path }}" />
-                                @endforeach
-                            </svg>
-
-                            <span>{{ $name }}</span>
-                        </a>
+                                <span>{{ $name }}</span>
+                            </a>
+                        @endif
                     @endif
                 @endforeach
             </li>
