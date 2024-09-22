@@ -98,13 +98,23 @@ class KelolaAkunController extends Controller
      */
     public function show(string $id)
     {
-        // Dapatkan semua permission yang ada pada user tersebut
-        $permission = User::findOrFail($id)->getAllPermissions();
+        // Temukan user berdasarkan ID
+        $user = User::findOrFail($id);
+
+        // Ambil permissions langsung dari model_has_permissions
+        $directPermissions = $user->getDirectPermissions();
+
+        // Jika tidak ada permission langsung, ambil permissions dari role
+        if ($directPermissions->isEmpty()) {
+            $permissions = $user->getPermissionsViaRoles();
+        } else {
+            $permissions = $directPermissions;
+        }
 
         return view('pages.it.kelola-akun.show', [
             'title' => 'Detail Akun',
             'user' => User::findOrFail($id),
-            'permission' => $permission,
+            'permission' => $permissions,
         ]);
     }
 
@@ -113,14 +123,27 @@ class KelolaAkunController extends Controller
      */
     public function edit(string $id)
     {
-        // Dapatkan semua permission yang ada
-        $permission = Permission::whereNotIn('name', ['perbandingan-kriteria', 'perbandingan-subkriteria', 'view perbandingan-kriteria', 'view perbandingan-subkriteria', 'perbandingan-karyawan'])->get();
+        // Temukan user berdasarkan ID
+        $user = User::findOrFail($id);
+
+        // Ambil semua permissions
+        $allPermissions = Permission::all();
+
+        // Ambil permissions langsung dari model_has_permissions
+        $directPermissions = $user->getDirectPermissions()->pluck('id')->toArray();
+
+        // Ambil permissions dari role_has_permissions jika tidak ada directPermissions
+        $rolePermissions = $directPermissions ? [] : $user->getPermissionsViaRoles()->pluck('id')->toArray();
+
+        // Gabungkan directPermissions dan rolePermissions
+        $selectedPermissions = array_merge($directPermissions, $rolePermissions);
         
         return view('pages.it.kelola-akun.edit', [
             'title' => 'Ubah Akun',
-            'user' => User::findOrFail($id),
+            'user' => $user,
             'roles' => $this->roles,
-            'permission' => $permission,
+            'allPermissions' => $allPermissions,
+            'selectedPermissions' => $selectedPermissions,
         ]);
     }
 
@@ -166,12 +189,16 @@ class KelolaAkunController extends Controller
                 ]);
             }
 
-            // Sync roles using Spatie
+            // Sync role user
             $user->syncRoles($validatedData['role']);
 
-            // Sync permissions using Spatie
+            // Update permissions for the role
             $permissions = Permission::whereIn('id', $validatedData['permission'])->pluck('name')->toArray();
             $user->syncPermissions($permissions);
+
+            // Clear any relevant caches (optional)
+            cache()->forget("spatie.permission.cache.user.{$user->id}");
+            cache()->forget("spatie.role_has_permissions.cache.user.{$user->id}");
 
             $notif = notify()->success('Akun berhasil diubah');
             return redirect()->route('kelolaAkun.index')->withInput()->with('notif', $notif);
