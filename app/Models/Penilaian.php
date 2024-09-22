@@ -21,7 +21,11 @@ class Penilaian extends Model
                     $query->where('nama_alternatif', 'like', '%' . $search . '%');
                 })->orWhereHas('alternatifKedua.alternatifPertama', function ($query) use ($search) {
                     $query->where('nama_alternatif', 'like', '%' . $search . '%');
-                })->orWhere('tahun_ajaran', 'like', '%' . $search . '%');
+                })->orWhereHas('tanggalPenilaian', function ($query) use ($search) {
+                    $query->where('tahun_ajaran', 'like', '%' . $search . '%');
+                })->orWhereHas('tanggalPenilaian', function ($query) use ($search) {
+                    $query->where('semester', 'like', '%' . $search . '%');
+                });
             });
         });
     }
