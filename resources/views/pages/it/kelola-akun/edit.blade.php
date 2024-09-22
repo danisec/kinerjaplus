@@ -89,10 +89,11 @@
                     Permission Pengguna</label>
                 <select class="@error('permission') border-red-500 @enderror field-input-slate w-full" id="permission"
                     name="permission[]" multiple required>
-                    @foreach ($permission as $itemPermission)
-                        <option value="{{ $itemPermission->id }}"
-                            {{ in_array($itemPermission->id, $user->getAllPermissions()->pluck('id')->toArray()) ? 'selected' : '' }}>
-                            {{ $itemPermission->name }}
+                    @foreach ($allPermissions as $permission)
+                        <option value="{{ $permission->id }}"
+                            {{ in_array($permission->id, old('permission', $selectedPermissions)) ? 'selected' : '' }}>
+                            {{ $permission->name }}
+                        </option>
                     @endforeach
                 </select>
 
