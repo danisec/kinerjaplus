@@ -14,25 +14,39 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        Permission::create(['name' => 'dashboard']);
-        Permission::create(['name' => 'karyawan']);
-        Permission::create(['name' => 'group-karyawan']);
-        Permission::create(['name' => 'kriteria']);
-        Permission::create(['name' => 'subkriteria']);
-        Permission::create(['name' => 'skala-indikator']);
-        Permission::create(['name' => 'perbandingan-kriteria']);
-        Permission::create(['name' => 'perbandingan-subkriteria']);
-        Permission::create(['name' => 'kelola-akun']);
+        // Daftar izin yang akan dibuat
+        $permissions = [
+            'dashboard',
+            'view pegawai',
+            'kelola pegawai',
+            'view group pegawai',
+            'kelola group pegawai',
+            'view kriteria',
+            'kelola kriteria',
+            'view subkriteria',
+            'kelola subkriteria',
+            'view skala indikator',
+            'kelola skala indikator',
+            'perbandingan kriteria',
+            'perbandingan subkriteria',
+            'view kelola akun',
+            'kelola akun',
+            'penilaian',
+            'riwayat penilaian',
+            'persetujuan penilaian',
+            'catatan pegawai',
+            'view perbandingan kriteria',
+            'view perbandingan subkriteria',
+            'perbandingan pegawai',
+            'perankingan',
+        ];
 
-        Permission::create(['name' => 'penilaian']);
-        Permission::create(['name' => 'riwayat-penilaian']);
-        Permission::create(['name' => 'persetujuan-penilaian']);
-        Permission::create(['name' => 'catatan-karyawan']);
-        Permission::create(['name' => 'view perbandingan-kriteria']);
-        Permission::create(['name' => 'view perbandingan-subkriteria']);
-        Permission::create(['name' => 'perbandingan-karyawan']);
-        Permission::create(['name' => 'perankingan']);
+        // Buat izin jika belum ada
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
 
+        // Buat peran dan berikan izin
         $roleSuperadmin = Role::create(['name' => 'superadmin']);
         $roleAdmin = Role::create(['name' => 'admin']);
         $roleIT = Role::create(['name' => 'IT']);
@@ -47,82 +61,94 @@ class RolePermissionSeeder extends Seeder
 
         $roleSuperadmin->givePermissionTo([
             'dashboard',
-            'karyawan',
-            'group-karyawan',
-            'kriteria',
-            'subkriteria',
-            'skala-indikator',
-            'perbandingan-kriteria',
-            'perbandingan-subkriteria',
-            'kelola-akun',
+            'view pegawai',
+            'kelola pegawai',
+            'view group pegawai',
+            'kelola group pegawai',
+            'view kriteria',
+            'kelola kriteria',
+            'view subkriteria',
+            'kelola subkriteria',
+            'view skala indikator',
+            'kelola skala indikator',
+            'perbandingan kriteria',
+            'perbandingan subkriteria',
+            'view kelola akun',
+            'kelola akun',
         ]);
 
         $roleAdmin->givePermissionTo([
             'dashboard',
-            'karyawan',
-            'group-karyawan',
-            'kriteria',
-            'subkriteria',
-            'skala-indikator',
+            'view pegawai',
+            'kelola pegawai',
+            'view group pegawai',
+            'kelola group pegawai',
+            'view kriteria',
+            'kelola kriteria',
+            'view subkriteria',
+            'kelola subkriteria',
+            'view skala indikator',
+            'kelola skala indikator',
         ]);
 
         $roleIT->givePermissionTo([
             'dashboard',
-            'kelola-akun',
+            'view kelola akun',
+            'kelola akun',
         ]);
 
         $roleYayasan->givePermissionTo([
             'dashboard',
             'penilaian',
-            'riwayat-penilaian',
+            'riwayat penilaian',
         ]);
 
         $roleDeputi->givePermissionTo([
             'dashboard',
             'penilaian',
-            'riwayat-penilaian',
+            'riwayat penilaian',
         ]);
 
         $roleKepalaSekolah->givePermissionTo([
             'dashboard',
             'penilaian',
-            'riwayat-penilaian',
-            'persetujuan-penilaian',
-            'catatan-karyawan',
-            'view perbandingan-kriteria',
-            'view perbandingan-subkriteria',
-            'perbandingan-karyawan',
+            'riwayat penilaian',
+            'persetujuan penilaian',
+            'catatan pegawai',
+            'view perbandingan kriteria',
+            'view perbandingan subkriteria',
+            'perbandingan pegawai',
             'perankingan',
         ]);
 
         $roleGuru->givePermissionTo([
             'dashboard',
             'penilaian',
-            'riwayat-penilaian',
+            'riwayat penilaian',
         ]);
 
         $roleTataUsahaTenagaPendidikan->givePermissionTo([
             'dashboard',
             'penilaian',
-            'riwayat-penilaian',
+            'riwayat penilaian',
         ]);
 
         $roleTataUsahaNonTenagaPendidikan->givePermissionTo([
             'dashboard',
             'penilaian',
-            'riwayat-penilaian',
+            'riwayat penilaian',
         ]);
 
         $roleKerohanianTenagaPendidikan->givePermissionTo([
             'dashboard',
             'penilaian',
-            'riwayat-penilaian',
+            'riwayat penilaian',
         ]);
 
         $roleKerohanianNonTenagaPendidikan->givePermissionTo([
             'dashboard',
             'penilaian',
-            'riwayat-penilaian',
+            'riwayat penilaian',
         ]);
     }
 }
