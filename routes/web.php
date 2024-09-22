@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(DashboardController::class)->name('dashboard.')->middleware('auth', 'permission:dashboard')->group(function () {
+Route::controller(DashboardController::class)->name('dashboard.')->middleware('auth', 'direct.permission:dashboard')->group(function () {
     Route::get('/dashboard', 'index')->name('index');
 
     Route::get('/dashboard/{kodeAlternatif}/getSelfRankChart', 'getSelfRankChart')->name('getSelfRankChart')->middleware('role:yayasan|deputi|kepala sekolah|guru|tata usaha tenaga pendidikan|tata usaha non tenaga pendidikan|kerohanian tenaga pendidikan|kerohanian non tenaga pendidikan');
@@ -34,12 +34,12 @@ Route::controller(DashboardController::class)->name('dashboard.')->middleware('a
     Route::get('/dashboard/{idTanggalPenilaian}/{namaGroupKaryawan}/getRankTahunAjaranGroupTable', 'getRankTahunAjaranGroupTable')->name('getRankTahunAjaranGroupTable')->middleware('role:yayasan|deputi');
 });
 
-Route::controller(TanggalPenilaianController::class)->name('tanggalPenilaian.')->middleware('auth', 'permission:penilaian')->group(function () {
+Route::controller(TanggalPenilaianController::class)->name('tanggalPenilaian.')->middleware('auth', 'direct.permission:penilaian')->group(function () {
     Route::get('/dashboard/penilaian/buat-tanggal-penilaian', 'create')->name('create');
     Route::post('/dashboard/penilaian/buat-tanggal-penilaian', 'store')->name('store');
 });
 
-Route::controller(PenilaianController::class)->name('penilaian.')->middleware('auth', 'permission:penilaian')->group(function () {
+Route::controller(PenilaianController::class)->name('penilaian.')->middleware('auth', 'direct.permission:penilaian')->group(function () {
     Route::get('/dashboard/penilaian/introduction', 'welcome')->name('welcome');
     
     Route::get('/dashboard/penilaian/tambah-penilaian', 'create')->name('create');
@@ -49,7 +49,7 @@ Route::controller(PenilaianController::class)->name('penilaian.')->middleware('a
     
 });
 
-Route::controller(RiwayatPenilaianController::class)->name('riwayatPenilaian.')->middleware('auth', 'permission:riwayat-penilaian')->group(function () {
+Route::controller(RiwayatPenilaianController::class)->name('riwayatPenilaian.')->middleware('auth', 'direct.permission:riwayat penilaian')->group(function () {
     Route::get('/dashboard/riwayat-penilaian', 'index')->name('index');
 
     Route::get('/dashboard/riwayat-penilaian/{firstYear}/{secondYear}/{semester}', 'showTahun')->name('showTahun');
@@ -57,32 +57,51 @@ Route::controller(RiwayatPenilaianController::class)->name('riwayatPenilaian.')-
 });
 
 Route::controller(PerhitunganKriteriaController::class)->name('perhitunganKriteria.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/perbandingan-kriteria', 'index')->name('index')->middleware('role:superadmin');
-    Route::get('/dashboard/perbandingan-kriteria/pedoman', 'pedoman')->name('pedoman')->middleware('role:superadmin');
+    // Route permission 'perbandingan kriteria'
+    Route::middleware('role_or_permission:superadmin|perbandingan kriteria')->group(function () {
+        Route::get('/dashboard/perbandingan-kriteria', 'index')->name('index');
+        Route::get('/dashboard/perbandingan-kriteria/pedoman', 'pedoman')->name('pedoman');
+        
+        Route::post('/dashboard/perbandingan-kriteria', 'store')->name('store');
+    });
 
-    Route::get('/dashboard/perbandingan-kriteria/hasil-perbandingan-kriteria', 'hasil')->name('hasil')->middleware('role:superadmin|kepala sekolah');
-    
-    Route::post('/dashboard/perbandingan-kriteria', 'store')->name('store')->middleware('role:superadmin');
+    // Route permission 'view perbandingan kriteria|perbandingan kriteria'
+    Route::middleware('role_or_permission:superadmin|kepala sekolah|view perbandingan kriteria|perbandingan kriteria')->group(function () {
+        Route::get('/dashboard/perbandingan-kriteria/hasil-perbandingan-kriteria', 'hasil')->name('hasil');
+    });
 });
 
 Route::controller(PerhitunganSubkriteriaController::class)->name('perhitunganSubkriteria.')->middleware('auth')->group(function () {
-    Route::get('/dashboard/perbandingan-subkriteria', 'index')->name('index')->middleware('role:superadmin');
-    Route::get('/dashboard/perbandingan-subkkriteria/pedoman', 'pedoman')->name('pedoman')->middleware('role:superadmin');
+    // Route permission 'perbandingan subkriteria'
+    Route::middleware('role_or_permission:superadmin|perbandingan subkriteria')->group(function () {
+        Route::get('/dashboard/perbandingan-subkriteria', 'index')->name('index');
+        Route::get('/dashboard/perbandingan-subkkriteria/pedoman', 'pedoman')->name('pedoman');
 
-    Route::get('/dashboard/perbandingan-subkriteria/hasil-perbandingan-subkriteria', 'hasil')->name('hasil')->middleware('role:superadmin|kepala sekolah');
+        Route::post('/dashboard/perbandingan-subkriteria', 'store')->name('store');
+    });
 
-    Route::post('/dashboard/perbandingan-subkriteria', 'store')->name('store')->middleware('role:superadmin');
+    // Route permission 'view perbandingan subkriteria|perbandingan subkriteria'
+    Route::middleware('role_or_permission:superadmin|kepala sekolah|view perbandingan subkriteria|perbandingan subkriteria')->group(function () {
+        Route::get('/dashboard/perbandingan-subkriteria/hasil-perbandingan-subkriteria', 'hasil')->name('hasil');
+    });
+
 });
 
-Route::controller(KelolaAkunController::class)->name('kelolaAkun.')->middleware('auth', 'permission:kelola-akun')->group(function () {
-    Route::get('/dashboard/kelola-akun', 'index')->name('index');
+Route::controller(KelolaAkunController::class)->name('kelolaAkun.')->middleware('auth')->group(function () {
+    // Route permission 'view kelola akun|kelola akun'
+    Route::middleware('direct.permission:view kelola akun,kelola akun')->group(function () {
+        Route::get('/dashboard/kelola-akun', 'index')->name('index');
+        Route::get('/dashboard/kelola-akun/view-akun/{id}', 'show')->name('show');
+    });
 
-    Route::get('/dashboard/kelola-akun/tambah-akun', 'create')->name('create');
-    Route::get('/dashboard/kelola-akun/view-akun/{id}', 'show')->name('show');
+    // Route permission 'kelola akun'
+    Route::middleware('direct.permission:kelola akun')->group(function () {
+        Route::get('/dashboard/kelola-akun/tambah-akun', 'create')->name('create');
 
-    Route::post('/dashboard/kelola-akun/tambah-akun', 'store')->name('store');
-    Route::delete('/dashboard/kelola-akun/{id}', 'destroy')->name('destroy');
+        Route::post('/dashboard/kelola-akun/tambah-akun', 'store')->name('store');
+        Route::delete('/dashboard/kelola-akun/{id}', 'destroy')->name('destroy');
 
-    Route::get('/dashboard/kelola-akun/ubah-akun/{id}/edit', 'edit')->name('edit');
-    Route::put('/dashboard/kelola-akun/{id}', 'update')->name('update');
+        Route::get('/dashboard/kelola-akun/ubah-akun/{id}/edit', 'edit')->name('edit');
+        Route::put('/dashboard/kelola-akun/{id}', 'update')->name('update');
+    });
 });
