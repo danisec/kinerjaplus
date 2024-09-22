@@ -67,13 +67,15 @@
                                         <x-atoms.svg.arrow-down @class(['mt-0.5 h-4 w-4']) />
                                     </div>
                                 </th>
-                                <th class="px-6 py-3 text-center" scope="colgroup">
-                                    <div class="flex flex-row items-center justify-center gap-0.5">
-                                        @sortablelink('rank', 'Rank')
+                                @if (Auth::user()->hasRole(['kepala sekolah']))
+                                    <th class="px-6 py-3 text-center" scope="colgroup">
+                                        <div class="flex flex-row items-center justify-center gap-0.5">
+                                            @sortablelink('rank', 'Rank')
 
-                                        <x-atoms.svg.arrow-down @class(['mt-0.5 h-4 w-4']) />
-                                    </div>
-                                </th>
+                                            <x-atoms.svg.arrow-down @class(['mt-0.5 h-4 w-4']) />
+                                        </div>
+                                    </th>
+                                @endif
                             </tr>
                         </thead>
 
@@ -97,8 +99,10 @@
                                         <td class="whitespace-nowrap px-6 py-4">
                                             {{ substr($item->nilai, 0, 9) }}
                                         </td>
-                                        <td class="flex justify-center gap-4 px-6 py-4">
-                                            {{ $item->rank }}
+                                        @if (Auth::user()->hasRole(['kepala sekolah']))
+                                            <td class="flex justify-center gap-4 px-6 py-4">
+                                                {{ $item->rank }}
+                                        @endif
                                         </td>
                                     </tr>
                                 </tbody>
@@ -120,14 +124,7 @@
                 </div>
             @endif
 
-            @if (Auth::user()->hasAnyRole([
-                    'kepala sekolah',
-                    'guru',
-                    'tata usaha tenaga pendidikan',
-                    'tata usaha non tenaga pendidikan',
-                    'kerohanian tenaga pendidikan',
-                    'kerohanian non tenaga pendidikan',
-                ]))
+            @if (Auth::user()->hasRole(['kepala sekolah']))
                 <div class="my-12">
                     <div class="flex flex-row items-center gap-4">
                         <h4 class="text-xl font-bold text-gray-700" id="namaGroup"
@@ -175,14 +172,7 @@
                 </div>
             @endif
 
-            @if (Auth::user()->hasAnyRole([
-                    'kepala sekolah',
-                    'guru',
-                    'tata usaha tenaga pendidikan',
-                    'tata usaha non tenaga pendidikan',
-                    'kerohanian tenaga pendidikan',
-                    'kerohanian non tenaga pendidikan',
-                ]))
+            @if (Auth::user()->hasRole(['kepala sekolah']))
                 <div class="relative overflow-x-auto rounded-lg shadow-sm">
                     <table class="w-full text-left text-base text-gray-900" id="tableRank">
                         <thead class="bg-slate-100 text-sm uppercase text-gray-900">
