@@ -47,18 +47,20 @@ class PersetujuanPenilaianController extends Controller
             $checkGroupKaryawanId = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->value('id_group_karyawan');
         }
 
-        // Dapatkan penilaian yang memiliki group karyawan yang sama dengan group karyawan yang dimiliki oleh auth user  $checkGroupKaryawan
+        // Dapatkan semua penilaian yang memiliki group karyawan yang sama dengan group karyawan yang dimiliki oleh auth user  $checkGroupKaryawan
         $penilaianGroupedByTahun = Penilaian::with(['tanggalPenilaian','alternatifPertama'])
             ->whereHas('alternatifPertama', function ($query) use ($checkGroupKaryawanId) {
             $query->where('id_group_karyawan', $checkGroupKaryawanId);
         })
-        ->select('tanggal_penilaian.tahun_ajaran', 'tanggal_penilaian.semester')
         ->join('tanggal_penilaian', 'penilaian.id_tanggal_penilaian', '=', 'tanggal_penilaian.id_tanggal_penilaian')
         ->orderBy('tanggal_penilaian.tahun_ajaran', 'DESC')
         ->when(request()->has('search'), function ($query) {
-            $query->where('tanggal_penilaian.tahun_ajaran', 'like', '%' . request('search') . '%');
+            // Request search berdasarkan tahun ajaran dan semester
+            $query->where('tanggal_penilaian.tahun_ajaran', 'like', '%' . request('search') . '%')
+                ->orWhere('tanggal_penilaian.semester', 'like', '%' . request('search') . '%');
         })
-        ->get()->unique('id_tanggal_penilaian');
+        ->get()
+        ->unique('id_tanggal_penilaian');
 
         // Menggabungkan tahun_ajaran dengan nama group karyawan
         $penilaianWithGroupKaryawan = [];
