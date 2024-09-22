@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(PersetujuanPenilaianController::class)->name('persetujuanPenilaian.')->middleware('auth', 'permission:persetujuan-penilaian')->group(function () {
+Route::controller(PersetujuanPenilaianController::class)->name('persetujuanPenilaian.')->middleware('auth', 'permission:persetujuan penilaian')->group(function () {
     Route::get('/dashboard/persetujuan-penilaian', 'index')->name('index');
     Route::get('/dashboard/persetujuan-penilaian/{id}/view-penilaian', 'show')->name('show');
     
@@ -29,7 +29,7 @@ Route::controller(PersetujuanPenilaianController::class)->name('persetujuanPenil
     Route::put('/dashboard/persetujuan-penilaian/{id}/{firstYear}/{secondYear}/{semester}/tambah-catatan-karyawan', 'updateCatatan')->name('updateCatatan');
 });
 
-Route::controller(CatatanKaryawanController::class)->name('catatanKaryawan.')->middleware('auth', 'permission:catatan-karyawan')->group(function () {
+Route::controller(CatatanKaryawanController::class)->name('catatanKaryawan.')->middleware('auth', 'permission:catatan pegawai')->group(function () {
     Route::get('/dashboard/catatan-karyawan', 'index')->name('index');
     Route::get('/dashboard/catatan-karyawan/{firstYear}/{secondYear}/{semester}', 'showTahun')->name('showTahun');
     
@@ -44,7 +44,7 @@ Route::controller(CatatanKaryawanController::class)->name('catatanKaryawan.')->m
     Route::delete('/dashboard/catatan-karyawan/{id}', 'destroy')->name('destroy');
 });
 
-Route::controller(PerhitunganAlternatifController::class)->name('perhitunganAlternatif.')->middleware('auth', 'permission:perbandingan-karyawan')->group(function () {
+Route::controller(PerhitunganAlternatifController::class)->name('perhitunganAlternatif.')->middleware('auth', 'permission:perbandingan pegawai')->group(function () {
     Route::get('/dashboard/perbandingan-alternatif/introduction', 'introduction')->name('introduction');
 
     Route::get('/dashboard/perbandingan-alternatif/{firstYear}/{secondYear}/{semester}', 'index')->name('index');
