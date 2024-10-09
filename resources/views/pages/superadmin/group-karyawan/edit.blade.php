@@ -43,7 +43,7 @@
             <div>
                 <div class="mb-2 flex flex-row items-center gap-2">
                     <label class="block text-base font-medium text-gray-900" for="nama kepala sekolah">
-                        Nama Kepala Sekolah</label>
+                        Nama Kepala Sekolah / Pimpinan</label>
 
                     <div class="cursor-pointer pt-0.5" x-data="{ showTooltip: false }">
                         <div @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
@@ -52,7 +52,7 @@
 
                         <div class="absolute z-10 w-96 rounded bg-slate-50 px-2 py-1 text-base text-gray-900"
                             x-show="showTooltip">
-                            Pilih kepala sekolah untuk validasi status penilaian, perbandingan pegawai,
+                            Pilih kepala sekolah / pimpinan untuk validasi status penilaian, perbandingan pegawai,
                             dan
                             perankingan.
                         </div>
@@ -89,6 +89,13 @@
                         <option value="{{ $item->kode_alternatif }}"
                             {{ in_array($item->kode_alternatif, old('kode_alternatif', $groupKaryawan->groupKaryawanDetail->pluck('kode_alternatif')->toArray())) ? 'selected' : '' }}>
                             {{ $item->alternatif->nama_alternatif . ' - ' . $item->alternatif->jabatan }}
+                        </option>
+                    @endforeach
+
+                    <!-- Karyawan yang belum dipilih -->
+                    @foreach ($karyawanBelumDipilih as $karyawan)
+                        <option value="{{ $karyawan->kode_alternatif }}">
+                            {{ $karyawan->nama_alternatif . ' - ' . $karyawan->jabatan }}
                         </option>
                     @endforeach
                 </select>
