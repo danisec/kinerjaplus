@@ -5,7 +5,7 @@
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
                 <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('catatanKaryawan.index') }}">Catatan Karyawan</a>
+                    href="{{ route('catatanKaryawan.index') }}">Catatan Pegawai</a>
             </div>
         </li>
 
@@ -22,7 +22,7 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Ubah Catatan Karyawan</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Ubah Catatan Pegawai</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
