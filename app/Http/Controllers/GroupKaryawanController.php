@@ -38,20 +38,18 @@ class GroupKaryawanController extends Controller
             })
             ->get();
             
-        // Dapatkan nama karyawan yang belum terdaftar di group karyawan dan jangan tampilkan kepala sekolah
-        $getRoleKepalaSekolah = Alternatif::with(['users'])
-            ->whereHas('users', function($query) {
-                $query->whereHas('roles', function($query) {
-                    $query->where('name', 'kepala sekolah');
-                });
-            })
-            ->pluck('kode_alternatif');
+        // Dapatkan nama karyawan yang belum terdaftar di group karyawan dan jangan tampilkan $kepalaSekolah yang belum terdaftar
+        $pimpinan = Alternatif::whereNotIn('kode_alternatif', function($query) {
+            $query->select('kepala_sekolah')->from('group_karyawan');
+        })
+        ->orderBy('nama_alternatif', 'ASC')
+        ->get();
 
         $alternatif = Alternatif::orderBy('nama_alternatif', 'ASC')->get();
 
         return view('pages.superadmin.group-karyawan.create', [
             'title' => 'Tambah Group Pegawai',
-            'kepalaSekolah' => $kepalaSekolah,
+            'kepalaSekolah' => $pimpinan,
             'namaKaryawan' => $alternatif,
         ]);
     }
@@ -136,12 +134,39 @@ class GroupKaryawanController extends Controller
                 $query->select('kode_alternatif')->from('group_karyawan_detail');
             })
             ->get();
+        
+        // Dapatkan semua nama karyawan
+        $pimpinan = Alternatif::orderBy('nama_alternatif', 'ASC')->get();
+
+        // Merge data kepala sekolah dengan data karyawan yang belum terdaftar di group karyawan
+        $mergePimpinan = [];
+        foreach ($kepalaSekolah as $key => $value) {
+            $mergePimpinan[] = $value;
+        }
+
+        foreach ($pimpinan as $key => $value) {
+            $mergePimpinan[] = $value;
+        }
+
+        // Dapatkan semua nama karyawan
+        $namaKaryawan = Alternatif::get();
+
+        // Dapatkan group karyawan yang dipilih
+        $groupKaryawan = GroupKaryawan::with(['alternatif', 'groupKaryawanDetail', 'groupKaryawanDetail.alternatif'])->where('id_group_karyawan', $id)->first();
+        
+        // Dapatkan nama karyawan yang belum dipilih (alternatif lainnya)
+        $karyawanBelumDipilih = Alternatif::whereNotIn('kode_alternatif', function($query) use ($id) {
+            $query->select('kode_alternatif')
+                ->from('group_karyawan_detail')
+                ->where('id_group_karyawan', $id);
+        })->get();
 
         return view('pages.superadmin.group-karyawan.edit', [
             'title' => 'Ubah Group Pegawai',
-            'namaKaryawan' => Alternatif::get(),
-            'kepalaSekolah' => $kepalaSekolah,
-            'groupKaryawan' => GroupKaryawan::with(['alternatif', 'groupKaryawanDetail', 'groupKaryawanDetail.alternatif'])->where('id_group_karyawan', $id)->first(),
+            'namaKaryawan' => $namaKaryawan,
+            'kepalaSekolah' => $mergePimpinan,
+            'groupKaryawan' => $groupKaryawan,
+            'karyawanBelumDipilih' => $karyawanBelumDipilih
         ]);
     }
 
