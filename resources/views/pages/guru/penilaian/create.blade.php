@@ -33,9 +33,12 @@
         @else
             <div class="my-6 w-full rounded-md bg-slate-100 p-8">
                 <p class="text-base font-bold uppercase tracking-wider text-gray-900">Petunjuk Pengisian</p>
-                <p class="my-6 text-base font-normal text-gray-900">Pada setiap pernyataan dari skala 1 hingga 4,
-                    pilihlah satu jawaban yang
-                    paling menggambarkan diri Anda.</p>
+                <p class="my-6 text-base font-normal text-gray-900">Pada setiap pernyataan di masing-masing
+                    kriteria,
+                    pilihlah salah satu jawaban yang paling sesuai dengan penilaian Anda terhadap diri Anda dan pegawai
+                    yang
+                    bersangkutan.
+                </p>
             </div>
 
             <form class="mt-12 space-y-6" action="{{ route('penilaian.store') }}" method="POST">
@@ -55,7 +58,7 @@
                             class="@error('alternatif_kedua') border-red-500 @enderror field-input-slate w-full font-semibold"
                             id="alternatif_kedua" name="alternatif_kedua" autofocus required>
 
-                            <option selected disabled hidden>Pilih Nama Karyawan</option>
+                            <option selected disabled hidden>Pilih Nama Pegawai</option>
 
                             @foreach ($alternatifPenilaianArray as $item)
                                 <optgroup
