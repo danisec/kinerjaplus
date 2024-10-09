@@ -47,7 +47,7 @@
             <div>
                 <div class="mb-2 flex flex-row items-center gap-2">
                     <label class="block text-base font-medium text-gray-900" for="nama kepala sekolah">
-                        Nama Kepala Sekolah
+                        Nama Kepala Sekolah / Pimpinan
                     </label>
 
                     <div class="cursor-pointer pt-0.5" x-data="{ showTooltip: false }">
@@ -57,7 +57,7 @@
 
                         <div class="absolute z-10 w-96 rounded bg-slate-50 px-2 py-1 text-base text-gray-900"
                             x-show="showTooltip">
-                            Pilih kepala sekolah untuk validasi status penilaian, perbandingan pegawai,
+                            Pilih kepala sekolah / pimpinan untuk validasi status penilaian, perbandingan pegawai,
                             dan
                             perankingan.
                         </div>
@@ -67,7 +67,7 @@
                 <select class="@error('kepala_sekolah') border-red-500 @enderror field-input-slate w-full"
                     name="kepala_sekolah" required>
                     <option selected disabled hidden>
-                        Pilih Kepala Sekolah
+                        Pilih Kepala Sekolah / Pimpinan
                     </option>
                     @foreach ($kepalaSekolah as $item)
                         <option value="{{ $item->kode_alternatif }}"
