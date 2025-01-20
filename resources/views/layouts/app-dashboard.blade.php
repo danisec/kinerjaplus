@@ -1,7 +1,7 @@
 <x-app-layout title="{{ $title }}">
 
     <div class="relative h-screen">
-        <x-organism.aside />
+        <x-nav-aside />
 
         <div class="ml-64">
             <x-organism.navbar />
