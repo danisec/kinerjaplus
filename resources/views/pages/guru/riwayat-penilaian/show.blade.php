@@ -42,11 +42,7 @@
                 @endphp
 
                 @foreach ($kriteria as $item)
-                    @if (
-                        !in_array($penilaian->alternatifKedua->alternatifPertama->users->role, [
-                            'tata usaha non tenaga pendidikan',
-                            'kerohanian non tenaga pendidikan',
-                        ]) || $item->kode_kriteria != 'K2')
+                    @if (!$checkRole || $item->kode_kriteria != 'K2')
                         <div class="mb-6 rounded-md bg-slate-50 p-4">
                             <h4 class="block text-xl font-semibold text-gray-900">
                                 {{ chr(64 + $kriteriaCounter++) . '.' }} {{ $item->nama_kriteria }}

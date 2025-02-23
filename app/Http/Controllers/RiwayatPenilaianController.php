@@ -42,7 +42,15 @@ class RiwayatPenilaianController extends Controller
         $checkGroupKaryawanId = null;
         if (Auth::user()->hasRole('kepala sekolah')) {
             $checkGroupKaryawanId = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $checkAuthAlternatif)->value('id_group_karyawan');
-        } elseif (Auth::user()->hasRole('guru')) {
+        } elseif (Auth::user()->hasAnyRole([
+                'yayasan',
+                'deputi',
+                'guru',
+                'tata usaha tenaga pendidikan',
+                'tata usaha non tenaga pendidikan',
+                'kerohanian tenaga pendidikan',
+                'kerohanian non tenaga pendidikan',
+            ])) {
             $checkGroupKaryawanId = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->value('id_group_karyawan');
         }
 
@@ -105,10 +113,27 @@ class RiwayatPenilaianController extends Controller
         $tahunAjaran = explode('/', $getTahunAjaran->first()->tanggalPenilaian->tahun_ajaran);
         $tahunAjaran[] = $getTahunAjaran->first()->tanggalPenilaian->semester;
 
+        $penilaian = Penilaian::with([
+            'tanggalPenilaian', 
+            'alternatifPertama.alternatifPertama', 
+            'alternatifKedua',  
+            'alternatifKedua.alternatifPertama.users', 
+            'penilaianIndikator', 
+            'penilaianIndikator.skalaIndikatorDetail'
+        ])->where('id_penilaian', $id)->first();
+
+        // Check role user
+        $checkUser = $penilaian->alternatifKedua->alternatifPertama->users;
+        $checkRole = $checkUser->hasAnyRole([
+            'tata usaha non tenaga pendidikan', 
+            'kerohanian non tenaga pendidikan'
+        ]);
+
         return view('pages.guru.riwayat-penilaian.show', [
             'title' => 'Detail Data Penilaian',
             'kriteria' => Kriteria::with(['subkriteria', 'subkriteria.indikatorSubkriteria'])->orderBy('kode_kriteria', 'ASC')->get(),
-            'penilaian' => Penilaian::with(['tanggalPenilaian', 'alternatifPertama.alternatifPertama', 'alternatifKedua',  'alternatifKedua.alternatifPertama.users', 'penilaianIndikator', 'penilaianIndikator.skalaIndikatorDetail'])->where('id_penilaian', $id)->first(),
+            'penilaian' => $penilaian,
+            'checkRole' => $checkRole,
             'tahunAjaran' => $tahunAjaran,
         ]);
     }
