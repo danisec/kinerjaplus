@@ -1,12 +1,16 @@
 FROM php:8.2-fpm
 
-# Copy composer.lock dan composer.json ke /var/www
-COPY composer.lock composer.json /var/www/
+# Arguments defined in docker-compose.yml
+ARG user
+ARG uid
 
-# Set sebagai working directory
+# Set working directory
 WORKDIR /var/www
 
-# Install dependencies yang diperlukan
+# Copy composer files
+COPY composer.lock composer.json /var/www/
+
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -20,30 +24,27 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    unzip
+    unzip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Hapus cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Install extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
-
-# Install composer
+# Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Add user for laravel application
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+# Create system user to run Composer and Artisan Commands
+RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN mkdir -p /home/$user/.composer && \
+    chown -R $user:$user /home/$user
 
-# Copy existing application directory contents
+# Copy application files
 COPY . /var/www
 
-# Copy existing application directory permissions
-COPY --chown=www:www . /var/www
-
 # Change current user to www
-USER www
+USER $user
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
