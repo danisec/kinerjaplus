@@ -3,9 +3,15 @@ import laravel from "laravel-vite-plugin";
 
 export default defineConfig({
     server: {
+        watch: {
+            usePolling: true,
+        },
         hmr: {
             host: "localhost",
+            port: 5173,
         },
+        port: 5173,
+        host: true,
     },
     plugins: [
         laravel({
@@ -16,5 +22,13 @@ export default defineConfig({
             ],
             refresh: true,
         }),
+        {
+            name: "controller",
+            handleHotUpdate({ file, server }) {
+                if (file.endsWith(".php")) {
+                    server.ws.send({ type: "full-reload", path: "*" });
+                }
+            },
+        },
     ],
 });
