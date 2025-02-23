@@ -37,6 +37,9 @@ Route::controller(DashboardController::class)->name('dashboard.')->middleware('a
 Route::controller(TanggalPenilaianController::class)->name('tanggalPenilaian.')->middleware('auth', 'direct.permission:penilaian')->group(function () {
     Route::get('/dashboard/penilaian/buat-tanggal-penilaian', 'create')->name('create');
     Route::post('/dashboard/penilaian/buat-tanggal-penilaian', 'store')->name('store');
+
+    Route::get('/dashboard/penilaian/ubah-tanggal-penilaian/{id}/edit', 'edit')->name('edit');
+    Route::put('/dashboard/penilaian/ubah-tanggal-penilaian/{id}/edit', 'update')->name('update');
 });
 
 Route::controller(PenilaianController::class)->name('penilaian.')->middleware('auth', 'direct.permission:penilaian')->group(function () {
