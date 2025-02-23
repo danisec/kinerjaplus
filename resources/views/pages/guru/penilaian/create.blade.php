@@ -79,17 +79,14 @@
                 </div>
 
                 <div id="kriteriaContainer">
-                    <?php
-                    $kriteriaCounter = 1;
-                    ?>
-
-                    @foreach ($kriteria as $item)
+                    @foreach ($kriteria as $index => $item)
                         @if (
                             !in_array(Auth::user()->role, ['tata usaha non tenaga pendidikan', 'kerohanian non tenaga pendidikan']) ||
                                 $item->kode_kriteria != 'K2')
-                            <div class="mb-6 rounded-md bg-slate-50 p-4">
+                            <div class="kriteria-page mb-6 rounded-md bg-slate-50 p-4" data-page="{{ $index + 1 }}"
+                                style="{{ $index > 0 ? 'display: none;' : '' }}">
                                 <h4 class="block text-xl font-semibold text-gray-900">
-                                    {{ chr(64 + $kriteriaCounter++) . '.' }} {{ $item->nama_kriteria }}
+                                    {{ chr(64 + $index + 1) . '.' }} {{ $item->nama_kriteria }}
                                 </h4>
 
                                 @foreach ($item->subkriteria as $subkriteria)
@@ -109,7 +106,7 @@
                                                 @foreach ($skalaIndikator->skalaIndikatorDetail as $skalaIndikatorDetail)
                                                     <div
                                                         class="flex h-max w-auto flex-col items-center justify-center gap-3 rounded-md bg-white p-3 shadow-slate-50 hover:shadow-md">
-                                                        <input
+                                                        <input class="cursor-pointer"
                                                             name="id_skala_indikator_detail[{{ $skalaIndikator->id_indikator_subkriteria }}]"
                                                             type="radio"
                                                             value="{{ $skalaIndikatorDetail->id_skala_indikator_detail }}"
@@ -137,7 +134,16 @@
                     @endforeach
                 </div>
 
-                <div class="flex flex-row items-center justify-center gap-4">
+                <!-- Pagination -->
+                <div class="mb-6 flex flex-row justify-between gap-4">
+                    <x-atoms.button.button-primary id="prevPage" :customClass="'w-full text-center rounded-lg px-5 py-3'" disabled :type="'button'"
+                        :name="'Sebelumnya'" />
+
+                    <x-atoms.button.button-primary id="nextPage" :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'button'"
+                        :name="'Selanjutnya'" />
+                </div>
+
+                <div class="flex flex-row items-center justify-center gap-4 py-8">
                     <a href="{{ route('penilaian.welcome') }}">
                         <x-atoms.button.button-gray :customClass="'w-80 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
                     </a>
@@ -154,5 +160,9 @@
         @endif
 
     </div>
+
+    <script>
+        window.kriteriaData = @json($kriteria);
+    </script>
 
 </x-app-dashboard>
