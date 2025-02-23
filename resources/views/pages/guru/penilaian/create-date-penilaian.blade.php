@@ -96,12 +96,7 @@
                     <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
                 </a>
 
-                <div x-data="{ isOpen: false }">
-                    <x-atoms.button.button-primary :customClass="'h-12 w-64 rounded-md'" :type="'button'" :name="'Simpan'"
-                        @click="isOpen = true" />
-
-                    <x-molecules.modal-confirm :title="'Apakah Anda yakin ingin menyimpan tanggal penilaian ini? Setelahnya Anda tidak dapat mengubah tanggal penilaian yang telah dibuat.'" />
-                </div>
+                <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Simpan'" />
             </div>
         </form>
     </div>
