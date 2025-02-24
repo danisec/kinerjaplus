@@ -232,7 +232,7 @@ class GroupKaryawanController extends Controller
             $notif = notify()->success('Data group pegawai berhasil dihapus');
             return back()->with('notif', $notif);
         } catch (\Throwable $th) {
-            $notif = notify()->error('Terjadi kesalahan saat menghapus data group pegawai');
+            $notif = notify()->error('Data tidak bisa dihapus karena masih digunakan dalam penilaian');
             return back();
         }
     }
