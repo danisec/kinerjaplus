@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreign('id_group_karyawan', 'fk_tanggal_penilaian_id_group_karyawan')
                 ->references('id_group_karyawan')
                 ->on('group_karyawan')
-                ->cascadeOnDelete()
+                ->restrictOnDelete()
                 ->cascadeOnUpdate();
         });
     }
