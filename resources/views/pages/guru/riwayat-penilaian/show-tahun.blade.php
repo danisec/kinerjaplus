@@ -49,20 +49,8 @@
                     <th class="px-6 py-3" scope="col" rowspan="2">
                         Kepada
                     </th>
-                    <th class="px-6 py-3 text-center" scope="colgroup" colspan="2">
-                        Status
-                    </th>
                     <th class="px-6 py-3 text-center" scope="colgroup" rowspan="2">
                         Aksi
-                    </th>
-                </tr>
-
-                <tr>
-                    <th class="px-6 py-3 text-center">
-                        Disetujui
-                    </th>
-                    <th class="px-3 py-3 text-center">
-                        Tidak Disetujui
                     </th>
                 </tr>
             </thead>
@@ -85,22 +73,6 @@
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
                                 {{ $item->alternatifKedua->alternatifPertama->nama_alternatif }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 text-center">
-                                <div class="flex items-center justify-center">
-                                    <input
-                                        class="focus:ring-3 h-5 w-5 rounded border-gray-300 bg-gray-50 text-blue-600 focus:ring-indigo-200"
-                                        type="checkbox" {{ $item->status == 'Disetujui' ? 'checked' : '' }}
-                                        @disabled(true)>
-                                </div>
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 text-center">
-                                <div class="flex items-center justify-center">
-                                    <input
-                                        class="focus:ring-3 h-5 w-5 rounded border-gray-300 bg-gray-50 text-red-600 focus:ring-indigo-200"
-                                        type="checkbox" {{ $item->status == 'Tidak Disetujui' ? 'checked' : '' }}
-                                        @disabled(true)>
-                                </div>
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
