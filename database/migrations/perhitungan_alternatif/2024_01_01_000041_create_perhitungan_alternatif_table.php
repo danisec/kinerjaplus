@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('perhitungan_alternatif', function (Blueprint $table) {  
             $table->id('id_perhitungan_alternatif');
             $table->unsignedBigInteger('id_tanggal_penilaian');
-            $table->string('kode_kriteria', 3);
+            $table->string('kode_kriteria', 10);
             $table->string('alternatif_pertama', 4);
             $table->string('alternatif_kedua', 4);
             $table->double('nilai_alternatif');
