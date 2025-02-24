@@ -49,7 +49,7 @@ class SubkriteriaController extends Controller
     {
         $validatedData = $request->validate([
             'kode_kriteria' => 'required',
-            'kode_subkriteria' => 'required|unique:subkriteria,kode_subkriteria|max:5',
+            'kode_subkriteria' => 'required|unique:subkriteria,kode_subkriteria|max:10',
             'nama_subkriteria' => 'required|max:255',
             'deskripsi_subkriteria' => 'max:2000',
             'bobot_subkriteria' => 'required|numeric',
@@ -57,7 +57,7 @@ class SubkriteriaController extends Controller
             'kode_kriteria.required' => 'Kriteria harus diisi',
             'kode_subkriteria.required' => 'Kode subkriteria harus diisi',
             'kode_subkriteria.unique' => 'Kode subkriteria sudah ada',
-            'kode_subkriteria.max' => 'Kode subkriteria maksimal 4 karakter',
+            'kode_subkriteria.max' => 'Kode subkriteria maksimal 10 karakter',
             'nama_subkriteria.required' => 'Nama subkriteria harus diisi',
             'nama_subkriteria.max' => 'Nama subkriteria maksimal 255 karakter',
             'deskripsi_subkriteria.max' => 'Deskripsi subkriteria maksimal 2000 karakter',
@@ -132,12 +132,12 @@ class SubkriteriaController extends Controller
     {
         $validatedData = $request->validate([
             'kode_kriteria' => '',
-            'kode_subkriteria' => 'max:5',
+            'kode_subkriteria' => 'max:10',
             'nama_subkriteria' => 'max:255',
             'deskripsi_subkriteria' => 'max:2000',
             'bobot_subkriteria' => 'required|numeric',
         ],[
-            'kode_subkriteria.max' => 'Kode subkriteria maksimal 4 karakter',
+            'kode_subkriteria.max' => 'Kode subkriteria maksimal 10 karakter',
             'nama_subkriteria.max' => 'Nama subkriteria maksimal 255 karakter',
             'deskripsi_subkriteria.max' => 'Deskripsi subkriteria maksimal 2000 karakter',
             'bobot_subkriteria.required' => 'Bobot subkriteria harus diisi',
