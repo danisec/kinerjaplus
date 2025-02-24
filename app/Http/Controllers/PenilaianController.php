@@ -196,7 +196,6 @@ class PenilaianController extends Controller
             'id_tanggal_penilaian' => 'required',
             'alternatif_pertama' => 'required',
             'alternatif_kedua' => 'required',
-            'status' => '',
             'id_indikator_subkriteria' => '',
             'id_skala_indikator_detail' => 'required',
         ], [
@@ -221,7 +220,6 @@ class PenilaianController extends Controller
                 'id_tanggal_penilaian' => $validatedData['id_tanggal_penilaian'],
                 'alternatif_pertama' => $validatedData['alternatif_pertama'],
                 'alternatif_kedua' => $validatedData['alternatif_kedua'],
-                'status' => $validatedData['status'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
