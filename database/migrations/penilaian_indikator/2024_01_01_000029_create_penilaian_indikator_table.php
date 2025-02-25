@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('id_penilaian_indikator');
             $table->unsignedBigInteger('id_penilaian');
             $table->unsignedBigInteger('id_skala_indikator_detail');
+            $table->enum('status', ['Disetujui', 'Tidak Disetujui'])->nullable();
             $table->timestamps();
         });
     }

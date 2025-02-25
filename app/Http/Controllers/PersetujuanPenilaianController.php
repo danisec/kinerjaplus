@@ -145,12 +145,58 @@ class PersetujuanPenilaianController extends Controller
         $tahunAjaran = explode('/', $getTahunAjaran->first()->tanggalPenilaian->tahun_ajaran);
         $tahunAjaran[] = $getTahunAjaran->first()->tanggalPenilaian->semester;
 
-        return view('pages.kepala-sekolah.persetujuan-penilaian.show', [
+        $penilaian = Penilaian::with([
+            'tanggalPenilaian', 
+            'alternatifPertama.alternatifPertama', 
+            'alternatifKedua', 
+            'penilaianIndikator', 
+            'penilaianIndikator.skalaIndikatorDetail'
+        ])->where('id_penilaian', $id)->first();
+
+        // Check role user
+        $checkUser = $penilaian->alternatifKedua->alternatifPertama->users;
+        $checkRole = $checkUser->hasAnyRole([
+            'tata usaha non tenaga pendidikan', 
+            'kerohanian non tenaga pendidikan'
+        ]);
+
+        return view('pages.kepala-sekolah.persetujuan-penilaian.review', [
             'title' => 'Detail Data Penilaian',
             'kriteria' => Kriteria::with(['subkriteria', 'subkriteria.indikatorSubkriteria'])->orderBy('kode_kriteria', 'ASC')->get(),
-            'penilaian' => Penilaian::with(['tanggalPenilaian', 'alternatifPertama.alternatifPertama', 'alternatifKedua', 'penilaianIndikator', 'penilaianIndikator.skalaIndikatorDetail'])->where('id_penilaian', $id)->first(),
+            'penilaian' => $penilaian,
+            'checkRole' => $checkRole,
             'tahunAjaran' => $tahunAjaran,
         ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function updateReviewPenilaian(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'status' => 'required|array',
+            'status.*' => 'required|in:Disetujui,Tidak Disetujui',
+        ],[
+            'status.required' => 'Status harus diisi',
+        ]);
+
+        try {
+            $penilaian = Penilaian::findOrFail($id);
+
+            foreach ($validatedData['status'] as $indikatorId => $status) {
+                // Update status per indikator
+                $penilaian->penilaianIndikator()
+                    ->where('id_skala_indikator_detail', $indikatorId)
+                    ->update(['status' => $status]);
+            }
+
+            $notif = notify()->success('Review penilaian berhasil disimpan');
+            return back()->withInput()->with('notif', $notif);
+        } catch (\Throwable $th) {
+            $notif = notify()->error('Terjadi kesalahan saat review penilaian');
+            return back()->with('notif', $notif);
+        }
     }
 
     /**
@@ -260,6 +306,15 @@ class PersetujuanPenilaianController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $penilaian = Penilaian::findOrFail($id);
+            $penilaian->delete();
+
+            $notif = notify()->success('Penilaian berhasil diatur ulang');
+            return back()->with('notif', $notif);
+        } catch (\Throwable $th) {
+            $notif = notify()->error('Terjadi kesalahan saat mengatur ulang penilaian');
+            return back()->with('notif', $notif);
+        }
     }
 }
