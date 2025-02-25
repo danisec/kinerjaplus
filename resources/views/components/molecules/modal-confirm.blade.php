@@ -9,7 +9,7 @@
 
         <p class="text-base font-normal text-gray-900">{{ $title }}</p>
 
-        <div class="mt-8 flex justify-start gap-4">
+        <div class="mt-8 flex items-center justify-center gap-20">
             <button class="rounded-md border border-gray-300 px-6 py-2.5 text-gray-900" type="button"
                 @click="isOpen = false">
                 Batal
