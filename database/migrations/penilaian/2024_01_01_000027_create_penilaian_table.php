@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('id_tanggal_penilaian');
             $table->string('alternatif_pertama', 3);
             $table->string('alternatif_kedua', 3);
-            $table->enum('status', ['Disetujui', 'Tidak Disetujui'])->nullable();
             $table->timestamps();
         });
     }

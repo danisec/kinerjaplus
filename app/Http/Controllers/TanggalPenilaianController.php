@@ -120,7 +120,35 @@ class TanggalPenilaianController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        // Dapatkan $getUserAlternatif berada di group karyawan mana
+        $getUserAlternatif = Auth::user()->alternatif->kode_alternatif;
+
+        $getAlternatifGroupKaryawan = null;
+
+        if (Auth::user()->hasRole('kepala sekolah')) {
+            $getAlternatifGroupKaryawan = GroupKaryawan::with(['alternatif'])->where('kepala_sekolah', $getUserAlternatif)->first();
+        } elseif (Auth::user()->hasAnyRole([
+                'yayasan',
+                'deputi',
+                'guru',
+                'tata usaha tenaga pendidikan',
+                'tata usaha non tenaga pendidikan',
+                'kerohanian tenaga pendidikan',
+                'kerohanian non tenaga pendidikan',
+            ])) {
+            $getAlternatifGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $getUserAlternatif)->first();
+        }
+
+        // Enum semester
+        $semester = DB::select("SHOW COLUMNS FROM tanggal_penilaian WHERE Field = 'semester'")[0]->Type;
+
+        return view('pages.guru.penilaian.edit-date-penilaian', [
+            'title' => 'Ubah Tanggal Penilaian',
+            'tahunAjaran' => $this->tahunAjaran,
+            'alternatifGroupKaryawan' => $getAlternatifGroupKaryawan,
+            'semester' => explode("','", substr($semester, 6, -2)),
+            'tanggalPenilaian' => TanggalPenilaian::where('id_tanggal_penilaian', $id)->first(),
+        ]);
     }
 
     /**
@@ -128,7 +156,27 @@ class TanggalPenilaianController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validatedData = $request->validate([
+            'id_group_karyawan' => 'required',
+            'tahun_ajaran' => 'required',
+            'semester' => 'required|in:ganjil,genap',
+            'awal_tanggal_penilaian' => 'required|date',
+            'akhir_tanggal_penilaian' => 'required|date',
+        ], [
+            'semester.required' => 'Semester harus dipilih',
+            'awal_tanggal_penilaian.required' => 'Tanggal awal penilaian harus diisi',
+            'akhir_tanggal_penilaian.required' => 'Tanggal akhir penilaian harus diisi',
+        ]);
+
+        try {
+            TanggalPenilaian::where('id_tanggal_penilaian', $id)->update($validatedData);
+
+            $notif = notify()->success('Tanggal penilaian berhasil diubah');
+            return redirect()->route('penilaian.welcome')->with('notif', $notif);
+        } catch (\Throwable $th) {
+            $notif = notify()->error('Terjadi kesalahan saat mengubah tanggal penilaian');
+            return back()->withInput();
+        }
     }
 
     /**

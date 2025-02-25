@@ -31,10 +31,14 @@ KinerjaPlus is a web application built using Laravel 10 for evaluating teacher p
 
 ## Installation
 
+Follow these steps to set up the project:
+
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/danisec/ereport-erenos.git
+    git clone https://github.com/danisec/kinerjaplus.git
+
+    cd kinerjaplus
     ```
 
 2. Install dependencies:
@@ -45,32 +49,46 @@ KinerjaPlus is a web application built using Laravel 10 for evaluating teacher p
     npm install && npm run build
     ```
 
-3. Create a new database and configure the `.env` file:
+3. Configure Environment Variables:
+
+    Copy the .env.example file and update it:
 
     ```bash
     cp .env.example .env
+    ```
 
+    Generate application key:
+
+    ```bash
     php artisan key:generate
     ```
 
 4. Set Up Database:
 
--   Create a database for the application.
--   Update the `.env` file with the database credentials.
+-   Create a new MySQL database.
+-   Update .env with your database credentials:
 
     ```bash
     DB_CONNECTION=mysql
     DB_HOST=127.0.0.1
     DB_PORT=3306
-    DB_DATABASE=kinerjaplus
+    DB_DATABASE=kinerja_plus
     DB_USERNAME=dbusername
     DB_PASSWORD=dbpassword
     ```
 
-5. Run the database migrations:
+5. Run Database Migrations:
 
     ```bash
     php artisan migrate --seed
+
+    php artisan migrate --path="database/migrations/*"
+    ```
+
+    Or, manually import the SQL file:
+
+    ```bash
+    mysql -u your_username -p your_password kinerja_plus < database/sql/kinerja_plus.sql
     ```
 
 6. Serve the application:
@@ -101,4 +119,12 @@ KinerjaPlus is a web application built using Laravel 10 for evaluating teacher p
 
 ## Contributing
 
-Contributions are welcome! Please fork the repository and submit a pull request with your changes. Ensure that your code follows the project’s coding standards.
+Contributions are welcome! To contribute:
+
+1. Fork the repository.
+2. Create a feature branch: git checkout -b feature-name
+3. Commit changes: git commit -m "feat: add new feature"
+4. Push to branch: git push origin feature-name
+5. Submit a pull request.
+
+Ensure your code follows the project’s coding standards before submission.

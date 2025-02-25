@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bobot_prioritas_subkriteria', function (Blueprint $table) {
             $table->id('id_bobot_prioritas_subkriteria');
-            $table->string('kode_kriteria', 3);
+            $table->string('kode_kriteria', 10);
             $table->double('bobot_prioritas');
             $table->timestamps();
         });

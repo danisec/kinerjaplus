@@ -24,6 +24,14 @@
                     Semester {!! $checkTanggalPenilaian->semester !!}
                 </h4>
 
+                @if (Auth::user()->hasRole('kepala sekolah'))
+                    <div class="my-8 flex justify-end text-center">
+                        <a href="{{ route('tanggalPenilaian.edit', $checkTanggalPenilaian->id_tanggal_penilaian) }}">
+                            <x-atoms.button.button-primary :customClass="'h-12 w-56 rounded-md'" :type="'button'" :name="'Ubah Tanggal Penilaian'" />
+                        </a>
+                    </div>
+                @endif
+
                 <div class="my-6 w-full rounded-md bg-slate-100 p-8">
                     <p class="text-base font-bold uppercase tracking-wider text-gray-900">Pengantar</p>
                     <p class="mt-6 text-base font-normal text-gray-900">Mohon berikan penilaian kinerja terhadap Anda

@@ -27,8 +27,8 @@
                 <label class="mb-2 block text-base font-medium text-gray-900" for="kode_alternatif">
                     Kode Alternatif</label>
                 <input class="@error('kode_alternatif') border-red-500 @enderror field-input-slate w-full"
-                    name="kode_alternatif" type="text" value="{{ $newKodeAlternatif }}" autofocus placeholder="A1"
-                    required>
+                    name="kode_alternatif" type="hidden" type="text" value="{{ $newKodeAlternatif }}" autofocus
+                    placeholder="A1" required>
 
                 @error('kode_alternatif')
                     <p class="invalid-feedback">

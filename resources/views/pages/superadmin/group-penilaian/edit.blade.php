@@ -61,7 +61,19 @@
 
                             @foreach ($groupKaryawanArray as $nestedIndex => $nestedItem)
                                 @if ($nestedItem['kode_alternatif'] != $item['kode_alternatif'])
-                                    <option value="{{ $nestedItem['kode_alternatif'] }}">
+                                    @php
+                                        // Cek apakah kode_alternatif ini sudah ada di group_penilaian
+                                        $isSelected = false;
+                                        foreach ($item['group_penilaian'] as $penilaian) {
+                                            if ($penilaian['alternatif_kedua'] == $nestedItem['kode_alternatif']) {
+                                                $isSelected = true;
+                                                break;
+                                            }
+                                        }
+                                    @endphp
+
+                                    <option value="{{ $nestedItem['kode_alternatif'] }}"
+                                        {{ $isSelected ? 'selected' : '' }}>
                                         {{ $nestedItem['nama_alternatif'] . ' - ' . $nestedItem['jabatan'] }}
                                     </option>
                                 @endif

@@ -94,7 +94,8 @@ class DashboardController extends Controller
             'tata usaha tenaga pendidikan', 
             'tata usaha non tenaga pendidikan', 
             'kerohanian tenaga pendidikan', 
-            'kerohanian non tenaga pendidikan'])){
+            'kerohanian non tenaga pendidikan'
+        ])){
 
             // Cari nama alternatif berdasarkan group karyawan yang mana nama alternatif sama dengan nama auth user
             $checkAuthAlternatif = Auth::user()->alternatif->kode_alternatif ?? null;

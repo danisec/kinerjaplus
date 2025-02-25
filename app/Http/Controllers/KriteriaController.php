@@ -40,13 +40,13 @@ class KriteriaController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'kode_kriteria' => 'required|unique:kriteria,kode_kriteria|max:3',
+            'kode_kriteria' => 'required|unique:kriteria,kode_kriteria|max:10',
             'nama_kriteria' => 'required|max:255',
             'bobot_kriteria' => 'required|numeric',
         ], [
             'kode_kriteria.required' => 'Kode kriteria harus diisi',
             'kode_kriteria.unique' => 'Kode kriteria sudah ada',
-            'kode_kriteria.max' => 'Kode kriteria maksimal 3 karakter',
+            'kode_kriteria.max' => 'Kode kriteria maksimal 10 karakter',
             'nama_kriteria.required' => 'Nama kriteria harus diisi',
             'nama_kriteria.max' => 'Nama kriteria maksimal 255 karakter',
             'bobot_kriteria.required' => 'Bobot kriteria harus diisi',
@@ -92,12 +92,12 @@ class KriteriaController extends Controller
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'kode_kriteria' => 'required|max:3',
+            'kode_kriteria' => 'required|max:10',
             'nama_kriteria' => 'required|max:255',
             'bobot_kriteria' => 'required|numeric',
         ], [
             'kode_kriteria.required' => 'Kode kriteria harus diisi',
-            'kode_kriteria.max' => 'Kode kriteria maksimal 3 karakter',
+            'kode_kriteria.max' => 'Kode kriteria maksimal 10 karakter',
             'nama_kriteria.required' => 'Nama kriteria harus diisi',
             'nama_kriteria.max' => 'Nama kriteria maksimal 255 karakter',
             'bobot_kriteria.required' => 'Bobot kriteria harus diisi',

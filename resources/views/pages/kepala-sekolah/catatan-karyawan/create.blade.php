@@ -31,12 +31,6 @@
             {!! $penilaian->alternatifPertama->alternatifPertama->nama_alternatif !!}
             Kepada
             {!! $penilaian->alternatifKedua->alternatifPertama->nama_alternatif !!}
-            <p class="text-sm font-normal text-gray-900"><span class="align-super text-red-600">&Star;</span>Buatkan
-                catatan
-                pegawai
-                jika
-                status penilaian tidak
-                disetujui.</p>
         </h4>
 
         <form class="mt-8 space-y-6"

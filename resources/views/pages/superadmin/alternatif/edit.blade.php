@@ -25,12 +25,11 @@
             @method('PUT')
             @csrf
 
-            <div class="hidden">
+            <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="kode_alternatif">
                     Kode Alternatif</label>
                 <input class="@error('kode_alternatif') border-red-500 @enderror field-input-slate w-full"
-                    name="kode_alternatif" type="text" value="{{ $alternatif->kode_alternatif }}" required
-                    @readonly(true)>
+                    name="kode_alternatif" type="text" value="{{ $alternatif->kode_alternatif }}" required>
 
                 @error('kode_alternatif')
                     <p class="invalid-feedback">

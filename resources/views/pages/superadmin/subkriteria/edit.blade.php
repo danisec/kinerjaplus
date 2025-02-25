@@ -48,7 +48,7 @@
                 @enderror
             </div>
 
-            <div class="hidden">
+            <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="kode subkriteria">
                     Kode Subkriteria</label>
                 <input class="@error('kode_subkriteria') border-red-500 @enderror field-input-slate w-full"

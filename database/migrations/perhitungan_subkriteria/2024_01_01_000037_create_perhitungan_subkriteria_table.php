@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('perhitungan_subkriteria', function (Blueprint $table) {
             $table->id('id_perhitungan_subkriteria');
-            $table->string('kode_kriteria', 3);
-            $table->string('subkriteria_pertama', 6);
-            $table->string('subkriteria_kedua', 6);
+            $table->string('kode_kriteria', 10);
+            $table->string('subkriteria_pertama', 10);
+            $table->string('subkriteria_kedua', 10);
             $table->double('nilai_subkriteria');
             $table->timestamps();
         });

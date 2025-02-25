@@ -22,7 +22,7 @@
 
         <p class="text-base font-normal capitalize text-gray-900">{{ $title }}</p>
 
-        <div class="mt-8 flex justify-start gap-4">
+        <div class="mt-8 flex items-center justify-center gap-20">
             <form id="{{ $modalId }}" action={{ $action }} method="POST">
                 @method('PUT')
                 @csrf
