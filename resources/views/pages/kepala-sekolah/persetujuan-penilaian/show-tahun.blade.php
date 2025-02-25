@@ -49,20 +49,8 @@
                     <th class="px-6 py-3" scope="col" rowspan="2">
                         Kepada
                     </th>
-                    <th class="px-6 py-3 text-center" scope="colgroup" colspan="2">
-                        Status
-                    </th>
                     <th class="px-6 py-3 text-center" scope="colgroup" rowspan="2">
                         Aksi
-                    </th>
-                </tr>
-
-                <tr>
-                    <th class="px-6 py-3 text-center">
-                        Disetujui
-                    </th>
-                    <th class="px-3 py-3 text-center">
-                        Tidak Disetujui
                     </th>
                 </tr>
             </thead>
@@ -86,44 +74,48 @@
                             <td class="whitespace-nowrap px-6 py-4">
                                 {{ $item->alternatifKedua->alternatifPertama->nama_alternatif }}
                             </td>
-                            <td class="whitespace-nowrap px-6 py-4 text-center">
-                                <div class="flex items-center justify-center">
-                                    <input
-                                        class="focus:ring-3 h-5 w-5 rounded border-gray-300 bg-gray-50 text-blue-600 focus:ring-indigo-200"
-                                        type="checkbox" {{ $item->status == 'Disetujui' ? 'checked' : '' }}
-                                        @disabled(true)>
-                                </div>
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 text-center">
-                                <div class="flex items-center justify-center">
-                                    <input
-                                        class="focus:ring-3 h-5 w-5 rounded border-gray-300 bg-gray-50 text-red-600 focus:ring-indigo-200"
-                                        type="checkbox" {{ $item->status == 'Tidak Disetujui' ? 'checked' : '' }}
-                                        @disabled(true)>
-                                </div>
-                            </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
-                                    <a class="font-medium text-gray-600"
+                                    <a class="font-medium text-blue-600 focus:outline-none"
                                         href="{{ route('persetujuanPenilaian.show', $item->id_penilaian) }}"
                                         target="_blank" rel="noreferrer noopener" @mouseenter="showTooltip = true"
                                         @mouseleave="showTooltip = false">
-                                        <x-atoms.svg.eye />
+                                        <x-atoms.svg.check />
                                     </a>
 
-                                    <div class="absolute rounded bg-gray-100 px-2 py-1 text-xs text-gray-900"
+                                    <div class="absolute rounded bg-gray-100 text-xs text-gray-900"
                                         x-show="showTooltip">
-                                        Detail
+                                        <span>Review</span>
                                     </div>
                                 </div>
 
-                                <div x-data="{ isOpen: false }">
-                                    <button class="text-blue-600 focus:outline-none" type="button"
+                                <div x-data="{ showTooltip: false }">
+                                    <a class="font-medium text-gray-800 focus:outline-none"
+                                        href="{{ route('persetujuanPenilaian.createCatatan', ['firstYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 5), 'semester' => $tahunAjaranBreadcrumbs['semester'], 'id' => $item->id_penilaian]) }}"
+                                        target="_blank" rel="noreferrer noopener" @mouseenter="showTooltip = true"
+                                        @mouseleave="showTooltip = false">
+                                        <x-atoms.svg.comment />
+                                    </a>
+
+                                    <div class="absolute rounded bg-gray-100 text-xs text-gray-900"
+                                        x-show="showTooltip">
+                                        <span>Catatan</span>
+                                    </div>
+                                </div>
+
+                                <div x-data="{ isOpen: false, showTooltip: false }">
+                                    <button class="text-red-600 focus:outline-none" type="button"
+                                        @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
                                         @click="isOpen = true">
-                                        <x-atoms.svg.check />
+                                        <x-atoms.svg.reload />
                                     </button>
 
-                                    <x-molecules.modal-update :title="'Ubah Status Persetujuan Penilaian : ' .
+                                    <div class="absolute rounded bg-gray-100 text-xs text-gray-900"
+                                        x-show="showTooltip">
+                                        <span>Atur Ulang</span>
+                                    </div>
+
+                                    <x-molecules.modal-delete :title="'Atur ulang penilaian : ' .
                                         $item->alternatifPertama->alternatifPertama->nama_alternatif .
                                         ' Kepada ' .
                                         $item->alternatifKedua->alternatifPertama->nama_alternatif .
@@ -131,43 +123,7 @@
                                         $item->tanggalPenilaian->tahun_ajaran .
                                         ' - Semester ' .
                                         $item->tanggalPenilaian->semester .
-                                        '?'" :action="route('persetujuanPenilaian.update', $item->id_penilaian)" :modalId="'modal_' . $item->id_penilaian">
-
-                                        <div class="flex flex-row items-center gap-4">
-                                            <input id="status_{{ $item->id_penilaian }}" name="status" type="hidden"
-                                                value="">
-
-                                            <div>
-                                                <button
-                                                    class="updateStatusButton rounded-md bg-indigo-700 px-8 py-2.5 text-white hover:bg-indigo-600 focus:bg-indigo-600 focus:ring-indigo-600"
-                                                    data-status="Disetujui" type="button">
-                                                    Disetujui
-                                                </button>
-                                            </div>
-
-                                            <div>
-                                                @if ($item->catatanKaryawan != null)
-                                                    <a
-                                                        href="{{ route('catatanKaryawan.edit', ['id' => $item->catatanKaryawan->id_catatan_karyawan, 'firstYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 5), 'semester' => $tahunAjaranBreadcrumbs['semester']]) }}">
-                                                        <button
-                                                            class="updateStatusButton rounded-md bg-red-700 px-8 py-2.5 text-white hover:bg-red-600 focus:bg-red-600 focus:ring-red-600"
-                                                            data-status="Tidak Disetujui" type="button">
-                                                            Tidak Disetujui
-                                                        </button>
-                                                    </a>
-                                                @else
-                                                    <a
-                                                        href="{{ route('persetujuanPenilaian.createCatatan', ['firstYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 5), 'semester' => $tahunAjaranBreadcrumbs['semester'], 'id' => $item->id_penilaian]) }}">
-                                                        <button
-                                                            class="updateStatusButton rounded-md bg-red-700 px-8 py-2.5 text-white hover:bg-red-600 focus:bg-red-600 focus:ring-red-600"
-                                                            data-status="Tidak Disetujui" type="button">
-                                                            Tidak Disetujui
-                                                        </button>
-                                                    </a>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </x-molecules.modal-update>
+                                        '?'" :action="route('persetujuanPenilaian.destroy', $item->id_penilaian)" :deleteNameButton="'Atur Ulang'" />
                                 </div>
                             </td>
                         </tr>
