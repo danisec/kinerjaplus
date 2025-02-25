@@ -19,14 +19,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(PersetujuanPenilaianController::class)->name('persetujuanPenilaian.')->middleware('auth', 'permission:persetujuan penilaian')->group(function () {
     Route::get('/dashboard/persetujuan-penilaian', 'index')->name('index');
-    Route::get('/dashboard/persetujuan-penilaian/{id}/view-penilaian', 'show')->name('show');
     
     Route::get('/dashboard/persetujuan-penilaian/{firstYear}/{secondYear}/{semester}', 'showTahun')->name('showTahun');
     Route::put('/dashboard/persetujuan-penilaian/{id}', 'update')->name('update');
+
+    Route::get('/dashboard/persetujuan-penilaian/{id}/review-penilaian', 'show')->name('show');
+    Route::put('/dashboard/persetujuan-penilaian/{id}/review-penilaian', 'updateReviewPenilaian')->name('update_review_penilaian');
     
     Route::get('/dashboard/persetujuan-penilaian/{firstYear}/{secondYear}/{semester}/{id}/tambah-catatan-karyawan', 'createCatatan')->name('createCatatan');
 
     Route::put('/dashboard/persetujuan-penilaian/{id}/{firstYear}/{secondYear}/{semester}/tambah-catatan-karyawan', 'updateCatatan')->name('updateCatatan');
+
+    Route::delete('/dashboard/persetujuan-penilaian/{id}', 'destroy')->name('destroy');
 });
 
 Route::controller(CatatanKaryawanController::class)->name('catatanKaryawan.')->middleware('auth', 'permission:catatan pegawai')->group(function () {
