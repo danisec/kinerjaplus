@@ -41,15 +41,15 @@
             </h4>
 
             <div>
-                {{-- @php
+                @php
                     $kriteriaCounter = 1;
-                @endphp --}}
+                @endphp
 
                 @foreach ($kriteria as $index => $item)
                     @if (!$checkRole || $item->kode_kriteria != 'K2')
                         <div class="mb-6 rounded-md bg-slate-50 p-4">
                             <h4 class="block text-xl font-semibold text-gray-900">
-                                {{ chr(64 + $index + 1) . '.' }} {{ $item->nama_kriteria }}
+                                {{ chr(64 + $kriteriaCounter++) . '.' }} {{ $item->nama_kriteria }}
                             </h4>
 
                             @foreach ($item->subkriteria as $subkriteria)
