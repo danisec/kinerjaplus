@@ -19,6 +19,7 @@
         "laravel/tinker": "^2.8",
         "laravolt/avatar": "^5.1",
         "mckenziearts/laravel-notify": "^2.4",
+        "sentry/sentry-laravel": "^4.13",
         "spatie/laravel-permission": "^6.9"
     },
     "require-dev": {
