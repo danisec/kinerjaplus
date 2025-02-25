@@ -77,24 +77,43 @@ class RankingController extends Controller
         $idTanggalPenilaian = $checkTanggalPenilaian->id_tanggal_penilaian ?? null;
 
         // Dapatkan penilaian yang memiliki group karyawan yang sama dengan group karyawan yang dimiliki oleh auth user  $checkGroupKaryawan
-        $alternatifPenilaian = Penilaian::with(['tanggalPenilaian', 'penilaianIndikator', 'penilaianIndikator.skalaIndikatorDetail.skalaIndikator.indikatorSubkriteria', 'penilaianIndikator.skalaIndikatorDetail.nilaiSkala', 'alternatifKedua', 'alternatifKedua.alternatifPertama'])->where('status', 'Disetujui')
+        $alternatifPenilaian = Penilaian::with([
+            'tanggalPenilaian', 
+            'penilaianIndikator' => function ($query) {
+                $query->where('status', 'Disetujui');
+            },
+            'penilaianIndikator.skalaIndikatorDetail.skalaIndikator.indikatorSubkriteria', 
+            'penilaianIndikator.skalaIndikatorDetail.nilaiSkala', 
+            'alternatifKedua', 
+            'alternatifKedua.alternatifPertama'
+        ])
         ->whereHas('alternatifKedua', function ($query) use ($checkGroupKaryawanId) {
             $query->where('id_group_karyawan', $checkGroupKaryawanId);
-        })->get();
+        })
+        ->whereHas('penilaianIndikator', function ($query) {
+            $query->where('status', 'Disetujui');
+        })
+        ->get();
 
         // Check apakah terdapat perhitungan_alternatif yang memiliki tahun_ajaran paling terbaru berdasarkan $tahunAjaran
-        $checkPerhitunganAlternatif = PerhitunganAlternatif::with('tanggalPenilaian', 'alternatifPertama', 'alternatifKedua')
-            ->join('tanggal_penilaian', 'perhitungan_alternatif.id_tanggal_penilaian', '=', 'tanggal_penilaian.id_tanggal_penilaian')
-            ->where('tanggal_penilaian.tahun_ajaran', $tahunAjaran)
-            ->get();
+        $checkPerhitunganAlternatif = PerhitunganAlternatif::with([
+            'tanggalPenilaian', 
+            'alternatifPertama', 
+            'alternatifKedua'
+        ])
+        ->join('tanggal_penilaian', 'perhitungan_alternatif.id_tanggal_penilaian', '=', 'tanggal_penilaian.id_tanggal_penilaian')
+        ->where('tanggal_penilaian.tahun_ajaran', $tahunAjaran)
+        ->get();
 
         $kriteria = $this->kriteria;
 
         // Dapatkan bobot prioritas alternatif berdasarkan $tahunAjaran terbaru
-        $bobotAlternatif = BobotPrioritasAlternatif::with(['tanggalPenilaian'])
-            ->join('tanggal_penilaian', 'bobot_prioritas_alternatif.id_tanggal_penilaian', '=', 'tanggal_penilaian.id_tanggal_penilaian')
-            ->where('tahun_ajaran', $tahunAjaran)
-            ->orderBy('kode_kriteria', 'asc')->get();
+        $bobotAlternatif = BobotPrioritasAlternatif::with([
+            'tanggalPenilaian'
+        ])
+        ->join('tanggal_penilaian', 'bobot_prioritas_alternatif.id_tanggal_penilaian', '=', 'tanggal_penilaian.id_tanggal_penilaian')
+        ->where('tahun_ajaran', $tahunAjaran)
+        ->orderBy('kode_kriteria', 'asc')->get();
 
         $bobotPrioritasSubkriteria = $this->bobotPrioritasSubkriteria;
 
@@ -127,7 +146,10 @@ class RankingController extends Controller
         }
 
         // Dapatkan jumlah indikator setiap subkriteria
-        $getCountIndikator = Kriteria::with(['subkriteria', 'subkriteria.indikatorSubkriteria'])->get();
+        $getCountIndikator = Kriteria::with([
+            'subkriteria', 
+            'subkriteria.indikatorSubkriteria'
+        ])->get();
 
         // Kelompokkan key subkriteria berdasarkan kode_kriteria
         $countIndikator = [];
@@ -146,8 +168,7 @@ class RankingController extends Controller
             $bobotKriteriaItem = $bobotKriteria[$kodeKriteria];
 
             foreach ($kriteriaItem->subkriteria as $subkriteriaItem) {
-                // $bobotSubkriteria[$kodeKriteria][$subkriteriaItem->kode_subkriteria] = $bobotKriteriaItem / $countSubkriteria[$kodeKriteria];
-                $bobotSubkriteria[$kodeKriteria][$subkriteriaItem->kode_subkriteria] = $subkriteriaItem->bobot_subkriteria;
+                $bobotSubkriteria[$kodeKriteria][$subkriteriaItem->kode_subkriteria] = $bobotKriteriaItem / $countSubkriteria[$kodeKriteria];
 
                 // Convert to persen
                 $bobotSubkriteria[$kodeKriteria][$subkriteriaItem->kode_subkriteria] = $bobotSubkriteria[$kodeKriteria][$subkriteriaItem->kode_subkriteria] / 100;
@@ -278,6 +299,20 @@ class RankingController extends Controller
                 }
             }
         }
+
+        $formattedAvgNilaiKriteria = [];
+
+        foreach ($alternatifPenilaian as $dataAlternatif) {
+            $kodeAlternatif = $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif;
+
+            foreach ($kriteria as $dataKriteria) {
+                $kodeKriteria = $dataKriteria->kode_kriteria;
+
+                // Set nilai dari perhitungan jika ada, jika tidak ada set default ke 0
+                $formattedAvgNilaiKriteria[$kodeAlternatif][$kodeKriteria] = 
+                    $avgNilaiKriteria[$kodeAlternatif][$kodeKriteria] ?? 0;
+            }
+        }
         
         // Hitung total nilai setiap kode alternatif $totalNilaiKriteria
         $totalNilaiKriteriaAlternatif = [];
@@ -354,7 +389,7 @@ class RankingController extends Controller
             'bobotAlternatif' => $bobotAlternatif,
             'bobotPrioritasSubkriteria' => $bobotPrioritasSubkriteria,
             'totalBobotKriteria' => $totalBobotKriteria,
-            'avgNilaiKriteria' => $avgNilaiKriteria,
+            'avgNilaiKriteria' => $formattedAvgNilaiKriteria,
             'nilaiAlternatif' => $totalNilaiAlternatif,
             'rankAlternatif' => $rankAlternatif,
         ]);
