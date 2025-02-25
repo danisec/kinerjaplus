@@ -58,7 +58,7 @@
 
         <div class="mt-8">
             <h2 class="mb-2 text-lg font-bold">Contoh Pengisian Matriks Perbandingan Berpasangan Subkriteria</h2>
-            <img src="{{ asset('storage/images/pedoman-pengisian-matriks-perbandingan-berpasangan-subkriteria.png') }}"
+            <img src="https://raw.githubusercontent.com/danisec/assets/refs/heads/main/images/kinerjaplus/images/pedoman-pengisian-matriks-perbandingan-berpasangan-subkriteria.png"
                 alt="Pedoman Pengisian Matriks Perbandingan Berpasangan Subkriteria">
 
             <h4 class="my-4 text-lg font-semibold">Cara Mengisi Tingkat Kepentingan Skala Saaty:</h4>
