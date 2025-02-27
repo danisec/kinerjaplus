@@ -76,7 +76,7 @@
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
-                                    <a class="font-medium text-blue-600 focus:outline-none"
+                                    <a class="{{ $item->penilaianIndikator->first()->status !== null ? 'text-green-500' : 'text-blue-600' }} font-medium focus:outline-none"
                                         href="{{ route('persetujuanPenilaian.show', $item->id_penilaian) }}"
                                         target="_blank" rel="noreferrer noopener" @mouseenter="showTooltip = true"
                                         @mouseleave="showTooltip = false">

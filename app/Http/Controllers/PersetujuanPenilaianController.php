@@ -98,7 +98,12 @@ class PersetujuanPenilaianController extends Controller
         }
 
         // Dapatkan penilaian yang memiliki group karyawan yang sama dengan group karyawan yang dimiliki oleh auth user  $checkGroupKaryawan
-        $penilaian = Penilaian::with(['tanggalPenilaian', 'catatanKaryawan', 'alternatifPertama.alternatifPertama'])
+        $penilaian = Penilaian::with([
+            'penilaianIndikator',
+            'tanggalPenilaian', 
+            'catatanKaryawan', 
+            'alternatifPertama.alternatifPertama'
+        ])
          ->whereHas('alternatifPertama', function ($query) use ($checkGroupKaryawanId) {
             $query->where('id_group_karyawan', $checkGroupKaryawanId);
         })
