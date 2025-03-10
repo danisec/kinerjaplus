@@ -137,7 +137,7 @@ class SubkriteriaSeeder extends Seeder
                 'kode_subkriteria' => 'SK3.1',
                 'nama_subkriteria' => 'Kepatuhan terhadap Proses Kerja yang berlaku',
                 'deskripsi_subkriteria' => null,
-                'bobot_subkriteria' => '10',
+                'bobot_subkriteria' => '20',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
