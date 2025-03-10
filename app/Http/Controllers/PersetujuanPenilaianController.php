@@ -99,23 +99,23 @@ class PersetujuanPenilaianController extends Controller
 
         // Dapatkan penilaian yang memiliki group karyawan yang sama dengan group karyawan yang dimiliki oleh auth user  $checkGroupKaryawan
         $penilaian = Penilaian::with([
-            'penilaianIndikator',
-            'tanggalPenilaian', 
-            'catatanKaryawan', 
-            'alternatifPertama.alternatifPertama'
-        ])
-         ->whereHas('alternatifPertama', function ($query) use ($checkGroupKaryawanId) {
-            $query->where('id_group_karyawan', $checkGroupKaryawanId);
-        })
-        ->where('id_tanggal_penilaian', function ($query) use ($firstYear, $secondYear, $semester) {
-            $query->select('id_tanggal_penilaian')
-                ->from('tanggal_penilaian')
-                ->where('tahun_ajaran', $firstYear . '/' . $secondYear)
-                ->where('semester', $semester);
-        })
-        ->filter(request(['search']))
-        ->paginate(10)
-        ->withQueryString();
+                'penilaianIndikator',
+                'tanggalPenilaian',
+                'catatanKaryawan',
+                'alternatifPertama.alternatifPertama'
+            ])
+            ->whereHas('alternatifPertama', function ($query) use ($checkGroupKaryawanId) {
+                $query->where('id_group_karyawan', $checkGroupKaryawanId);
+            })
+            ->whereIn('id_tanggal_penilaian', function ($query) use ($firstYear, $secondYear, $semester) {
+                $query->select('id_tanggal_penilaian')
+                    ->from('tanggal_penilaian')
+                    ->where('tahun_ajaran', $firstYear . '/' . $secondYear)
+                    ->where('semester', $semester);
+            })
+            ->filter(request(['search']))
+            ->paginate(10)
+            ->withQueryString();
 
         return view('pages.kepala-sekolah.persetujuan-penilaian.show-tahun', [
             'title' => 'Detail Data Penilaian',
