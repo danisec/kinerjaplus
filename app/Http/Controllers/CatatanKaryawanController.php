@@ -83,7 +83,7 @@ class CatatanKaryawanController extends Controller
         ];
 
         $catatanKaryawan = CatatanKaryawan::with(['tanggalPenilaian', 'penilaian', 'penilaian.alternatifPertama.alternatifPertama', 'penilaian.alternatifKedua.alternatifPertama'])
-        ->where('id_tanggal_penilaian', function ($query) use ($firstYear, $secondYear, $semester) {
+        ->whereIn('id_tanggal_penilaian', function ($query) use ($firstYear, $secondYear, $semester) {
             $query->select('id_tanggal_penilaian')
                 ->from('tanggal_penilaian')
                 ->where('tahun_ajaran', $firstYear . '/' . $secondYear)
