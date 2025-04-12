@@ -29,9 +29,9 @@ Route::controller(DashboardController::class)->name('dashboard.')->middleware('a
 
     Route::get('/dashboard/{idTanggalPenilaian}/getRankTahunAjaranTable', 'getRankTahunAjaranTable')->name('getRankTahunAjaranTable')->middleware('role:kepala sekolah|guru|tata usaha tenaga pendidikan|tata usaha non tenaga pendidikan|kerohanian tenaga pendidikan|kerohanian non tenaga pendidikan');
 
-    Route::get('/dashboard/{idTanggalPenilaian}/{namaGroupKaryawan}/getRankTahunAjaranGroupChart', 'getRankTahunAjaranGroupChart')->name('getRankTahunAjaranGroupChart')->middleware('role:yayasan|deputi');
+    Route::get('/dashboard/{idTanggalPenilaian}/getRankTahunAjaranGroupChart', 'getRankTahunAjaranGroupChart')->name('getRankTahunAjaranGroupChart')->middleware('role:yayasan|deputi');
     
-    Route::get('/dashboard/{idTanggalPenilaian}/{namaGroupKaryawan}/getRankTahunAjaranGroupTable', 'getRankTahunAjaranGroupTable')->name('getRankTahunAjaranGroupTable')->middleware('role:yayasan|deputi');
+    Route::get('/dashboard/{idTanggalPenilaian}/getRankTahunAjaranGroupTable', 'getRankTahunAjaranGroupTable')->name('getRankTahunAjaranGroupTable')->middleware('role:yayasan|deputi');
 });
 
 Route::controller(TanggalPenilaianController::class)->name('tanggalPenilaian.')->middleware('auth', 'direct.permission:penilaian')->group(function () {

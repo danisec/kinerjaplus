@@ -115,33 +115,21 @@
                 <h4 class="text-xl font-bold text-gray-700">Ranking Kinerja Pegawai Tahun Ajaran
                 </h4>
 
-                <div class="w-52">
+                <div class="w-[50%]">
                     <select class="field-input-slate w-full capitalize" id="selectTahun" name="tahun_ajaran"
                         data-current-tahun="{{ $firstTanggalPenilaian->id_tanggal_penilaian ?? '' }}"
-                        data-current-text="{{ $firstTanggalPenilaian ? $firstTanggalPenilaian->tahun_ajaran . ' - ' . $firstTanggalPenilaian->semester : '' }}">
+                        data-current-text="{{ $firstTanggalPenilaian ? $firstTanggalPenilaian->tahun_ajaran . ' - ' . $firstTanggalPenilaian->semester : '' }}"
+                        data-current-group="{{ $firstTanggalPenilaian->groupKaryawan->nama_group_karyawan ?? '' }}">
 
                         <option selected disabled hidden>
-                            {{ $firstTanggalPenilaian ? $firstTanggalPenilaian->tahun_ajaran . ' - ' . $firstTanggalPenilaian->semester : '' }}
+                            {{ $firstTanggalPenilaian ? $firstTanggalPenilaian->tahun_ajaran . ' - ' . $firstTanggalPenilaian->semester . ' — ' . $firstTanggalPenilaian->groupKaryawan->nama_group_karyawan : '' }}
                         </option>
                         @foreach ($tanggalPenilaian as $itemTanggalPenilaian)
                             <option
                                 data-text="{{ $itemTanggalPenilaian->tahun_ajaran . ' - ' . $itemTanggalPenilaian->semester }}"
+                                data-group="{{ $itemTanggalPenilaian->groupKaryawan->nama_group_karyawan }}"
                                 value="{{ $itemTanggalPenilaian->id_tanggal_penilaian }}">
-                                {{ $itemTanggalPenilaian->tahun_ajaran . ' - ' . $itemTanggalPenilaian->semester }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="w-64">
-                    <select class="field-input-slate w-full" id="selectNamaGroup" name="nama_group_karyawan"
-                        data-nama-group="{{ $firstNamaGroupKaryawan ? $firstNamaGroupKaryawan->nama_group_karyawan : '' }}">
-
-                        <option selected disabled hidden>
-                            {{ $firstNamaGroupKaryawan ? $firstNamaGroupKaryawan->nama_group_karyawan : '' }}</option>
-                        @foreach ($namaGroupKaryawan as $nama)
-                            <option value="{{ $nama }}">
-                                {{ $nama }}
+                                {{ $itemTanggalPenilaian->tahun_ajaran . ' - ' . $itemTanggalPenilaian->semester . ' — ' . $itemTanggalPenilaian->groupKaryawan->nama_group_karyawan }}
                             </option>
                         @endforeach
                     </select>

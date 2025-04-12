@@ -18,31 +18,22 @@ $(document).ready(function () {
     showSkeletonLoading();
     fetchChartData();
 
-    $("#selectTahun, #selectNamaGroup").change(function () {
+    $("#selectTahun").change(function () {
         let idTanggalPenilaian = $("#selectTahun").val();
         let selectedOptionText = $(this).find("option:selected").data("text");
+        let selectedGroup = $("#selectTahun option:selected").data("group");
 
-        let namaGroupKaryawan = $("#selectNamaGroup").val();
-        fetchChartData(
-            idTanggalPenilaian,
-            selectedOptionText,
-            namaGroupKaryawan,
-        );
+        fetchChartData(idTanggalPenilaian, selectedOptionText, selectedGroup);
     });
 
     function fetchChartData(
         idTanggalPenilaian = null,
         selectedOptionText = null,
-        namaGroupKaryawan = null,
     ) {
         let currentIdTanggalPenilaian = $("#selectTahun").data("current-tahun");
 
         if (idTanggalPenilaian === null) {
             idTanggalPenilaian = currentIdTanggalPenilaian;
-        }
-
-        if (namaGroupKaryawan === null) {
-            namaGroupKaryawan = $("#selectNamaGroup").data("nama-group");
         }
 
         let currentTextIdTanggalPenilaian =
@@ -59,8 +50,6 @@ $(document).ready(function () {
             url:
                 "/dashboard/" +
                 idTanggalPenilaian +
-                "/" +
-                namaGroupKaryawan +
                 "/getRankTahunAjaranGroupChart",
             type: "GET",
             success: function (data) {
@@ -92,8 +81,6 @@ $(document).ready(function () {
             url:
                 "/dashboard/" +
                 idTanggalPenilaian +
-                "/" +
-                namaGroupKaryawan +
                 "/getRankTahunAjaranGroupTable",
             type: "GET",
             success: function (response) {
@@ -136,9 +123,9 @@ $(document).ready(function () {
             subtitle: {
                 text:
                     "5 Peringkat Teratas Kinerja Pegawai " +
-                    ($("#selectNamaGroup").val()
-                        ? $("#selectNamaGroup").val()
-                        : $("#selectNamaGroup").data("nama-group")) +
+                    ($("#selectTahun option:selected").data("group")
+                        ? $("#selectTahun option:selected").data("group")
+                        : $("#selectTahun").data("current-group")) +
                     " Tahun Ajaran " +
                     (selectedOptionText
                         ? selectedOptionText

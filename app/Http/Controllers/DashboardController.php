@@ -40,12 +40,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Dapatkan id_tanggal_penilaian yang unik dan urutkan dari yang terbesar
-        $tanggalPenilaian = TanggalPenilaian::with('groupKaryawan')->orderBy('id_tanggal_penilaian', 'DESC')->get();
-
-        // Dapatkan id_tanggal_penilaian yang paling terbaru
-        $getFirstTanggalPenilaian = TanggalPenilaian::orderBy('id_tanggal_penilaian', 'DESC')->first();
-
         if (Auth::user()->hasAnyRole('superadmin', 'IT', 'admin')){
 
             return view('pages.dashboard.home.index-admin', [
@@ -71,6 +65,15 @@ class DashboardController extends Controller
             } elseif (Auth::user()->hasAnyRole('yayasan', 'deputi')) {
                 $checkGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->first();
             }
+
+            // dd($checkGroupKaryawan);
+
+            // Dapatkan id_tanggal_penilaian yang unik berdasarkan id_group_karyawan
+            $tanggalPenilaian = TanggalPenilaian::with('groupKaryawan')->orderBy('id_tanggal_penilaian', 'DESC')->get();
+            // dd($tanggalPenilaian);
+
+            // Dapatkan id_tanggal_penilaian yang paling terbaru
+            $getFirstTanggalPenilaian = TanggalPenilaian::orderBy('id_tanggal_penilaian', 'DESC')->first();
 
             $selfRankings = $this->ranking->sortable()->orderBy('tahun_ajaran', 'DESC')->where('kode_alternatif', $checkAuthAlternatif)->paginate(5)->withQueryString();
 
@@ -113,6 +116,14 @@ class DashboardController extends Controller
             ])) {
                 $checkGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->first();
             }
+
+            // Dapatkan id_tanggal_penilaian yang unik berdasarkan id_group_karyawan
+            $tanggalPenilaian = TanggalPenilaian::with('groupKaryawan')->orderBy('id_tanggal_penilaian', 'DESC')->whereHas('groupKaryawan', function ($query) use ($checkGroupKaryawan) {
+                $query->where('id_group_karyawan', $checkGroupKaryawan->id_group_karyawan);
+            })->get();
+
+            // Dapatkan id_tanggal_penilaian yang paling terbaru
+            $getFirstTanggalPenilaian = TanggalPenilaian::orderBy('id_tanggal_penilaian', 'DESC')->first();
 
             $selfRankings = $this->ranking->sortable()->orderBy('id_tanggal_penilaian', 'DESC')->where('kode_alternatif', $checkAuthAlternatif)->paginate(5)->withQueryString();
 
@@ -307,16 +318,12 @@ class DashboardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function getRankTahunAjaranGroupChart($idTanggalPenilaian, $namaGroupKaryawan)
+    public function getRankTahunAjaranGroupChart($idTanggalPenilaian)
     {
         // Cari ranking berdasarkan tahun ajaran dan berdasarkan nama group karyawan
         $ranking = $this->ranking
         ->where('id_tanggal_penilaian', $idTanggalPenilaian)
-        ->whereHas('alternatif', function ($query) use ($namaGroupKaryawan) {
-            $query->whereHas('groupKaryawan', function ($query) use ($namaGroupKaryawan) {
-                $query->where('nama_group_karyawan', $namaGroupKaryawan);
-            });
-        })->get();
+        ->get();
 
         // Dapatkan top 5 ranking pada table ranking berdasarkan $tahunAjaran dengan rank 1, 2, 3, 4, dan 5
         $topRanking = $ranking->whereIn('rank', [1, 2, 3, 4, 5]);
@@ -345,17 +352,13 @@ class DashboardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function getRankTahunAjaranGroupTable($idTanggalPenilaian, $namaGroupKaryawan)
+    public function getRankTahunAjaranGroupTable($idTanggalPenilaian)
     {
         // Cari ranking berdasarkan tahun ajaran dan berdasarkan nama group karyawan
         $rankings = $this->ranking
         ->orderBy('rank', 'ASC')
         ->where('id_tanggal_penilaian', $idTanggalPenilaian)
-        ->whereHas('alternatif', function ($query) use ($namaGroupKaryawan) {
-            $query->whereHas('groupKaryawan', function ($query) use ($namaGroupKaryawan) {
-                $query->where('nama_group_karyawan', $namaGroupKaryawan);
-            });
-        })->paginate(10);
+        ->paginate(10);
 
         // transformasi data sebelum mengirim respons
         $data = $rankings->transform(function ($item) {
