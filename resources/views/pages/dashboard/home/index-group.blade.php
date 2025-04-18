@@ -2,7 +2,7 @@
 
     <div class="my-2">
         @if ($checkGroupKaryawan != null)
-            @if (Auth::user()->hasRole(['yayasan', 'deputi']))
+            @if (Auth::user()->hasAnyRole(['yayasan', 'deputi']))
                 <div class="mb-12">
                     <div class="flex flex-row items-center gap-4">
                         <input id="kodeAlternatif" name="kode_alternatif" type="hidden"
@@ -109,7 +109,7 @@
         @endif
     </div>
 
-    @if (Auth::user()->hasRole(['yayasan', 'deputi']))
+    @if (Auth::user()->hasAnyRole(['yayasan', 'deputi']))
         <div class="my-2">
             <div class="flex flex-row items-center gap-4">
                 <h4 class="text-xl font-bold text-gray-700">Ranking Kinerja Pegawai Tahun Ajaran
