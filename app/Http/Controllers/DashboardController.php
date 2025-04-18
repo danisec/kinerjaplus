@@ -66,11 +66,8 @@ class DashboardController extends Controller
                 $checkGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $checkAuthAlternatif)->first();
             }
 
-            // dd($checkGroupKaryawan);
-
             // Dapatkan id_tanggal_penilaian yang unik berdasarkan id_group_karyawan
             $tanggalPenilaian = TanggalPenilaian::with('groupKaryawan')->orderBy('id_tanggal_penilaian', 'DESC')->get();
-            // dd($tanggalPenilaian);
 
             // Dapatkan id_tanggal_penilaian yang paling terbaru
             $getFirstTanggalPenilaian = TanggalPenilaian::orderBy('id_tanggal_penilaian', 'DESC')->first();
@@ -246,8 +243,6 @@ class DashboardController extends Controller
 
         // Convert collection to array
         $topRanking = $topRanking->toArray();
-
-        // dd($topRanking);
 
         // Buatkan array untuk menampung data top ranking
         $dataTopRanking = [];
