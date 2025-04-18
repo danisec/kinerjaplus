@@ -94,11 +94,7 @@ $(document).ready(function () {
                     response.pagination.currentPage,
                     response.pagination.perPage,
                 );
-                showPagination(
-                    idTanggalPenilaian,
-                    namaGroupKaryawan,
-                    response.pagination,
-                );
+                showPagination(idTanggalPenilaian, response.pagination);
             },
             error: function (xhr, status, error) {
                 console.error(error);
@@ -239,7 +235,7 @@ $(document).ready(function () {
         }
     }
 
-    function showPagination(idTanggalPenilaian, namaGroupKaryawan, pagination) {
+    function showPagination(idTanggalPenilaian, pagination) {
         let paginationLinks = $("#paginationLinks");
         paginationLinks.empty();
 
@@ -260,17 +256,15 @@ $(document).ready(function () {
             let page = $(this).data("page");
 
             // Memperbarui tampilan tabel berdasarkan halaman yang dipilih
-            updateTable(idTanggalPenilaian, namaGroupKaryawan, page);
+            updateTable(idTanggalPenilaian, page);
         });
     }
 
-    function updateTable(idTanggalPenilaian, namaGroupKaryawan, page) {
+    function updateTable(idTanggalPenilaian, page) {
         $.ajax({
             url:
                 "/dashboard/" +
                 idTanggalPenilaian +
-                "/" +
-                namaGroupKaryawan +
                 "/getRankTahunAjaranGroupTable?page=" +
                 page,
             type: "GET",
@@ -280,11 +274,7 @@ $(document).ready(function () {
                     response.pagination.currentPage,
                     response.pagination.perPage,
                 );
-                showPagination(
-                    idTanggalPenilaian,
-                    namaGroupKaryawan,
-                    response.pagination,
-                );
+                showPagination(idTanggalPenilaian, response.pagination);
             },
             error: function (xhr, status, error) {
                 console.error(error);
