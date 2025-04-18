@@ -119,8 +119,12 @@ class DashboardController extends Controller
                 $query->where('id_group_karyawan', $checkGroupKaryawan->id_group_karyawan);
             })->get();
 
-            // Dapatkan id_tanggal_penilaian yang paling terbaru
-            $getFirstTanggalPenilaian = TanggalPenilaian::orderBy('id_tanggal_penilaian', 'DESC')->first();
+            // Dapatkan id_tanggal_penilaian yang paling terbaru berdasarkan id_group_karyawan
+            $getFirstTanggalPenilaian = TanggalPenilaian::orderBy('id_tanggal_penilaian', 'DESC')
+                ->whereHas('groupKaryawan', function ($query) use ($checkGroupKaryawan) {
+                    $query->where('id_group_karyawan', $checkGroupKaryawan->id_group_karyawan);
+                })->first();
+            // dd($getFirstTanggalPenilaian);
 
             $selfRankings = $this->ranking->sortable()->orderBy('id_tanggal_penilaian', 'DESC')->where('kode_alternatif', $checkAuthAlternatif)->paginate(5)->withQueryString();
 
