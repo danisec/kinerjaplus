@@ -337,12 +337,16 @@ class RankingController extends Controller
         // Urutkan $totalNilaiAlternatif secara descending (dari yang tertinggi)
         arsort($totalNilaiAlternatif);
 
-        // // Urutkan ranking dari nilai terbesar ke terkecil
+        // Hapus alternatif kepala sekolah dari perhitungan ranking
+        unset($totalNilaiAlternatif[$checkAuthAlternatif]);
+
+        // Urutkan ranking dari nilai terbesar ke terkecil
         $rank = 0;
-        $prevTotal = 0;
+        $prevTotal = null;
         $rankAlternatif = [];
+
         foreach ($totalNilaiAlternatif as $kodeAlternatif => $totalNilaiAlternatifItem) {
-            if ($totalNilaiAlternatifItem != $prevTotal) {
+            if ($totalNilaiAlternatifItem !== $prevTotal) {
                 $rank++;
             }
 
@@ -350,8 +354,9 @@ class RankingController extends Controller
             $prevTotal = $totalNilaiAlternatifItem;
         }
 
-        // Buatkan array untuk menampung data $totalNilaiAlternatif dan $rankAlternatif
+        // Gabungkan nilai dan ranking ke dalam satu array
         $totalNilaiAlternatifAndRankAlternatif = [];
+
         foreach ($totalNilaiAlternatif as $kodeAlternatif => $totalNilaiAlternatifItem) {
             $totalNilaiAlternatifAndRankAlternatif[$kodeAlternatif] = [
                 'id_tanggal_penilaian' => $idTanggalPenilaian,
@@ -382,6 +387,7 @@ class RankingController extends Controller
         return view('pages.kepala-sekolah.ranking.index', [
             'title' => 'Perankingan',
             'tahunAjaran' => $tahunAjaran,
+            'checkAuthAlternatif' => $checkAuthAlternatif,
             'checkTanggalPenilaian' => $checkTanggalPenilaian,
             'alternatifPenilaian' => $uniqueAlternatifPenilaianByTahunIdTanggalPenilaian,
             'kriteria' => $kriteria,
