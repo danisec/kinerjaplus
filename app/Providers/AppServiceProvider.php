@@ -25,12 +25,5 @@ class AppServiceProvider extends ServiceProvider
                 return $user->getDirectPermissions()->contains('name', $permission);
             });
         });
-
-        // if APP_ENV == local, Debugbar is enabled
-        if (env('APP_ENV') == 'local') {
-            \Debugbar::enable();
-        } else {
-            \Debugbar::disable();
-        }
     }
 }
