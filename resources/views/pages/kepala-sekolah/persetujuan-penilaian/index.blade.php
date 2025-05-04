@@ -14,7 +14,7 @@
 
         <div class="flex flex-row items-center justify-between">
             <div>
-                <x-molecules.search :placeholder="'Cari Tahun Penilaian'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
+                <x-molecules.search :placeholder="'Cari Tahun Penilaian'" :request="request('tahun_ajaran')" :name="'tahun_ajaran'" :value="request('tahun_ajaran')" />
             </div>
         </div>
     </div>
@@ -41,26 +41,30 @@
                 </tr>
             </thead>
 
-            <tbody>
-                @if ($penilaianGroupedByTahun != null && $penilaianGroupedByTahun->count() > 0)
+            @if ($penilaianGroupedByTahun != null && $penilaianGroupedByTahun->count() > 0)
+                <tbody>
                     @foreach ($penilaianWithGroupKaryawan as $index => $item)
                         <tr class="border-b bg-white hover:bg-slate-100">
                             <th class="whitespace-nowrap px-6 py-4 font-medium text-gray-900" scope="row">
                                 {{ $index + 1 }}
                             </th>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $item['tahunAjaran'] }}
+                                {{ $item['tahun_ajaran'] }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 capitalize">
                                 {{ $item['semester'] }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $item['namaGroupKaryawan'] }}
+                                {{ $item['name_group_employee'] }}
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
                                     <a class="font-medium text-gray-600"
-                                        href="{{ route('persetujuanPenilaian.showTahun', ['firstYear' => substr($item['tahunAjaran'], 0, 4), 'secondYear' => substr($item['tahunAjaran'], 5), 'semester' => $item['semester']]) }}"
+                                        href="{{ route('persetujuanPenilaian.showTahun', [
+                                            'firstYear' => substr($item['tahun_ajaran'], 0, 4),
+                                            'secondYear' => substr($item['tahun_ajaran'], 5),
+                                            'semester' => $item['semester'],
+                                        ]) }}"
                                         @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
                                         <x-atoms.svg.eye />
                                     </a>
@@ -73,21 +77,21 @@
                             </td>
                         </tr>
                     @endforeach
-            </tbody>
-        @else
-            <tbody>
-                <tr class="border-b bg-white">
-                    <td class="px-6 py-4 text-center font-medium text-gray-600" colspan="6">
-                        Data belum ada.
-                    </td>
-                </tr>
-            </tbody>
+                </tbody>
+            @else
+                <tbody>
+                    <tr class="border-b bg-white">
+                        <td class="px-6 py-4 text-center font-medium text-gray-600" colspan="6">
+                            Data belum ada.
+                        </td>
+                    </tr>
+                </tbody>
             @endif
         </table>
     </div>
 
-    {{-- <div class="bg-white p-6">
-        {{ $penilaianWithGroupKaryawan->links('vendor.pagination.tailwind') }}
-    </div> --}}
+    <div class="bg-white p-6">
+        {{ $penilaianGroupedByTahun->links('vendor.pagination.tailwind') }}
+    </div>
 
 </x-app-dashboard>
