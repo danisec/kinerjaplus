@@ -40,7 +40,6 @@ class TanggalPenilaianController extends Controller
      */
     public function create()
     {
-        // Dapatkan $getUserAlternatif berada di group karyawan mana
         $getUserAlternatif = Auth::user()->alternatif->kode_alternatif;
 
         $getAlternatifGroupKaryawan = null;
@@ -58,18 +57,7 @@ class TanggalPenilaianController extends Controller
             $getAlternatifGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $getUserAlternatif)->first();
         }
 
-        // Enum semester
         $semester = DB::select("SHOW COLUMNS FROM tanggal_penilaian WHERE Field = 'semester'")[0]->Type;
-
-        // Check tanggal penilaian ada atau tidak, berdasarkan tahun ajaran, id_group_karyawan, dan akhir tanggal penilaian
-        $checkTanggalPenilaian = TanggalPenilaian::where('tahun_ajaran', $this->tahunAjaran ?? null)
-            ->where('id_group_karyawan', $getAlternatifGroupKaryawan->id_group_karyawan ?? null)
-            ->where('akhir_tanggal_penilaian', '>=', now())
-            ->first();
-
-        if ($checkTanggalPenilaian) {
-            return back();
-        }
 
         return view('pages.guru.penilaian.create-date-penilaian', [
             'title' => 'Buat Tanggal Penilaian',
@@ -97,6 +85,17 @@ class TanggalPenilaianController extends Controller
         ]);
 
         try {
+            // Check tanggal penilaian exist or not, based on tahun ajaran, id_group_karyawan, semester
+            $checkTanggalPenilaian = TanggalPenilaian::where('tahun_ajaran', $this->tahunAjaran ?? null)
+                ->where('id_group_karyawan', $validatedData['id_group_karyawan'] ?? null)
+                ->where('semester', $validatedData['semester'] ?? null)
+                ->first();
+
+            if ($checkTanggalPenilaian) {
+                $notif = notify()->error('Tanggal penilaian sudah ada');
+                return back()->withInput()->with('notif', $notif);
+            }
+
             TanggalPenilaian::create($validatedData);
 
             $notif = notify()->success('Tanggal penilaian berhasil disimpan');
@@ -120,7 +119,6 @@ class TanggalPenilaianController extends Controller
      */
     public function edit(string $id)
     {
-        // Dapatkan $getUserAlternatif berada di group karyawan mana
         $getUserAlternatif = Auth::user()->alternatif->kode_alternatif;
 
         $getAlternatifGroupKaryawan = null;
@@ -139,7 +137,6 @@ class TanggalPenilaianController extends Controller
             $getAlternatifGroupKaryawan = GroupKaryawanDetail::with(['alternatif'])->where('kode_alternatif', $getUserAlternatif)->first();
         }
 
-        // Enum semester
         $semester = DB::select("SHOW COLUMNS FROM tanggal_penilaian WHERE Field = 'semester'")[0]->Type;
 
         return view('pages.guru.penilaian.edit-date-penilaian', [
@@ -169,7 +166,25 @@ class TanggalPenilaianController extends Controller
         ]);
 
         try {
-            TanggalPenilaian::where('id_tanggal_penilaian', $id)->update($validatedData);
+            $currentTanggalPenilaian = TanggalPenilaian::findOrFail($id);
+
+            $exists = TanggalPenilaian::where('id_group_karyawan', $validatedData['id_group_karyawan'])
+                ->where('tahun_ajaran', $validatedData['tahun_ajaran'])
+                ->where('semester', $validatedData['semester'])
+                ->where('id_tanggal_penilaian', '!=', $id)
+                ->exists();
+
+            if ($exists) {
+                $currentTanggalPenilaian->update([
+                    'awal_tanggal_penilaian' => $validatedData['awal_tanggal_penilaian'],
+                    'akhir_tanggal_penilaian' => $validatedData['akhir_tanggal_penilaian'],
+                ]);
+
+                $notif = notify()->error('Tanggal penilaian sudah ada');
+                return back()->withInput()->with('notif', $notif);
+            }
+
+            $currentTanggalPenilaian->update($validatedData);
 
             $notif = notify()->success('Tanggal penilaian berhasil diubah');
             return redirect()->route('penilaian.welcome')->with('notif', $notif);

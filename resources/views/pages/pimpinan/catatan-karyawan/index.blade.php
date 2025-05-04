@@ -60,7 +60,7 @@
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
                                     <a class="font-medium text-gray-600"
-                                        href="{{ route('catatanKaryawan.showTahun', ['firstYear' => substr($item['tahun'], 0, 4), 'secondYear' => substr($item['tahun'], 5), 'semester' => $item['semester']]) }}"
+                                        href="{{ route('catatanKaryawan.showTahunPimpinan', ['idGroupKaryawan' => $item['idGroupKaryawan'], 'firstYear' => substr($item['tahun'], 0, 4), 'secondYear' => substr($item['tahun'], 5), 'semester' => $item['semester']]) }}"
                                         @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
                                         <x-atoms.svg.eye />
                                     </a>

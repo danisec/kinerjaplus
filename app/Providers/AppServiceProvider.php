@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -26,11 +28,17 @@ class AppServiceProvider extends ServiceProvider
             });
         });
 
-        // if APP_ENV == local, Debugbar is enabled
-        if (env('APP_ENV') == 'local') {
-            \Debugbar::enable();
-        } else {
-            \Debugbar::disable();
-        }
+        Collection::macro('paginate', function ($perPage = 10) {
+            $page = request()->get('page', 1);
+            $results = $this->forPage($page, $perPage)->values();
+
+            return new LengthAwarePaginator(
+                $results,
+                $this->count(),
+                $perPage,
+                $page,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
+        });
     }
 }

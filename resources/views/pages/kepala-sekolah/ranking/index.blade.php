@@ -105,34 +105,32 @@
                             </tr>
 
                             @foreach ($alternatifPenilaian as $dataAlternatif)
-                                @if ($dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif !== $checkAuthAlternatif)
-                                    <tr class="border-b bg-white">
-                                        <th class="w-12 whitespace-nowrap bg-slate-100 px-6 py-4 font-medium text-gray-900"
-                                            scope="row">
-                                            {{ $dataAlternatif->alternatifKedua->alternatifPertama->nama_alternatif }}
-                                        </th>
+                                <tr class="border-b bg-white">
+                                    <th class="w-12 whitespace-nowrap bg-slate-100 px-6 py-4 font-medium text-gray-900"
+                                        scope="row">
+                                        {{ $dataAlternatif->alternatifKedua->alternatifPertama->nama_alternatif }}
+                                    </th>
 
-                                        @foreach ($bobotAlternatif as $bobot)
-                                            @if ($bobot->kode_alternatif == $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif)
-                                                <td class="px-3 py-3 text-center">
-                                                    <input
-                                                        class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
-                                                        type="text" value="{{ $bobot->bobot_prioritas }}" readonly>
-                                                </td>
-                                            @endif
-                                        @endforeach
+                                    @foreach ($bobotAlternatif as $bobot)
+                                        @if ($bobot->kode_alternatif == $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif)
+                                            <td class="px-3 py-3 text-center">
+                                                <input
+                                                    class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                    type="text" value="{{ $bobot->bobot_prioritas }}" readonly>
+                                            </td>
+                                        @endif
+                                    @endforeach
 
-                                        @foreach ($totalBobotKriteria as $keyAlternatif => $totalBobot)
-                                            @if ($keyAlternatif == $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif)
-                                                <td class="px-3 py-3 text-center">
-                                                    <input
-                                                        class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
-                                                        type="text" value="{{ $totalBobot }}" readonly>
-                                                </td>
-                                            @endif
-                                        @endforeach
-                                    </tr>
-                                @endif
+                                    @foreach ($totalBobotKriteria as $keyAlternatif => $totalBobot)
+                                        @if ($keyAlternatif == $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif)
+                                            <td class="px-3 py-3 text-center">
+                                                <input
+                                                    class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                    type="text" value="{{ $totalBobot }}" readonly>
+                                            </td>
+                                        @endif
+                                    @endforeach
+                                </tr>
                             @endforeach
                         </tbody>
 
@@ -164,22 +162,20 @@
 
                     <tbody>
                         @foreach ($alternatifPenilaian as $dataAlternatif)
-                            @if ($dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif !== $checkAuthAlternatif)
-                                <tr class="border-b bg-white">
-                                    <th class="w-12 whitespace-nowrap bg-slate-100 px-6 py-4 font-medium text-gray-900"
-                                        scope="row">
-                                        {{ $dataAlternatif->alternatifKedua->alternatifPertama->nama_alternatif }}
-                                    </th>
+                            <tr class="border-b bg-white">
+                                <th class="w-12 whitespace-nowrap bg-slate-100 px-6 py-4 font-medium text-gray-900"
+                                    scope="row">
+                                    {{ $dataAlternatif->alternatifKedua->alternatifPertama->nama_alternatif }}
+                                </th>
 
-                                    @foreach ($avgNilaiKriteria[$dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif] as $kodeSubkriteria => $nilai)
-                                        <td class="px-3 py-3 text-center">
-                                            <input
-                                                class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
-                                                type="text" value="{{ substr($nilai, 0, 8) }}" readonly>
-                                        </td>
-                                    @endforeach
-                                </tr>
-                            @endif
+                                @foreach ($avgNilaiKriteria[$dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif] as $kodeSubkriteria => $nilai)
+                                    <td class="px-3 py-3 text-center">
+                                        <input
+                                            class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                            type="text" value="{{ substr($nilai, 0, 8) }}" readonly>
+                                    </td>
+                                @endforeach
+                            </tr>
                         @endforeach
                     </tbody>
 
@@ -212,34 +208,32 @@
 
                     <tbody>
                         @foreach ($alternatifPenilaian as $dataAlternatif)
-                            @if ($dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif !== $checkAuthAlternatif)
-                                <tr class="border-b bg-white">
-                                    <th class="w-12 whitespace-nowrap bg-slate-100 px-6 py-4 font-medium text-gray-900"
-                                        scope="row">
-                                        {{ $dataAlternatif->alternatifKedua->alternatifPertama->nama_alternatif }}
-                                    </th>
+                            <tr class="border-b bg-white">
+                                <th class="w-12 whitespace-nowrap bg-slate-100 px-6 py-4 font-medium text-gray-900"
+                                    scope="row">
+                                    {{ $dataAlternatif->alternatifKedua->alternatifPertama->nama_alternatif }}
+                                </th>
 
-                                    @foreach ($nilaiAlternatif as $keyAlternatif => $nilai)
-                                        @if ($keyAlternatif == $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif)
-                                            <td class="px-3 py-3 text-center">
-                                                <input
-                                                    class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
-                                                    type="text" value="{{ substr($nilai, 0, 8) }}" readonly>
-                                            </td>
-                                        @endif
-                                    @endforeach
+                                @foreach ($nilaiAlternatif as $keyAlternatif => $nilai)
+                                    @if ($keyAlternatif == $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif)
+                                        <td class="px-3 py-3 text-center">
+                                            <input
+                                                class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                type="text" value="{{ substr($nilai, 0, 8) }}" readonly>
+                                        </td>
+                                    @endif
+                                @endforeach
 
-                                    @foreach ($rankAlternatif as $keyAlternatif => $rank)
-                                        @if ($keyAlternatif == $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif)
-                                            <td class="px-3 py-3 text-center">
-                                                <input
-                                                    class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
-                                                    type="text" value="{{ $rank }}" readonly>
-                                            </td>
-                                        @endif
-                                    @endforeach
-                                </tr>
-                            @endif
+                                @foreach ($rankAlternatif as $keyAlternatif => $rank)
+                                    @if ($keyAlternatif == $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif)
+                                        <td class="px-3 py-3 text-center">
+                                            <input
+                                                class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                type="text" value="{{ $rank }}" readonly>
+                                        </td>
+                                    @endif
+                                @endforeach
+                            </tr>
                         @endforeach
                     </tbody>
 

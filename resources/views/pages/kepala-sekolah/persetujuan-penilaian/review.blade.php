@@ -28,8 +28,7 @@
 
     <div class="mx-auto my-8 w-full">
 
-        <form class="mt-8 space-y-6"
-            action="{{ route('persetujuanPenilaian.update_review_penilaian', $penilaian->id_penilaian) }}"
+        <form class="mt-8 space-y-6" action="{{ route('persetujuanPenilaian.update', $penilaian->id_penilaian) }}"
             method="POST">
             @method('PUT')
             @csrf

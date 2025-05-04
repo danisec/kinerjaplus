@@ -4,17 +4,17 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Catatan Pegawai</span>
+                <span class="mx-2 text-base font-medium text-gray-500">Persetujuan Penilaian</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="my-8">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Catatan Pegawai Evaluasi Kinerja</h4>
+        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Persetujuan Penilaian Evaluasi Kinerja</h4>
 
         <div class="flex flex-row items-center justify-between">
             <div>
-                <x-molecules.search :placeholder="'Cari Tahun Catatan Pegawai'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
+                <x-molecules.search :placeholder="'Cari Tahun Penilaian'" :request="request('tahun_ajaran')" :name="'tahun_ajaran'" :value="request('tahun_ajaran')" />
             </div>
         </div>
     </div>
@@ -41,26 +41,31 @@
                 </tr>
             </thead>
 
-            <tbody>
-                @if ($catatanKaryawan != null && $catatanKaryawan->count() > 0)
-                    @foreach ($catatanWithGroupKaryawan as $index => $item)
+            @if ($penilaianGroupedByTahun != null && $penilaianGroupedByTahun->count() > 0)
+                <tbody>
+                    @foreach ($penilaianWithGroupKaryawan as $index => $item)
                         <tr class="border-b bg-white hover:bg-slate-100">
                             <th class="whitespace-nowrap px-6 py-4 font-medium text-gray-900" scope="row">
                                 {{ $index + 1 }}
                             </th>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $item['tahun'] }}
+                                {{ $item['tahun_ajaran'] }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 capitalize">
                                 {{ $item['semester'] }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
-                                {{ $item['namaGroupKaryawan'] }}
+                                {{ $item['name_group_employee'] }}
                             </td>
                             <td class="flex justify-center gap-4 px-6 py-4">
                                 <div x-data="{ showTooltip: false }">
                                     <a class="font-medium text-gray-600"
-                                        href="{{ route('catatanKaryawan.showTahun', ['firstYear' => substr($item['tahun'], 0, 4), 'secondYear' => substr($item['tahun'], 5), 'semester' => $item['semester']]) }}"
+                                        href="{{ route('persetujuanPenilaian.showTahunPimpinan', [
+                                            'idGroupKaryawan' => $item['id_group_employee'],
+                                            'firstYear' => substr($item['tahun_ajaran'], 0, 4),
+                                            'secondYear' => substr($item['tahun_ajaran'], 5),
+                                            'semester' => $item['semester'],
+                                        ]) }}"
                                         @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
                                         <x-atoms.svg.eye />
                                     </a>
@@ -73,21 +78,21 @@
                             </td>
                         </tr>
                     @endforeach
-            </tbody>
-        @else
-            <tbody>
-                <tr class="border-b bg-white">
-                    <td class="px-6 py-4 text-center font-medium text-gray-600" colspan="6">
-                        Data belum ada.
-                    </td>
-                </tr>
-            </tbody>
+                </tbody>
+            @else
+                <tbody>
+                    <tr class="border-b bg-white">
+                        <td class="px-6 py-4 text-center font-medium text-gray-600" colspan="6">
+                            Data belum ada.
+                        </td>
+                    </tr>
+                </tbody>
             @endif
         </table>
     </div>
 
     <div class="bg-white p-6">
-        {{ $catatanKaryawan->links('vendor.pagination.tailwind') }}
+        {{ $penilaianGroupedByTahun->links('vendor.pagination.tailwind') }}
     </div>
 
 </x-app-dashboard>

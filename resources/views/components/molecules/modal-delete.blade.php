@@ -1,4 +1,4 @@
-@props(['title', 'action', 'deleteNameButton' => 'Hapus'])
+@props(['title', 'action', 'class' => '', 'deleteNameButton' => 'Hapus'])
 
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/20" x-show="isOpen"
     x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95"
@@ -20,7 +20,7 @@
                 @csrf
 
                 <button
-                    class="rounded-md bg-red-500 px-6 py-2.5 text-white hover:bg-red-600 focus:bg-red-600 focus:ring-red-600"
+                    class="{{ $class }} rounded-md bg-red-500 px-6 py-2.5 text-white hover:bg-red-600 focus:bg-red-600 focus:ring-red-600"
                     type="submit">
                     {{ $deleteNameButton }}
                 </button>

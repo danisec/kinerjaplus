@@ -69,7 +69,7 @@ Route::controller(PerhitunganKriteriaController::class)->name('perhitunganKriter
     });
 
     // Route permission 'view perbandingan kriteria|perbandingan kriteria'
-    Route::middleware('role_or_permission:superadmin|kepala sekolah|view perbandingan kriteria|perbandingan kriteria')->group(function () {
+    Route::middleware('role_or_permission:superadmin|kepala sekolah|deputi|yayasan|view perbandingan kriteria|perbandingan kriteria')->group(function () {
         Route::get('/dashboard/perbandingan-kriteria/hasil-perbandingan-kriteria', 'hasil')->name('hasil');
     });
 });
@@ -84,7 +84,7 @@ Route::controller(PerhitunganSubkriteriaController::class)->name('perhitunganSub
     });
 
     // Route permission 'view perbandingan subkriteria|perbandingan subkriteria'
-    Route::middleware('role_or_permission:superadmin|kepala sekolah|view perbandingan subkriteria|perbandingan subkriteria')->group(function () {
+    Route::middleware('role_or_permission:superadmin|kepala sekolah|deputi|yayasan|view perbandingan subkriteria|perbandingan subkriteria')->group(function () {
         Route::get('/dashboard/perbandingan-subkriteria/hasil-perbandingan-subkriteria', 'hasil')->name('hasil');
     });
 

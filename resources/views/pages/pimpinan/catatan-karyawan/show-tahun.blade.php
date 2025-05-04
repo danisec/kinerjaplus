@@ -12,15 +12,16 @@
         <li aria-current="page">
             <div class="flex items-center">
                 <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium capitalize text-gray-500">Tahun Ajaran
-                    {{ $tahunAjaranBreadcrumbs['tahun_ajaran'] . ' - Semester ' . $tahunAjaranBreadcrumbs['semester'] }}</span>
+                <span class="mx-2 text-base font-medium capitalize text-gray-500">
+                    {{ $tahunAjaranBreadcrumbs['name_group_karyawan'] . ' Tahun Ajaran ' . $tahunAjaranBreadcrumbs['tahun_ajaran'] . ' - Semester ' . $tahunAjaranBreadcrumbs['semester'] }}</span>
             </div>
         </li>
     </x-molecules.breadcrumb>
 
     <div class="my-8">
         <h4 class="mb-6 text-2xl font-semibold capitalize text-gray-900">Catatan Pegawai Evaluasi Kinerja
-            {{ $tahunAjaranBreadcrumbs['tahun_ajaran'] . ' - Semester ' . $tahunAjaranBreadcrumbs['semester'] }}</h4>
+            {{ $tahunAjaranBreadcrumbs['name_group_karyawan'] . ' ' . $tahunAjaranBreadcrumbs['tahun_ajaran'] . ' - Semester ' . $tahunAjaranBreadcrumbs['semester'] }}
+        </h4>
 
         <div class="flex flex-row items-center justify-between">
             <div>

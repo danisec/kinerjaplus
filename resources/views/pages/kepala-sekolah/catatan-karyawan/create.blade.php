@@ -34,14 +34,12 @@
         </h4>
 
         <form class="mt-8 space-y-6"
-            action="{{ route('persetujuanPenilaian.updateCatatan', [$penilaian->id_penilaian, 'firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5), 'semester' => $tahunAjaran['semester']]) }}"
+            action="{{ route('persetujuanPenilaian.storeCatatan', [$penilaian->id_penilaian, 'firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5), 'semester' => $tahunAjaran['semester']]) }}"
             method="POST">
-            @method('PUT')
             @csrf
 
             <input name="id_penilaian" type="hidden" value="{{ $penilaian->id_penilaian }}">
             <input name="id_tanggal_penilaian" type="hidden" value="{{ $penilaian->id_tanggal_penilaian }}">
-            <input name="status" type="hidden" value="Tidak Disetujui">
 
             <div>
                 <label class="mb-2 block text-base font-medium text-gray-900" for="tahun ajaran">
@@ -73,9 +71,18 @@
             </div>
 
             <div class="flex flex-row gap-4">
-                <a href="{{ route('catatanKaryawan.index') }}">
-                    <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                </a>
+                @if (Auth::user()->hasRole(['kepala sekolah']))
+                    <a
+                        href="{{ route('persetujuanPenilaian.showTahun', ['firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5), 'semester' => $tahunAjaran['semester']]) }}">
+                        <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
+                    </a>
+                @else
+                    <a
+                        href="{{ route('persetujuanPenilaian.showTahunPimpinan', [$penilaian->alternatifPertama->id_group_karyawan, 'firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5), 'semester' => $tahunAjaran['semester']]) }}">
+                        <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
+                    </a>
+                @endif
+
                 <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Simpan'" />
             </div>
         </form>
