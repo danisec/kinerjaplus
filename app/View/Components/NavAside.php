@@ -4,6 +4,7 @@ namespace App\View\Components;
 
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Component;
 
 class NavAside extends Component
@@ -11,6 +12,8 @@ class NavAside extends Component
     /**
      * Create a new component instance.
      */
+    public $user;
+    public $hasDirectPermissions;
     public $sideNavDashboard;
     public $sideNavData;
     public $sideNavPenilaian;
@@ -21,6 +24,9 @@ class NavAside extends Component
     public $sideNavKelolaAkun;
     public function __construct()
     {
+        $this->user = Auth::user();
+        $this->hasDirectPermissions = $this->user->getDirectPermissions()->isNotEmpty();
+
         $this->sideNavDashboard= [
             'Dashboard' => [
                 'url' => '',
