@@ -31,6 +31,29 @@ class User extends Authenticatable
         );
     }
 
+    public function getGroupKaryawanId()
+    {
+        $kodeAlternatif = $this->alternatif->kode_alternatif ?? null;
+
+        if ($this->hasRole('kepala sekolah')) {
+            return GroupKaryawan::where('kepala_sekolah', $kodeAlternatif)->value('id_group_karyawan');
+        }
+
+        if ($this->hasRole([
+                'yayasan',
+                'deputi',
+                'guru',
+                'tata usaha tenaga pendidikan',
+                'tata usaha non tenaga pendidikan',
+                'kerohanian tenaga pendidikan',
+                'kerohanian non tenaga pendidikan',
+            ])) {
+            return GroupKaryawanDetail::where('kode_alternatif', $kodeAlternatif)->value('id_group_karyawan');
+        }
+
+        return null;
+    }
+
     public function alternatif()
     {
         return $this->belongsTo(Alternatif::class, 'fullname', 'nama_alternatif');
