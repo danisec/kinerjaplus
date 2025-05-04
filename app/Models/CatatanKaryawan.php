@@ -20,7 +20,7 @@ class CatatanKaryawan extends Model
                     $query->where('nama_alternatif', 'like', '%' . $search . '%');
                 })->orWhereHas('penilaian.alternatifKedua.alternatifPertama', function ($query) use ($search) {
                     $query->where('nama_alternatif', 'like', '%' . $search . '%');
-                })->orWhere('tahun_ajaran', 'like', '%' . $search . '%');
+                });
             });
         });
     }
