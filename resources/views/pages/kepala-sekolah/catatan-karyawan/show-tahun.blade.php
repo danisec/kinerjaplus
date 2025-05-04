@@ -24,7 +24,7 @@
 
         <div class="flex flex-row items-center justify-between">
             <div>
-                <x-molecules.search :placeholder="'Cari Catatan Pegawai'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
+                <x-molecules.search :placeholder="'Cari Nama Pegawai'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
             </div>
         </div>
     </div>
