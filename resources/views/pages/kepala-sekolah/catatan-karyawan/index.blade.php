@@ -16,12 +16,6 @@
             <div>
                 <x-molecules.search :placeholder="'Cari Tahun Catatan Pegawai'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
             </div>
-
-            <div class="hidden">
-                <a href="{{ route('catatanKaryawan.create') }}">
-                    <x-atoms.button.button-primary :customClass="'h-12 w-60 rounded-md'" :type="'button'" :name="'Tambah Catatan Karyawan'" />
-                </a>
-            </div>
         </div>
     </div>
 
@@ -90,6 +84,10 @@
             </tbody>
             @endif
         </table>
+    </div>
+
+    <div class="bg-white p-6">
+        {{ $catatanKaryawan->links('vendor.pagination.tailwind') }}
     </div>
 
 </x-app-dashboard>
