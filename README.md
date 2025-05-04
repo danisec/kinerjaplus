@@ -128,3 +128,7 @@ Contributions are welcome! To contribute:
 5. Submit a pull request.
 
 Ensure your code follows the project’s coding standards before submission.
+
+## License
+
+This project is licensed under CC BY 4.0. See the [Creative Commons Attribution CC BY 4.0](LICENSE) file for details.
