@@ -25,9 +25,21 @@
 
         <div class="flex flex-row items-center justify-between">
             <div>
-                <x-molecules.search :placeholder="'Cari Persetujuan Penilaian'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
+                <x-molecules.search :placeholder="'Cari Nama Pegawai'" :request="request('nama_alternatif')" :name="'nama_alternatif'" :value="request('nama_alternatif')" />
             </div>
         </div>
+    </div>
+
+    <div class="mb-8 flex flex-row items-center gap-1.5 rounded-lg bg-emerald-50 p-4 text-sm text-emerald-700">
+        <svg class="size-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+        </svg>
+
+
+        <p class="text-sm font-medium">Total review penilaian {{ $notApprovedPenilaian }} / {{ $totalReviewPenilaian }}
+        </p>
     </div>
 
     <div class="relative overflow-x-auto rounded-lg shadow-sm">
@@ -90,12 +102,30 @@
                                 </div>
 
                                 <div x-data="{ showTooltip: false }">
-                                    <a class="font-medium text-gray-800 focus:outline-none"
-                                        href="{{ route('persetujuanPenilaian.createCatatan', ['firstYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 5), 'semester' => $tahunAjaranBreadcrumbs['semester'], 'id' => $item->id_penilaian]) }}"
-                                        target="_blank" rel="noreferrer noopener" @mouseenter="showTooltip = true"
-                                        @mouseleave="showTooltip = false">
-                                        <x-atoms.svg.comment />
-                                    </a>
+                                    @if ($item->catatanKaryawan === null)
+                                        <a class="font-medium text-gray-800 focus:outline-none"
+                                            href="{{ route('persetujuanPenilaian.createCatatan', [
+                                                'firstYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 0, 4),
+                                                'secondYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 5),
+                                                'semester' => $tahunAjaranBreadcrumbs['semester'],
+                                                'id' => $item->id_penilaian,
+                                            ]) }}"
+                                            rel="noreferrer noopener" @mouseenter="showTooltip = true"
+                                            @mouseleave="showTooltip = false">
+                                            <x-atoms.svg.comment />
+                                        </a>
+                                    @else
+                                        <a class="font-medium text-blue-600"
+                                            href="{{ route('catatanKaryawan.edit', [
+                                                'id' => $item->catatanKaryawan->id_catatan_karyawan,
+                                                'firstYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 0, 4),
+                                                'secondYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 5),
+                                                'semester' => $tahunAjaranBreadcrumbs['semester'],
+                                            ]) }}"
+                                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
+                                            <x-atoms.svg.pen />
+                                        </a>
+                                    @endif
 
                                     <div class="absolute rounded bg-gray-100 text-xs text-gray-900"
                                         x-show="showTooltip">
@@ -112,7 +142,7 @@
 
                                     <div class="absolute rounded bg-gray-100 text-xs text-gray-900"
                                         x-show="showTooltip">
-                                        <span>Atur Ulang</span>
+                                        <span>Atur Ulang Penilaian</span>
                                     </div>
 
                                     <x-molecules.modal-delete :title="'Atur ulang penilaian : ' .
