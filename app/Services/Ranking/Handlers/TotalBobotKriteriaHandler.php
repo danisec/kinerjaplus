@@ -1,12 +1,10 @@
-<?php
+<?php 
 
-namespace App\Services;
+namespace App\Services\Ranking\Handlers;
 
-use Illuminate\Http\Request;
-
-class RankingService
+class TotalBobotKriteriaHandler
 {
-    public function totalBobotKriteria($uniqueAlternatifPenilaianByTahunAjaran, $kriteria, $bobotPrioritasSubkriteria, $bobotAlternatif)
+    public function handle($uniqueAlternatifPenilaianByTahunAjaran, $kriteria, $bobotPrioritasSubkriteria, $bobotAlternatif): array
     {
         $totalBobotKriteria = [];
         foreach ($uniqueAlternatifPenilaianByTahunAjaran as $alternatifItem) {
