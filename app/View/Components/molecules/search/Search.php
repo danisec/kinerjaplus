@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\molecules;
+namespace App\View\Components\molecules\search;
 
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -21,6 +21,6 @@ class Search extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.molecules.search');
+        return view('components.molecules.search.search');
     }
 }
