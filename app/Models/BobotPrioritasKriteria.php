@@ -10,6 +10,7 @@ class BobotPrioritasKriteria extends Model
     use HasFactory;
 
     protected $table = 'bobot_prioritas_kriteria';
+    protected $primaryKey = 'id_bobot_prioritas_kriteria';
     protected $guarded = ['id_bobot_prioritas_kriteria'];
 
     public function kriteria()
