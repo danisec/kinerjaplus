@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\NilaiSkala\StoreNilaiSkalaRequest;
+use App\Http\Requests\NilaiSkala\UpdateNilaiSkalaRequest;
 use App\Models\NilaiSkala;
-use Illuminate\Http\Request;
 
 class NilaiSkalaController extends Controller
 {
@@ -28,24 +29,14 @@ class NilaiSkalaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreNilaiSkalaRequest $request)
     {
-        $validatedData = $request->validate([
-            'skala' => 'required',
-            'nilai_skala' => 'required|min:1|max:100'
-        ], [
-            'skala.required' => 'Skala harus diisi',
-            'nilai_skala.required' => 'Nilai skala harus diisi',
-            'nilai_skala.min' => 'Nilai skala minimal 1',
-            'nilai_skala.max' => 'Nilai skala maksimal 100'
-        ]);
-
         try {
             $nilaiSkala = [];
-            foreach ($validatedData['skala'] as $key => $skala) {
+            foreach ($request['skala'] as $key => $skala) {
                 $nilaiSkala[] = [
                     'skala' => $skala,
-                    'nilai_skala' => $validatedData['nilai_skala'][$key],
+                    'nilai_skala' => $request['nilai_skala'][$key],
                     'created_at' => now(),
                     'updated_at' => now()
                 ];
@@ -74,33 +65,26 @@ class NilaiSkalaController extends Controller
      */
     public function edit(NilaiSkala $nilaiSkala)
     {
+        $nilaiSkala = NilaiSkala::orderBy('id_nilai_skala', 'ASC')->get();
+
         return view('pages.superadmin.nilai-skala.edit', [
             'title' => 'Ubah Nilai Skala',
-            'nilaiSkala' => NilaiSkala::orderBy('id_nilai_skala', 'ASC')->get(),
+            'nilaiSkala' => $nilaiSkala,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, NilaiSkala $nilaiSkala)
+    public function update(UpdateNilaiSkalaRequest $request, NilaiSkala $nilaiSkala)
     {
-        $validatedData = $request->validate([
-            'id_nilai_skala' => '',
-            'skala' => '',
-            'nilai_skala' => 'min:1|max:100'
-        ], [
-            'nilai_skala.min' => 'Nilai skala minimal 1',
-            'nilai_skala.max' => 'Nilai skala maksimal 100'
-        ]);
-
         try {
             $nilaiSkala = [];
-            foreach ($validatedData['id_nilai_skala'] as $key => $id_nilai_skala) {
+            foreach ($request['id_nilai_skala'] as $key => $id_nilai_skala) {
                 $nilaiSkala[] = [
                     'id_nilai_skala' => $id_nilai_skala,
-                    'skala' => $validatedData['skala'][$key],
-                    'nilai_skala' => $validatedData['nilai_skala'][$key],
+                    'skala' => $request['skala'][$key],
+                    'nilai_skala' => $request['nilai_skala'][$key],
                     'updated_at' => now()
                 ];
             }
