@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BobotPrioritasKriteria;
 use App\Models\Kriteria;
 use App\Models\PerhitunganKriteria;
 use App\Models\RatioIndex;
@@ -30,8 +31,48 @@ class PerhitunganKriteriaController extends Controller
      */
     public function index()
     {
+        $intensitasKepentingan = [
+            [
+                'key' => '1',
+                'value' => '1 - Sama penting',
+            ],
+            [
+                'key' => '2',
+                'value' => '2 - Mendekati sedikit lebih penting (Grey Area)',
+            ],
+            [
+                'key' => '3',
+                'value' => '3 - Sedikit lebih penting',
+            ],
+            [
+                'key' => '4',
+                'value' => '4 - Mendekati lebih penting (Grey Area)',
+            ],
+            [
+                'key' => '5',
+                'value' => '5 - Lebih penting',
+            ],
+            [
+                'key' => '6',
+                'value' => '6 - Mendekati jelas lebih penting (Grey Area)',
+            ],
+            [
+                'key' => '7',
+                'value' => '7 - Jelas lebih penting',
+            ],
+            [
+                'key' => '8',
+                'value' => '8 - Mendekati mutlak penting (Grey Area)',
+            ],
+            [
+                'key' => '9',
+                'value' => '9 - Mutlak penting',
+            ],
+        ];
+
         return view('pages.kepala-sekolah.perhitungan-kriteria.index', [
             'title' => 'Perbandingan Kriteria',
+            'intensitasKepentingan' => $intensitasKepentingan,
             'kriteria' => $this->kriteria,
             'perhitunganKriteria' => $this->perhitunganKriteria,
         ]);
@@ -92,13 +133,12 @@ class PerhitunganKriteriaController extends Controller
             $totalKolomKriteria = $this->perhitunganKriteriaService->totalKolomKriteria($perhitunganKriteria);
             $normalisasiMatriks = $this->perhitunganKriteriaService->normalisasiMatriks($perhitunganKriteria, $totalKolomKriteria);
             $totalBarisNormalisasiMatriks = $this->perhitunganKriteriaService->totalBarisNormalisasiMatriks($normalisasiMatriks);
-            $bobotPrioritasKriteria= $this->perhitunganKriteriaService->bobotPrioritasKriteria($totalBarisNormalisasiMatriks, $jumlahKriteria);
-            $consistencyMeasures= $this->perhitunganKriteriaService->consistencyMeasure($perhitunganKriteria, $bobotPrioritasKriteria);
-            $totalConsistencyMeasures= $this->perhitunganKriteriaService->totalConsistencyMeasures($consistencyMeasures, $jumlahKriteria);
-            $consistencyRatio= $this->perhitunganKriteriaService->consistencyRatio($totalConsistencyMeasures, $jumlahKriteria, $ratioIndex);
-            $consistencyResult= $this->perhitunganKriteriaService->consistencyResult($consistencyRatio);
+            $bobotPrioritasKriteria = $this->perhitunganKriteriaService->bobotPrioritasKriteria($totalBarisNormalisasiMatriks, $jumlahKriteria);
+            $consistencyMeasures = $this->perhitunganKriteriaService->consistencyMeasure($perhitunganKriteria, $bobotPrioritasKriteria);
+            $totalConsistencyMeasures = $this->perhitunganKriteriaService->totalConsistencyMeasures($consistencyMeasures, $jumlahKriteria);
+            $consistencyRatio = $this->perhitunganKriteriaService->consistencyRatio($totalConsistencyMeasures, $jumlahKriteria, $ratioIndex);
+            $consistencyResult = $this->perhitunganKriteriaService->consistencyResult($consistencyRatio);
 
-            // Mengembalikan data yang akan di simpan dalam cache
             return [
                 'kriteria' => $this->kriteria,
                 'perhitunganKriteria' => $perhitunganKriteria,
@@ -112,7 +152,9 @@ class PerhitunganKriteriaController extends Controller
             ];
         });
 
-        return view('pages.kepala-sekolah.perhitungan-kriteria.hasil', array_merge(['title' => 'Hasil Perbandingan Kriteria'], $result));
+        return view('pages.kepala-sekolah.perhitungan-kriteria.hasil', array_merge([
+            'title' => 'Hasil Perbandingan Kriteria'
+        ], $result));
     }
 
     /**
@@ -182,6 +224,16 @@ class PerhitunganKriteriaController extends Controller
      */
     public function destroy(PerhitunganKriteria $perhitunganKriteria)
     {
-        //
+        // Truncate table perhitungan_kriteria
+        PerhitunganKriteria::truncate();
+        
+        // Truncate table bobot_prioritas_kriteria
+        BobotPrioritasKriteria::truncate();
+
+        // Forget cache hasil_perhitungan_kriteria
+        Cache::forget('hasil_perhitungan_kriteria');
+
+        $notif = notify()->success('Perbandingan kriteria berhasil direset');
+        return redirect()->back()->withInput()->with('notif', $notif);
     }
 }
