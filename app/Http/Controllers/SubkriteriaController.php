@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Subkriteria\StoreSubkriteriaRequest;
+use App\Http\Requests\Subkriteria\UpdateSubkriteriaRequest;
 use App\Models\IndikatorSubkriteria;
 use App\Models\Kriteria;
 use App\Models\Subkriteria;
@@ -25,9 +27,11 @@ class SubkriteriaController extends Controller
      */
     public function index()
     {
+        $subkriteria = Subkriteria::with('kriteria')->orderBy('id_subkriteria', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString();
+
         return view('pages.superadmin.subkriteria.index', [
             'title' => 'Subkriteria',
-            'subkriteria' => Subkriteria::with('kriteria')->orderBy('id_subkriteria', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
+            'subkriteria' => $subkriteria,
         ]);
     }
 
@@ -45,41 +49,16 @@ class SubkriteriaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreSubkriteriaRequest $request)
     {
-        $validatedData = $request->validate([
-            'kode_kriteria' => 'required',
-            'kode_subkriteria' => 'required|unique:subkriteria,kode_subkriteria|max:10',
-            'nama_subkriteria' => 'required|max:255',
-            'deskripsi_subkriteria' => 'max:2000',
-            'bobot_subkriteria' => 'required|numeric',
-        ],[
-            'kode_kriteria.required' => 'Kriteria harus diisi',
-            'kode_subkriteria.required' => 'Kode subkriteria harus diisi',
-            'kode_subkriteria.unique' => 'Kode subkriteria sudah ada',
-            'kode_subkriteria.max' => 'Kode subkriteria maksimal 10 karakter',
-            'nama_subkriteria.required' => 'Nama subkriteria harus diisi',
-            'nama_subkriteria.max' => 'Nama subkriteria maksimal 255 karakter',
-            'deskripsi_subkriteria.max' => 'Deskripsi subkriteria maksimal 2000 karakter',
-            'bobot_subkriteria.required' => 'Bobot subkriteria harus diisi',
-            'bobot_subkriteria.numeric' => 'Bobot subkriteria harus berupa angka',
-        ]);
-
         DB::beginTransaction();
 
         try {
-            $subkriteria = Subkriteria::create($validatedData);
+            $subkriteria = Subkriteria::create($request->validated());
             $kodeSubkriteria = $subkriteria->kode_subkriteria;
 
-            $validatedIndikatorSubkriteria = $request->validate([
-                'indikator_subkriteria' => 'required|max:200',
-            ],[
-                'indikator_subkriteria.required' => 'Indikator subkriteria harus diisi',
-                'indikator_subkriteria.max' => 'Indikator subkriteria maksimal 200 karakter',
-            ]);
-
             $indikatorSubkriteria = [];
-            foreach ($validatedIndikatorSubkriteria['indikator_subkriteria'] as $key => $value) {
+            foreach ($request['indikator_subkriteria'] as $key => $value) {
                 $indikatorSubkriteria[] = [
                     'kode_subkriteria' => $kodeSubkriteria,
                     'indikator_subkriteria' => $value,
@@ -107,9 +86,11 @@ class SubkriteriaController extends Controller
      */
     public function show($id)
     {
+        $subkriteria = Subkriteria::with('kriteria', 'indikatorSubkriteria')->where('id_subkriteria', $id)->first();
+
         return view('pages.superadmin.subkriteria.show', [
             'title' => 'Detail Subkriteria',
-            'subkriteria' => Subkriteria::with('kriteria', 'indikatorSubkriteria')->where('id_subkriteria', $id)->first(),
+            'subkriteria' => $subkriteria,
         ]);
     }
 
@@ -118,50 +99,41 @@ class SubkriteriaController extends Controller
      */
     public function edit($id)
     {
+        $subkriteria = Subkriteria::with('kriteria', 'indikatorSubkriteria')->where('id_subkriteria', $id)->first();
+
         return view('pages.superadmin.subkriteria.edit', [
             'title' => 'Ubah Subkriteria',
             'kriteria' => $this->kriteria,
-            'subkriteria' => Subkriteria::with('kriteria', 'indikatorSubkriteria')->where('id_subkriteria', $id)->first(),
+            'subkriteria' => $subkriteria,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UpdateSubkriteriaRequest $request, $id)
     {
-        $validatedData = $request->validate([
-            'kode_kriteria' => '',
-            'kode_subkriteria' => 'max:10',
-            'nama_subkriteria' => 'max:255',
-            'deskripsi_subkriteria' => 'max:2000',
-            'bobot_subkriteria' => 'required|numeric',
-        ],[
-            'kode_subkriteria.max' => 'Kode subkriteria maksimal 10 karakter',
-            'nama_subkriteria.max' => 'Nama subkriteria maksimal 255 karakter',
-            'deskripsi_subkriteria.max' => 'Deskripsi subkriteria maksimal 2000 karakter',
-            'bobot_subkriteria.required' => 'Bobot subkriteria harus diisi',
-            'bobot_subkriteria.numeric' => 'Bobot subkriteria harus berupa angka',
-        ]);
-
         DB::beginTransaction();
 
         try {
-            Subkriteria::where('id_subkriteria', $id)->update($validatedData);
+            Subkriteria::where('id_subkriteria', $id)->update($request->only([
+                'kode_kriteria',
+                'kode_subkriteria',
+                'nama_subkriteria',
+                'deskripsi_subkriteria',
+                'bobot_subkriteria',
+            ]));
+    
+            $idIndikatorSubkriteria = IndikatorSubkriteria::select('id_indikator_subkriteria')
+            ->where('kode_subkriteria', $request['kode_subkriteria'])
+            ->get()
+            ->toArray();
 
-            $validatedIndikatorSubkriteria = $request->validate([
-                'indikator_subkriteria' => 'max:200',
-            ],[
-                'indikator_subkriteria.max' => 'Indikator subkriteria maksimal 200 karakter',
-            ]);
-
-            $idIndikatorSubkriteria = IndikatorSubkriteria::select('id_indikator_subkriteria')->where('kode_subkriteria', $validatedData['kode_subkriteria'])->get()->toArray();
-
-            foreach ($validatedIndikatorSubkriteria['indikator_subkriteria'] as $key => $value) {
+            foreach ($request['indikator_subkriteria'] as $key => $value) {
                 IndikatorSubkriteria::updateOrCreate(
                     ['id_indikator_subkriteria' => $idIndikatorSubkriteria[$key]['id_indikator_subkriteria']],
                     [
-                        'kode_subkriteria' => $validatedData['kode_subkriteria'],
+                        'kode_subkriteria' => $request['kode_subkriteria'],
                         'indikator_subkriteria' => $value,
                         'updated_at' => now(),
                     ]
@@ -206,16 +178,17 @@ class SubkriteriaController extends Controller
             $lastKodeSubkriteria = Subkriteria::where('kode_kriteria', $kodeKriteria)->orderBy('id_subkriteria', 'DESC')->first();
             
             if ($lastKodeSubkriteria) {
-                // Memecah kode subkriteria menjadi bagian awal (misal: SK2) dan nomor (misal: 9)
+                // Separate the kode subkriteria into prefix and number
+                // Example: SK2.9 -> ['SK2', '9']
                 list($kode, $nomor) = explode('.', $lastKodeSubkriteria->kode_subkriteria);
 
                 // Increment nomor subkriteria
                 $newNomor = $nomor + 1;
 
-                // Format ulang nomor subkriteria agar memiliki dua digit
+                // Formated nomor subkriteria
                 $newKodeSubkriteria = $kode . '.' . $newNomor;
             } else {
-                // Jika tidak ada subkriteria sebelumnya, mulai dari nomor 1
+                // If there is no previous subkriteria, start from number 1
                 $newKodeSubkriteria = 'S'.$kodeKriteria.'.1';
             }
 
