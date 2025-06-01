@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\molecules;
+namespace App\View\Components\molecules\modal;
 
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -21,6 +21,6 @@ class ModalUpdate extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.molecules.modal-update');
+        return view('components.molecules.modal.modal-update');
     }
 }
