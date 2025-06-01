@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SkalaIndikator\StoreSkalaIndikatorRequest;
+use App\Http\Requests\SkalaIndikator\UpdateSkalaIndikatorRequest;
 use App\Models\NilaiSkala;
 use App\Models\SkalaIndikator;
 use App\Models\SkalaIndikatorDetail;
 use App\Models\Subkriteria;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SkalaIndikatorController extends Controller
@@ -15,11 +16,21 @@ class SkalaIndikatorController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {       
+    {
+        $skalaIndikator = SkalaIndikator::with([
+            'indikatorSubkriteria', 
+            'skalaIndikatorDetail'
+        ])
+        ->orderBy('id_skala_indikator', 'DESC')
+        ->filter(request(['search']))
+        ->paginate(10)->withQueryString();
+
+        $nilaiSkala = NilaiSkala::orderBy('id_nilai_skala', 'ASC')->get();
+
         return view('pages.superadmin.skala-indikator.index', [
             'title' => 'Skala Indikator',
-            'skalaIndikator' => SkalaIndikator::with(['indikatorSubkriteria', 'skalaIndikatorDetail'])->orderBy('id_skala_indikator', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
-            'nilaiSkala' => NilaiSkala::orderBy('id_nilai_skala', 'ASC')->get(),
+            'skalaIndikator' => $skalaIndikator,
+            'nilaiSkala' => $nilaiSkala,
         ]);
     }
 
@@ -28,41 +39,30 @@ class SkalaIndikatorController extends Controller
      */
     public function create()
     {
+        $subkriteria = Subkriteria::with('indikatorSubkriteria')->orderBy('id_subkriteria', 'ASC')->get();
+
         return view('pages.superadmin.skala-indikator.create', [
             'title' => 'Tambah Skala Indikator',
-            'subkriteria' => Subkriteria::with('indikatorSubkriteria')->orderBy('id_subkriteria', 'ASC')->get(),
+            'subkriteria' => $subkriteria,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreSkalaIndikatorRequest $request)
     {
-        $validatedData = $request->validate([
-            'id_indikator_subkriteria' => 'required',
-        ], [
-            'id_indikator_subkriteria.required' => 'Indikator subkriteria harus diisi',
-        ]);
-
         DB::beginTransaction();
 
         try {
-            $skalaIndikator = SkalaIndikator::create($validatedData);
+            $skalaIndikator = SkalaIndikator::create($request->only(['id_indikator_subkriteria']));
             $idSkalaIndikator = $skalaIndikator->id;
 
-            $validatedSkalaIndikatorDetail = $request->validate([
-                'skala' => '',
-                'deskripsi_skala' => 'required',
-            ], [
-                'deskripsi_skala.required' => 'Deskripsi skala harus diisi',
-            ]);
-
             $skalaIndikatorDetail = [];
-            foreach ($validatedSkalaIndikatorDetail['deskripsi_skala'] as $key => $value) {
+            foreach ($request['deskripsi_skala'] as $key => $value) {
                 $skalaIndikatorDetail[] = [
                     'id_skala_indikator' => $idSkalaIndikator,
-                    'skala' => $validatedSkalaIndikatorDetail['skala'][$key],
+                    'skala' => $request['skala'][$key],
                     'deskripsi_skala' => $value,
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -88,9 +88,16 @@ class SkalaIndikatorController extends Controller
      */
     public function show($id)
     {
+        $skalaIndikator = SkalaIndikator::with([
+            'indikatorSubkriteria', 
+            'indikatorSubkriteria.subkriteria'
+        ])
+        ->where('id_skala_indikator', $id)
+        ->first();
+
         return view('pages.superadmin.skala-indikator.show', [
             'title' => 'Detail Skala Indikator',
-            'skalaIndikator' => SkalaIndikator::with(['indikatorSubkriteria', 'indikatorSubkriteria.subkriteria'])->where('id_skala_indikator', $id)->first(),
+            'skalaIndikator' => $skalaIndikator,
         ]);
     }
 
@@ -99,40 +106,38 @@ class SkalaIndikatorController extends Controller
      */
     public function edit($id)
     {
+        $skalaIndikator = SkalaIndikator::with([
+            'indikatorSubkriteria', 
+            'indikatorSubkriteria.subkriteria'
+        ])
+        ->where('id_skala_indikator', $id)
+        ->first();
+
         return view('pages.superadmin.skala-indikator.edit', [
             'title' => 'Ubah Skala Indikator',
-            'skalaIndikator' => SkalaIndikator::with(['indikatorSubkriteria', 'indikatorSubkriteria.subkriteria'])->where('id_skala_indikator', $id)->first()
+            'skalaIndikator' => $skalaIndikator,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UpdateSkalaIndikatorRequest $request, $id)
     {
-        $validatedData = $request->validate([
-            'id_indikator_subkriteria' => '',
-        ]);
-
         DB::beginTransaction();
 
         try {
-            SkalaIndikator::where('id_skala_indikator', $id)->update($validatedData);
+            SkalaIndikator::where('id_skala_indikator', $id)->update($request->only(['id_indikator_subkriteria']));
             $idSkalaIndikator = $id;
-
-            $validatedSkalaIndikatorDetail = $request->validate([
-                'skala' => '',
-                'deskripsi_skala' => '',
-            ]);
 
             $idSkalaIndikatorDetail = SkalaIndikatorDetail::select('id_skala_indikator_detail')->where('id_skala_indikator', $idSkalaIndikator)->get()->toArray();
 
-            foreach ($validatedSkalaIndikatorDetail['deskripsi_skala'] as $key => $value) {
+            foreach ($request['deskripsi_skala'] as $key => $value) {
                 SkalaIndikatorDetail::updateOrCreate(
                     ['id_skala_indikator_detail' => $idSkalaIndikatorDetail[$key]['id_skala_indikator_detail']],
                     [
                         'id_skala_indikator' => $idSkalaIndikator,
-                        'skala' => $validatedSkalaIndikatorDetail['skala'][$key],
+                        'skala' => $request['skala'][$key],
                         'deskripsi_skala' => $value,
                         'updated_at' => now(),
                     ]
