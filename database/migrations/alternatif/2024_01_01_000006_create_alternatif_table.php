@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('tanggal_masuk_kerja');
             $table->bigInteger('nip');
             $table->string('jabatan', 50);
-            $table->string('pendidikan', 10);
+            $table->string('pendidikan', 100);
             $table->timestamps();
         });
     }
