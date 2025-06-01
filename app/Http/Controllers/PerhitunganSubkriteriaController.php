@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BobotPrioritasSubkriteria;
 use App\Models\PerhitunganSubkriteria;
 use App\Models\RatioIndex;
 use App\Models\Subkriteria;
@@ -28,10 +29,50 @@ class PerhitunganSubkriteriaController extends Controller
      */
     public function index()
     {
+        $intensitasKepentingan = [
+            [
+                'key' => '1',
+                'value' => '1 - Sama penting',
+            ],
+            [
+                'key' => '2',
+                'value' => '2 - Mendekati sedikit lebih penting (Grey Area)',
+            ],
+            [
+                'key' => '3',
+                'value' => '3 - Sedikit lebih penting',
+            ],
+            [
+                'key' => '4',
+                'value' => '4 - Mendekati lebih penting (Grey Area)',
+            ],
+            [
+                'key' => '5',
+                'value' => '5 - Lebih penting',
+            ],
+            [
+                'key' => '6',
+                'value' => '6 - Mendekati jelas lebih penting (Grey Area)',
+            ],
+            [
+                'key' => '7',
+                'value' => '7 - Jelas lebih penting',
+            ],
+            [
+                'key' => '8',
+                'value' => '8 - Mendekati mutlak penting (Grey Area)',
+            ],
+            [
+                'key' => '9',
+                'value' => '9 - Mutlak penting',
+            ],
+        ];
+
         $subkriteria = Subkriteria::with(['kriteria'])->orderBy('kode_kriteria', 'asc')->get()->groupBy('kode_kriteria');
         
         return view('pages.kepala-sekolah.perhitungan-subkriteria.index', [
             'title' => 'Perbandingan Subkriteria',
+            'intensitasKepentingan' => $intensitasKepentingan,
             'subkriteria' => $subkriteria,
             'perhitunganSubkriteria' => $this->perhitunganSubkriteria,
         ]);
@@ -192,6 +233,16 @@ class PerhitunganSubkriteriaController extends Controller
      */
     public function destroy(PerhitunganSubkriteria $perhitunganSubkriteria)
     {
-        //
+        // Truncate table perhitungan_kriteria
+        PerhitunganSubkriteria::truncate();
+
+        // Truncate table bobot_prioritas_kriteria
+        BobotPrioritasSubkriteria::truncate();
+
+        // Forget cache hasil_perhitungan_kriteria
+        Cache::forget('hasil_perhitungan_subkriteria');
+
+        $notif = notify()->success('Perbandingan subkriteria berhasil direset');
+        return redirect()->back()->withInput()->with('notif', $notif);
     }
 }
