@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Alternatif\StoreAlternatifRequest;
+use App\Http\Requests\Alternatif\UpdateAlternatifRequest;
 use App\Models\Alternatif;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AlternatifController extends Controller
@@ -17,7 +17,7 @@ class AlternatifController extends Controller
 
     public function __construct()
     {
-        // Dapatkan nama karyawan kecuali superadmin, admin, dan IT
+       // Get nama karyawan except superadmin, admin, and IT
         $this->namaKaryawan = User::whereHas('roles', function ($query) {
             $query->whereNotIn('name', ['superadmin', 'admin', 'IT']);
         })->orderBy('fullname', 'ASC')->get();
@@ -28,9 +28,11 @@ class AlternatifController extends Controller
      */
     public function index()
     {
+        $alternatif = Alternatif::orderBy('id_alternatif', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString();
+
         return view('pages.superadmin.alternatif.index', [
             'title' => 'Pegawai',
-            'alternatif' => Alternatif::orderBy('id_alternatif', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
+            'alternatif' => $alternatif,
         ]);
     }
 
@@ -42,7 +44,7 @@ class AlternatifController extends Controller
         $alternatif = Alternatif::get();
         $enumJenisKelamin = DB::select("SHOW COLUMNS FROM alternatif WHERE Field = 'jenis_kelamin'")[0]->Type;
 
-        // ambil kode alternatif terakhir
+        // Get last kode_alternatif
         $lastKodeAlaternatif = Alternatif::orderBy('id_alternatif', 'DESC')->first();
         $newKodeAlternatif = $lastKodeAlaternatif ? ++$lastKodeAlaternatif->kode_alternatif : 'A1';
 
@@ -58,35 +60,10 @@ class AlternatifController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAlternatifRequest $request)
     {
-        $validatedData = $request->validate([
-            'kode_alternatif' => 'required|unique:alternatif,kode_alternatif',
-            'nama_alternatif' => 'required|unique:alternatif,nama_alternatif',
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'tanggal_masuk_kerja' => 'required|date',
-            'nip' => 'required|numeric|unique:alternatif,nip',
-            'jabatan' => 'required',
-            'pendidikan' => 'required|max:10',
-        ], [
-            'kode_alternatif.required' => 'Kode alternatif harus diisi',
-            'kode_alternatif.unique' => 'Kode alternatif sudah ada',
-            'nama_alternatif.required' => 'Nama karyawan harus diisi',
-            'nama_alternatif.unique' => 'Nama karyawan sudah ada',
-            'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
-            'jenis_kelamin.in' => 'Jenis kelamin harus Laki-laki atau Perempuan',
-            'tanggal_masuk_kerja.required' => 'Tanggal masuk kerja harus diisi',
-            'tanggal_masuk_kerja.date' => 'Tanggal masuk kerja harus berupa tanggal',
-            'nip.required' => 'Nomor induk pegawai harus diisi',
-            'nip.numeric' => 'Nomor induk pegawai harus berupa angka',
-            'nip.unique' => 'Nomor induk pegawai sudah ada',
-            'jabatan.required' => 'Jabatan harus diisi',
-            'pendidikan.required' => 'Pendidikan harus diisi',
-            'pendidikan.max' => 'Pendidikan maksimal 10 karakter',
-        ]);
-
         try {
-            Alternatif::create($validatedData);
+            Alternatif::create($request->validated());
 
             $notif = notify()->success('Data pegawai berhasil ditambahkan');
             return redirect()->route('alternatif.index')->withInput()->with('notif', $notif);
@@ -101,9 +78,11 @@ class AlternatifController extends Controller
      */
     public function show($id)
     {
+        $alternatif = Alternatif::where('id_alternatif', $id)->first();
+
         return view('pages.superadmin.alternatif.show', [
             'title' => 'Detail Pegawai',
-            'alternatif' => Alternatif::where('id_alternatif', $id)->first(),
+            'alternatif' => $alternatif,
         ]);
     }
 
@@ -112,12 +91,15 @@ class AlternatifController extends Controller
      */
     public function edit($id)
     {
+        $alternatif = Alternatif::where('id_alternatif', $id)->first();
+
         $enumJenisKelamin = DB::select("SHOW COLUMNS FROM alternatif WHERE Field = 'jenis_kelamin'")[0]->Type;
+        $jenisKelamin = explode("','", substr($enumJenisKelamin, 6, (strlen($enumJenisKelamin)-8)));
 
         return view('pages.superadmin.alternatif.edit', [
             'title' => 'Ubah Pegawai',
-            'alternatif' => Alternatif::where('id_alternatif', $id)->first(),
-            'jenisKelamin' => explode("','", substr($enumJenisKelamin, 6, (strlen($enumJenisKelamin)-8))),
+            'alternatif' => $alternatif,
+            'jenisKelamin' => $jenisKelamin,
             'namaKaryawan' => $this->namaKaryawan,
         ]);
     }
@@ -125,33 +107,10 @@ class AlternatifController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UpdateAlternatifRequest $request, $id)
     {
-        $validatedData = $request->validate([
-            'kode_alternatif' => 'required',
-            'nama_alternatif' => 'required',
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'tanggal_masuk_kerja' => 'required|date',
-            'nip' => 'required|numeric',
-            'jabatan' => 'required',
-            'pendidikan' => 'required|max:10',
-        ], [
-            'kode_alternatif.required' => 'Kode alternatif harus diisi',
-            'nama_alternatif.required' => 'Nama karyawan harus diisi',
-            'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
-            'jenis_kelamin.in' => 'Jenis kelamin harus Laki-laki atau Perempuan',
-            'tanggal_masuk_kerja.required' => 'Tanggal masuk kerja harus diisi',
-            'tanggal_masuk_kerja.date' => 'Tanggal masuk kerja harus berupa tanggal',
-            'nip.required' => 'Nomor induk pegawai harus diisi',
-            'nip.numeric' => 'Nomor induk pegawai harus berupa angka',
-            'jabatan.required' => 'Jabatan harus diisi',
-            'pendidikan.required' => 'Pendidikan harus diisi',
-            'pendidikan.max' => 'Pendidikan maksimal 10 karakter',
-        ]);
-
         try {
-            Alternatif::where('id_alternatif', $id)->update($validatedData);
-            DB::commit();
+            Alternatif::where('id_alternatif', $id)->update($request->validated());
 
             $notif = notify()->success('Data pegawai berhasil diubah');
             return redirect()->route('alternatif.index')->withInput()->with('notif', $notif);
