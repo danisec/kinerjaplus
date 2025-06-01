@@ -11,7 +11,7 @@ class ShowTahunAjaranKepalaSekolahHandler
     {
         $tahunAjaranBreadcrumbs = [
             'tahun_ajaran' => $firstYear . '/' . $secondYear,
-            'semester' => $semester,
+            'semester' => ucfirst($semester),
         ];   
 
         $checkAuthAlternatif = auth()->user()->alternatif->kode_alternatif;
