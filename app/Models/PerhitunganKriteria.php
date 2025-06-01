@@ -10,6 +10,7 @@ class PerhitunganKriteria extends Model
     use HasFactory;
     
     protected $table = 'perhitungan_kriteria';
+    protected $primaryKey = 'id_perhitungan_kriteria';
     protected $guarded = ['id_perhitungan_kriteria'];
 
     public function kriteriaPertama()
