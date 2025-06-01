@@ -41,15 +41,44 @@ class DashboardController extends Controller
     public function index()
     {
         if (Auth::user()->hasAnyRole('superadmin', 'IT', 'admin')){
+            $countUser = User::count();
+            $countAlternatif = Alternatif::count();
+            $countKriteria = Kriteria::count();
+            $countSubkriteria = Subkriteria::count();
+
+            $alternatif = Alternatif::orderBy('id_alternatif', 'DESC')
+            ->filter(request(['search']))
+            ->paginate(10)
+            ->withQueryString();
+
+            $user = User::join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->select('users.*', 'roles.name as role')
+            ->orderBy('fullname', 'ASC')
+            ->filter(request(['search']))
+            ->paginate(10)
+            ->withQueryString();
+
+            $roleColors = [
+                'superadmin' => 'bg-rose-100 text-rose-600',
+                'admin' => 'bg-rose-100 text-rose-600',
+                'yayasan' => 'bg-emerald-100 text-emerald-600',
+                'deputi' => 'bg-indigo-100 text-indigo-600',
+                'kepala sekolah' => 'bg-lime-100 text-lime-600',
+                'guru' => 'bg-fuchsia-100 text-fuchsia-600',
+                'IT' => 'bg-sky-100 text-sky-600',
+                'default' => 'bg-zinc-100 text-zinc-600',
+            ];
 
             return view('pages.dashboard.home.index-admin', [
                 'title' => 'Dashboard',
-                'countUser' => User::count(),
-                'countAlternatif' => Alternatif::count(),
-                'countKriteria' => Kriteria::count(),
-                'countSubkriteria' => Subkriteria::count(),
-                'alternatif' => Alternatif::orderBy('id_alternatif', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
-                'user' => User::orderBy('fullname', 'ASC')->filter(request(['search']))->paginate(10)->withQueryString(),
+                'countUser' => $countUser,
+                'countAlternatif' => $countAlternatif,
+                'countKriteria' => $countKriteria,
+                'countSubkriteria' => $countSubkriteria,
+                'alternatif' => $alternatif,
+                'user' => $user,
+                'roleColors' => $roleColors,
             ]);
         }
 
