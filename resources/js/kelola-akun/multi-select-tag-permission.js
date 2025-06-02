@@ -105,10 +105,10 @@ function MultiSelectTag(el, customs = { shadow: false, rounded: true }) {
         body = document.createElement("div");
         body.classList.add("body");
         if (customs.shadow) {
-            body.classList.add("shadow");
+            body.classList.add("shadow-sm");
         }
         if (customs.rounded) {
-            body.classList.add("rounded");
+            body.classList.add("rounded-sm");
         }
 
         // .input-container
@@ -150,10 +150,10 @@ function MultiSelectTag(el, customs = { shadow: false, rounded: true }) {
         drawer = document.createElement("div");
         drawer.classList.add(...["drawer", "hidden"]);
         if (customs.shadow) {
-            drawer.classList.add("shadow");
+            drawer.classList.add("shadow-sm");
         }
         if (customs.rounded) {
-            drawer.classList.add("rounded");
+            drawer.classList.add("rounded-sm");
         }
         drawer.append(inputBody);
         ul = document.createElement("ul");
