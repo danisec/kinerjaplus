@@ -8,9 +8,9 @@ $(document).ready(function () {
     const prevPageButton = $("#prevPage");
     const nextPageButton = $("#nextPage");
 
-    // Fungsi untuk mengupdate tampilan pagination
+    // Function update pagination
     function updatePagination() {
-        // Tampilkan halaman saat ini
+        // Show current page
         kriteriaPages.forEach((page, index) => {
             if (index + 1 === currentPage) {
                 $(page).show();
@@ -19,17 +19,17 @@ $(document).ready(function () {
             }
         });
 
-        // Aktifkan/nonaktifkan tombol navigasi dan ubah warna
+        // Update button states
         if (currentPage === 1) {
             prevPageButton.prop("disabled", true);
             prevPageButton.removeClass("bg-indigo-600 hover:bg-indigo-700");
             prevPageButton.addClass(
-                "!text-gray-900 bg-slate-200 hover:bg-slate-300",
+                "text-gray-900! bg-slate-200 hover:bg-slate-300",
             );
         } else {
             prevPageButton.prop("disabled", false);
             prevPageButton.removeClass(
-                "!text-gray-900 bg-slate-200 hover:bg-slate-300",
+                "text-gray-900! bg-slate-200 hover:bg-slate-300",
             );
             prevPageButton.addClass("bg-indigo-600 hover:bg-indigo-700");
         }
@@ -38,18 +38,18 @@ $(document).ready(function () {
             nextPageButton.prop("disabled", true);
             nextPageButton.removeClass("bg-indigo-600 hover:bg-indigo-700");
             nextPageButton.addClass(
-                "!text-gray-900 bg-slate-200 hover:bg-slate-300",
+                "text-gray-900! bg-slate-200 hover:bg-slate-300",
             );
         } else {
             nextPageButton.prop("disabled", false);
             nextPageButton.removeClass(
-                "!text-gray-900 bg-slate-200 hover:bg-slate-300",
+                "text-gray-900! bg-slate-200 hover:bg-slate-300",
             );
             nextPageButton.addClass("bg-indigo-600 hover:bg-indigo-700");
         }
     }
 
-    // Event listener untuk tombol "Sebelumnya"
+    // Initialize pagination
     prevPageButton.on("click", function () {
         if (currentPage > 1) {
             currentPage--;
@@ -57,7 +57,6 @@ $(document).ready(function () {
         }
     });
 
-    // Event listener untuk tombol "Selanjutnya"
     nextPageButton.on("click", function () {
         if (currentPage < totalPages) {
             currentPage++;
@@ -65,7 +64,7 @@ $(document).ready(function () {
         }
     });
 
-    // Event listener untuk perubahan dropdown alternatif
+    // Handle change event for alternatif kedua
     $("#alternatif_kedua").change(function () {
         let kodeAlternatif = $(this).val();
 
@@ -135,11 +134,11 @@ $(document).ready(function () {
                     $("#kriteriaContainer").append(kriteriaHTML);
                 });
 
-                // Update kriteriaPages setelah data di-load
+                // Update kriteria pages
                 kriteriaPages = $(".kriteria-page").toArray();
                 totalPages = kriteriaPages.length;
 
-                // Inisialisasi pagination
+                // Initialize pagination
                 currentPage = 1;
                 updatePagination();
             },
