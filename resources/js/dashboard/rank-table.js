@@ -34,10 +34,6 @@ $(document).ready(function () {
             idTanggalPenilaian = currentIdTanggalPenilaian;
         }
 
-        // let tahunAjaranParts = tahunAjaran.split("/");
-        // let firstYear = tahunAjaranParts[0];
-        // let secondYear = tahunAjaranParts[1];
-
         $.ajax({
             url: `/dashboard/${idTanggalPenilaian}/getRankTahunAjaranTable?page=${page}`,
             type: "GET",
@@ -66,24 +62,34 @@ $(document).ready(function () {
 
             data.forEach(function (item, index) {
                 let row = `
-                    <tr class="border-b bg-white hover:bg-slate-100">
-                        <td class="whitespace-nowrap px-6 py-4 font-medium text-gray-900" scope="row">
-                            ${startIndex + index + 1}
+                    <tr>
+                        <td class="py-3">
+                            <div class="flex items-center">
+                                <p class="xs:text-sm sm:text-theme-md capitalize text-gray-700 dark:text-gray-400">
+                                    ${item.tahun_ajaran} - ${item.semester}
+                                </p>
+                            </div>
                         </td>
-                        <td class="px-6 py-4">
-                            ${item.tahun_ajaran}
+                        <td class="py-3">
+                            <div class="flex items-center">
+                                <p class="xs:text-sm sm:text-theme-md capitalize text-gray-700 dark:text-gray-400">
+                                    ${item.nama}
+                                </p>
+                            </div>
                         </td>
-                        <td class="px-6 py-4 capitalize">
-                            ${item.semester}
+                        <td class="py-3">
+                            <div class="flex items-center">
+                                <p class="xs:text-sm sm:text-theme-md capitalize text-gray-700 dark:text-gray-400">
+                                    ${item.nilai}
+                                </p>
+                            </div>
                         </td>
-                        <td class="px-6 py-4">
-                            ${item.nama}
-                        </td>
-                        <td class="px-6 py-4">
-                            ${item.nilai}
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            ${item.rank}
+                        <td class="py-3">
+                            <div class="flex items-center">
+                                <p class="xs:text-sm sm:text-theme-md capitalize text-gray-700 dark:text-gray-400">
+                                    ${item.rank}
+                                </p>
+                            </div>
                         </td>
                     </tr>
                     `;
@@ -105,17 +111,16 @@ $(document).ready(function () {
         let paginationLinks = $("#paginationLinks");
         paginationLinks.empty();
 
-        // Membuat link untuk setiap halaman
+        // pagination
         for (let i = 1; i <= pagination.lastPage; i++) {
             let activeClass =
                 i === pagination.currentPage
-                    ? "bg-indigo-700 text-white"
-                    : "text-gray-700";
-            let pageLink = `<a href="#" class="px-3 py-1 mx-1 rounded ${activeClass}" data-page="${i}">${i}</a>`;
+                    ? "bg-brand-500/[0.08] relative -ml-px inline-flex cursor-default items-center rounded-lg px-4 py-2 text-sm font-medium leading-5 text-indigo-500"
+                    : "hover:bg-brand-500/[0.08] hover:text-brand-500 dark:hover:text-brand-500 relative -ml-px inline-flex items-center rounded-lg bg-white px-4 py-2 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out";
+            let pageLink = `<a href="#" class="px-3 py-1 mx-1 rounded-sm ${activeClass}" data-page="${i}">${i}</a>`;
             paginationLinks.append(pageLink);
         }
 
-        // Menambahkan event listener untuk setiap link halaman
         paginationLinks.find("a").click(function (e) {
             e.preventDefault();
             let page = $(this).data("page");
