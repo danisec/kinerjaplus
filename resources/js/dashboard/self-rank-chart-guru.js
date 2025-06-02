@@ -116,6 +116,45 @@ $(document).ready(function () {
                     color: "#4f46e5",
                 },
             ],
+            responsive: {
+                rules: [
+                    {
+                        condition: {
+                            maxWidth: 600,
+                        },
+                        chartOptions: {
+                            chart: {
+                                spacingLeft: 10,
+                                spacingRight: 10,
+                            },
+                            xAxis: {
+                                labels: {
+                                    style: {
+                                        fontSize: "10px",
+                                    },
+                                },
+                            },
+                            yAxis: {
+                                labels: {
+                                    style: {
+                                        fontSize: "10px",
+                                    },
+                                },
+                            },
+                            plotOptions: {
+                                column: {
+                                    pointWidth: 30,
+                                    dataLabels: {
+                                        style: {
+                                            fontSize: "9px",
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
         });
     }
 });
