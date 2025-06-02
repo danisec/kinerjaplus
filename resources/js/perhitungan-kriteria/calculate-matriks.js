@@ -19,7 +19,6 @@ $(document).ready(function () {
             calculatedInput.val(calculatedValue);
         }
 
-        // Buatkan kondisi NaN jika inputan kosong
         if (isNaN(calculatedValue)) {
             calculatedInput.val("");
         }
