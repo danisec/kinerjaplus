@@ -7,9 +7,9 @@ if (
     window.location.pathname.includes("/dashboard/data-group-alternatif/") ||
     window.location.pathname.includes("/dashboard/kelola-akun/view-akun/")
 ) {
-    import("./textAreaHeight")
+    import("./text-area-height")
         .then((module) => {})
         .catch((error) => {
-            console.error("Gagal mengimpor textAreaHeight");
+            console.error("Gagal mengimpor text area height");
         });
 }
