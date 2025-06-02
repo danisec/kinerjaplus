@@ -9,7 +9,7 @@ $(document).ready(function () {
     const nextPageButton = $("#nextPage");
 
     function updatePagination() {
-        // Tampilkan halaman saat ini
+        // Show current page
         kriteriaPages.each(function (index, page) {
             if (index + 1 === currentPage) {
                 $(page).show();
@@ -18,17 +18,17 @@ $(document).ready(function () {
             }
         });
 
-        // Aktifkan/nonaktifkan tombol navigasi dan ubah warna
+        // Update button states
         if (currentPage === 1) {
             prevPageButton.prop("disabled", true);
             prevPageButton.removeClass("bg-indigo-600 hover:bg-indigo-700");
             prevPageButton.addClass(
-                "!text-gray-900 bg-slate-200 hover:bg-slate-300",
+                "text-gray-900! bg-slate-200 hover:bg-slate-300",
             );
         } else {
             prevPageButton.prop("disabled", false);
             prevPageButton.removeClass(
-                "!text-gray-900 bg-slate-200 hover:bg-slate-300",
+                "text-gray-900! bg-slate-200 hover:bg-slate-300",
             );
             prevPageButton.addClass("bg-indigo-600 hover:bg-indigo-700");
         }
@@ -37,18 +37,18 @@ $(document).ready(function () {
             nextPageButton.prop("disabled", true);
             nextPageButton.removeClass("bg-indigo-600 hover:bg-indigo-700");
             nextPageButton.addClass(
-                "!text-gray-900 bg-slate-200 hover:bg-slate-300",
+                "text-gray-900! bg-slate-200 hover:bg-slate-300",
             );
         } else {
             nextPageButton.prop("disabled", false);
             nextPageButton.removeClass(
-                "!text-gray-900 bg-slate-200 hover:bg-slate-300",
+                "text-gray-900! bg-slate-200 hover:bg-slate-300",
             );
             nextPageButton.addClass("bg-indigo-600 hover:bg-indigo-700");
         }
     }
 
-    // Navigasi ke halaman sebelumnya
+    // Prev button
     prevPageButton.on("click", function () {
         if (currentPage > 1) {
             currentPage--;
@@ -56,7 +56,7 @@ $(document).ready(function () {
         }
     });
 
-    // Navigasi ke halaman berikutnya
+    // Next button
     nextPageButton.on("click", function () {
         if (currentPage < totalPages) {
             currentPage++;
@@ -64,6 +64,5 @@ $(document).ready(function () {
         }
     });
 
-    // Inisialisasi pagination
     updatePagination();
 });
