@@ -1,13 +1,13 @@
 if (window.location.pathname.includes("/dashboard/data-skala-indikator/")) {
-    import("./getIndikatorSubkriteria")
+    import("./get-indikator-subkriteria")
         .then((module) => {})
         .catch((error) => {
-            console.error("Gagal mengimpor getIndikatorSubkriteria");
+            console.error("Gagal mengimpor get indikator subkriteria");
         });
 
-    import("./tambahSkalaIndikator")
+    import("./add-skalaIndikator")
         .then((module) => {})
         .catch((error) => {
-            console.error("Gagal mengimpor tambahSkalaIndikator");
+            console.error("Gagal mengimpor add skala indikator");
         });
 }
