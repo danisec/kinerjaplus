@@ -1,7 +1,7 @@
 if (window.location.pathname.includes("/dashboard/perbandingan-alternatif/")) {
-    import("./calculateMatriks")
+    import("./calculate-matriks")
         .then((module) => {})
         .catch((error) => {
-            console.error("Gagal mengimpor calculateMatriks");
+            console.error("Gagal mengimpor calculate matriks");
         });
 }
