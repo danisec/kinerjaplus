@@ -3,10 +3,10 @@ if (
         "/dashboard/data-group-alternatif/ubah-group-alternatif/",
     )
 ) {
-    import("./getAlternatif")
+    import("./get-alternatif")
         .then((module) => {})
         .catch((error) => {
-            console.error("Gagal mengimpor getAlternatif");
+            console.error("Gagal mengimpor get alternatif");
         });
 }
 
@@ -17,13 +17,13 @@ if (
         "/dashboard/data-group-alternatif/ubah-group-alternatif/",
     )
 ) {
-    import("./multiSelectTag")
+    import("./multi-select-tag")
         .then((module) => {
             const MultiSelectTag = module.default;
 
             new MultiSelectTag("namaKaryawan", {
                 rounded: true,
-                placeholder: "Cari Nama Karyawan",
+                placeholder: "Cari Nama Pegawai",
                 tagColor: {
                     textColor: "#FFFFFF",
                     borderColor: "#34d399",
@@ -32,7 +32,7 @@ if (
             });
         })
         .catch((error) => {
-            console.error("Gagal mengimpor multiSelectTag", error);
+            console.error("Gagal mengimpor multi select tag", error);
         });
 }
 
@@ -41,7 +41,7 @@ if (
         "/dashboard/data-group-alternatif/group-penilaian/",
     )
 ) {
-    import("./multiSelectTag")
+    import("./multi-select-tag")
         .then((module) => {
             const MultiSelectTag = module.default;
             let groupKaryawanArray = window.groupKaryawanArray;
@@ -59,6 +59,6 @@ if (
             });
         })
         .catch((error) => {
-            console.error("Gagal mengimpor multiSelectTag", error);
+            console.error("Gagal mengimpor multi select tag", error);
         });
 }
