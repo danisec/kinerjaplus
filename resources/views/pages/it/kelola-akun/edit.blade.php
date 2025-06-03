@@ -1,137 +1,83 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('kelolaAkun.index') }}">Kelola Akun</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('kelolaAkun.index') }}">Kelola Akun</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Ubah Akun</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Ubah Akun</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-    <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Ubah Akun</h4>
-
-        <form class="mt-8 space-y-6" action="{{ route('kelolaAkun.update', $user->id) }}" method="POST">
-            @method('PUT')
-            @csrf
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="fullname">
-                    Nama Lengkap</label>
-                <input class="@error('fullname') border-red-500 @enderror field-input-slate w-full" name="fullname"
-                    type="text" value="{{ $user->fullname }}" required>
-
-                @error('fullname')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="username">
-                    Nama Pengguna</label>
-                <input class="@error('username') border-red-500 @enderror field-input-slate w-full" name="username"
-                    type="text" value="{{ $user->username }}" required>
-
-                @error('username')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="email">
-                    Email</label>
-                <input class="@error('email') border-red-500 @enderror field-input-slate w-full" name="email"
-                    type="email" value="{{ $user->email }}" required>
-
-                @error('email')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="role">
-                    Peran Pengguna</label>
-                <select class="@error('role') border-red-500 @enderror field-input-slate w-full" name="role"
-                    required>
-
-                    @foreach ($roles as $role)
-                        <option class="capitalize" value="{{ $role->name }}"
-                            {{ old('role', $user->roles->first()->name ?? '') == $role->name ? 'selected' : '' }}>
-                            {{ $role->name }}
-                        </option>
-                    @endforeach
-                </select>
-
-                @error('role')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="permission">
-                    Permission Pengguna</label>
-                <select class="@error('permission') border-red-500 @enderror field-input-slate w-full" id="permission"
-                    name="permission[]" multiple required>
-                    @foreach ($allPermissions as $permission)
-                        <option value="{{ $permission->id }}"
-                            {{ in_array($permission->id, old('permission', $selectedPermissions)) ? 'selected' : '' }}>
-                            {{ $permission->name }}
-                        </option>
-                    @endforeach
-                </select>
-
-                @error('permission')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="password">
-                    Password</label>
-
-                <div class="flex flex-row items-center justify-end">
-                    <input class="@error('password') border-red-500 @enderror field-input-slate w-full"
-                        id="passwordInput" name="password" type="password" value="{{ old('password') }}"
-                        placeholder="********">
-
-                    <button class="absolute mr-2.5" id="togglePasswordVisibility" type="button">
-                        <x-atoms.svg.eye id="eyeIcon" />
-                    </button>
+    <form class="my-8" action="{{ route('kelolaAkun.update', $user->id) }}" method="POST">
+        @method('PUT')
+        @csrf
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Ubah Akun
+                    </h3>
                 </div>
 
-                @error('password')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    <div>
+                        <x-molecules.input.input name="fullname" label="Nama Lengkap" :type="'text'"
+                            :value="$user->fullname" required />
+                    </div>
 
-            <div class="flex flex-row gap-4">
-                <a href="{{ route('kelolaAkun.index') }}">
-                    <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                </a>
-                <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Ubah'" />
+                    <div>
+                        <x-molecules.input.input name="username" label="Nama Pengguna" :type="'text'"
+                            :value="$user->username" required />
+                    </div>
+
+                    <div>
+                        <x-molecules.input.input name="email" label="Email" :type="'email'" :value="$user->email"
+                            required />
+                    </div>
+
+                    <div>
+                        <x-molecules.select.select name="role" label="Peran Pengguna" :options="$roles->pluck('name', 'name')"
+                            :value="old('role', $user->roles->first()->name ?? '')" required />
+                    </div>
+
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                            for="nama karyawan">
+                            Izin Pengguna
+                        </label>
+                        <select
+                            class="@error('permission') border-red-500 @enderror shadow-theme-xs focus:ring-3 focus:outline-hidden h-11 w-full appearance-none rounded-lg border border-gray-300 px-4 py-2.5 pr-11 text-sm capitalize text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                            id="permission" name="permission[]" multiple required>
+
+                            @foreach ($allPermissions as $permission)
+                                <option value="{{ $permission->id }}"
+                                    {{ in_array($permission->id, old('permission', $selectedPermissions)) ? 'selected' : '' }}>
+                                    {{ $permission->name }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        @error('permission')
+                            <p class="invalid-feedback">
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
+                    <div class="flex flex-row justify-center gap-4">
+                        <a href="{{ route('kelolaAkun.index') }}">
+                            <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                        </a>
+                        <x-atoms.button.button-primary :type="'submit'" :name="'Ubah'" />
+                    </div>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 
 </x-app-dashboard>

@@ -10,4 +10,5 @@ return [
     Jenssegers\Agent\AgentServiceProvider::class,
     Spatie\Permission\PermissionServiceProvider::class,
     Barryvdh\Debugbar\ServiceProvider::class,
+    Mckenziearts\Notify\LaravelNotifyServiceProvider::class
 ];

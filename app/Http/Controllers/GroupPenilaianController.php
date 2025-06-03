@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GroupPenilaian\StoreGroupPenilaianRequest;
+use App\Http\Requests\GroupPenilaian\UpdateGroupPenilaianRequest;
 use App\Models\GroupKaryawan;
 use App\Models\GroupPenilaian;
 use App\Models\GroupPenilaianDetail;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class GroupPenilaianController extends Controller
@@ -23,15 +24,21 @@ class GroupPenilaianController extends Controller
      */
     public function create($id)
     {
-        $groupKaryawan = GroupKaryawan::with(['alternatif', 'groupKaryawanDetail', 'groupKaryawanDetail.alternatif'])->where('id_group_karyawan', $id)->first();
+        $groupKaryawan = GroupKaryawan::with([
+            'alternatif', 
+            'groupKaryawanDetail', 
+            'groupKaryawanDetail.alternatif'
+        ])
+        ->where('id_group_karyawan', $id)
+        ->first();
 
-        // Dapatkan data kepala sekolah dari $groupKaryawan
+        // Get kepala sekolah
         $kepalaSekolah = $groupKaryawan->alternatif;
         
-        // Dapatkan data karyawan dari $groupKaryawan
+        // Get data karyawan
         $namaKaryawan = $groupKaryawan->groupKaryawanDetail;
 
-        // Menggabungkan data kepala sekolah dan karyawan menjadi satu array
+        // Merge kepala sekolah and karyawan in groupKaryawanArray
         $groupKaryawanArray = [
             [
                 'kode_alternatif' => $kepalaSekolah->kode_alternatif,
@@ -58,34 +65,23 @@ class GroupPenilaianController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreGroupPenilaianRequest $request)
     {
-         $validatedData = $request->validate([
-            'id_group_karyawan' => 'required',
-            'alternatif_pertama.*' => 'required',
-        ]);
-
         DB::beginTransaction();
 
         try {
             $groupPenilaian = [];
-            foreach ($validatedData['alternatif_pertama'] as $key => $value) {
+            foreach ($request['alternatif_pertama'] as $key => $value) {
                 $groupPenilaian[] = GroupPenilaian::insertGetId([
-                    'id_group_karyawan' => $validatedData['id_group_karyawan'],
+                    'id_group_karyawan' => $request['id_group_karyawan'],
                     'alternatif_pertama' => $value,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
             }
 
-            $validatedGroupPenilaianDetail = $request->validate([
-                'alternatif_kedua.*' => 'required',
-            ], [
-                'alternatif_kedua.*.required' => 'Nama karyawan harus diisi',
-            ]);
-
             $groupPenilaianDetail = [];
-            foreach ($validatedGroupPenilaianDetail['alternatif_kedua'] as $key => $alternatifKedua) {
+            foreach ($request['alternatif_kedua'] as $key => $alternatifKedua) {
                 foreach ($alternatifKedua as $value) {
                     $groupPenilaianDetail[] = [
                         'id_group_penilaian' => $groupPenilaian[$key],
@@ -129,18 +125,20 @@ class GroupPenilaianController extends Controller
             'groupKaryawanDetail.alternatif', 
             'groupPenilaian', 
             'groupPenilaian.groupPenilaianDetail.alternatifKedua'
-        ])->where('id_group_karyawan', $id)->first();
+        ])
+        ->where('id_group_karyawan', $id)
+        ->first();
 
-        // Dapatkan data kepala sekolah dari $groupKaryawan
+        // Get data kepala sekolah
         $kepalaSekolah = $groupKaryawan->alternatif;
         
-        // Dapatkan data karyawan dari $groupKaryawan
+        // Get data karyawan
         $namaKaryawan = $groupKaryawan->groupKaryawanDetail;
 
-        // Dapatkan data group penilaian berdasarkan id_group_karyawan
+        // Get group penilaian by id
         $groupPenilaian = $groupKaryawan->groupPenilaian;
 
-        // Menggabungkan data kepala sekolah dan karyawan menjadi satu array
+        // Merge kepala sekolah and karyawan
         $groupKaryawanArray = [
             [
                 'kode_alternatif' => $kepalaSekolah->kode_alternatif,
@@ -159,11 +157,10 @@ class GroupPenilaianController extends Controller
             ];
         }
 
-        // Cocokkan groupPenilaian->alternatif_pertama dengan groupKaryawanArray->kode_alternatif
+        // Match each groupPenilaian's 'alternatif_pertama' with 'kode_alternatif' in groupKaryawanArray
         foreach ($groupPenilaian as $penilaian) {
             foreach ($groupKaryawanArray as &$karyawan) {
                 if ($penilaian->alternatif_pertama === $karyawan['kode_alternatif']) {
-                    // Tambahkan data groupPenilaianDetail ke dalam array group_penilaian
                     foreach ($penilaian->groupPenilaianDetail as $detail) {
                         $karyawan['group_penilaian'][] = [
                             'alternatif_kedua' => $detail->alternatif_kedua,
@@ -183,40 +180,29 @@ class GroupPenilaianController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UpdateGroupPenilaianRequest $request, $id)
     {
-    // Validasi data yang dikirim dari form
-    $validatedData = $request->validate([
-        'id_group_karyawan' => 'required',
-        'alternatif_pertama.*' => 'required',
-        'alternatif_kedua.*' => 'required|array',
-    ], [
-        'alternatif_kedua.*.required' => 'Nama karyawan harus diisi',
-    ]);
-
     DB::beginTransaction();
 
     try {
-        // Ambil data group_penilaian yang sudah ada berdasarkan id_group_karyawan
-        $existingGroupPenilaian = GroupPenilaian::where('id_group_karyawan', $validatedData['id_group_karyawan'])
-            ->get()
-            ->keyBy('alternatif_pertama'); // Gunakan alternatif_pertama sebagai key
+        // Get data group penilaian that already exists by id group karyawan
+        $existingGroupPenilaian = GroupPenilaian::where('id_group_karyawan', $request['id_group_karyawan'])
+        ->get()
+        ->keyBy('alternatif_pertama');
 
-        // Ambil data group_penilaian_detail yang sudah ada berdasarkan id_group_penilaian
+        // Get data group penilaian detail that already exists by id group penilaian
         $existingGroupPenilaianDetail = GroupPenilaianDetail::whereIn('id_group_penilaian', $existingGroupPenilaian->pluck('id_group_penilaian'))
-            ->get()
-            ->groupBy('id_group_penilaian');
+        ->get()
+        ->groupBy('id_group_penilaian');
 
-        // Proses update atau insert data group_penilaian
-        foreach ($validatedData['alternatif_pertama'] as $key => $alternatifPertama) {
+        // Update or create group penilaian
+        foreach ($request['alternatif_pertama'] as $key => $alternatifPertama) {
             if ($existingGroupPenilaian->has($alternatifPertama)) {
-                // Jika data sudah ada, update updated_at
                 GroupPenilaian::where('id_group_penilaian', $existingGroupPenilaian[$alternatifPertama]->id_group_penilaian)
                     ->update(['updated_at' => now()]);
             } else {
-                // Jika data belum ada, insert baru
                 $groupPenilaianId = GroupPenilaian::insertGetId([
-                    'id_group_karyawan' => $validatedData['id_group_karyawan'],
+                    'id_group_karyawan' => $request['id_group_karyawan'],
                     'alternatif_pertama' => $alternatifPertama,
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -227,17 +213,16 @@ class GroupPenilaianController extends Controller
             }
         }
 
-        // Proses update atau insert data group_penilaian_detail
-        foreach ($validatedData['alternatif_kedua'] as $key => $alternatifKeduaList) {
-            $idGroupPenilaian = $existingGroupPenilaian[$validatedData['alternatif_pertama'][$key]]->id_group_penilaian;
+        // Update or insert group penilaian detail
+        foreach ($request['alternatif_kedua'] as $key => $alternatifKeduaList) {
+            $idGroupPenilaian = $existingGroupPenilaian[$request['alternatif_pertama'][$key]]->id_group_penilaian;
 
-            // Ambil data alternatif_kedua yang sudah ada untuk id_group_penilaian ini
+            // Get data alternatif kedua that already exists for this id group penilaian
             $existingDetails = $existingGroupPenilaianDetail->get($idGroupPenilaian, collect());
 
-            // Bandingkan dengan data yang dikirim dari form
+            // Compare with data sent from the form
             foreach ($alternatifKeduaList as $alternatifKedua) {
                 if (!$existingDetails->contains('alternatif_kedua', $alternatifKedua)) {
-                    // Jika data belum ada, insert baru
                     GroupPenilaianDetail::create([
                         'id_group_penilaian' => $idGroupPenilaian,
                         'alternatif_kedua' => $alternatifKedua,
@@ -247,7 +232,7 @@ class GroupPenilaianController extends Controller
                 }
             }
 
-            // Hapus data yang tidak ada di form tetapi ada di database
+            // Delete data that is not in the form but exists in the database
             $existingDetails->whereNotIn('alternatif_kedua', $alternatifKeduaList)
                 ->each(function ($detail) {
                     GroupPenilaianDetail::where('id_group_penilaian_detail', $detail->id_group_penilaian_detail)

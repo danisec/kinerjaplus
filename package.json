@@ -10,22 +10,20 @@
   "devDependencies": {
     "@commitlint/cli": "^19.7.1",
     "@commitlint/config-conventional": "^19.7.1",
-    "@tailwindcss/forms": "^0.5.6",
-    "autoprefixer": "^10.4.15",
     "axios": "^1.1.2",
     "husky": "^9.1.7",
-    "laravel-vite-plugin": "^0.8.0",
-    "postcss": "^8.4.28",
+    "laravel-vite-plugin": "^1.2.0",
     "prettier": "^3.0.2",
     "prettier-plugin-blade": "^2.1.12",
-    "prettier-plugin-tailwindcss": "^0.6.1",
-    "tailwindcss": "^3.4.3",
-    "vite": "^4.0.0"
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "vite": "^5.4.19"
   },
   "dependencies": {
     "@alpinejs/focus": "^3.13.0",
+    "@tailwindcss/vite": "^4.1.5",
     "alpinejs": "^3.13.0",
-    "jquery": "^3.7.1"
+    "jquery": "^3.7.1",
+    "tailwindcss": "^4.1.5"
   },
   "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321"
 }

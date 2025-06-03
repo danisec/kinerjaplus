@@ -1,65 +1,73 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Profile</span>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Profile</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-    <div class="mx-auto my-8 w-11/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Akun dan Pengaturan</h4>
+    <div class="my-8">
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Profile
+                    </h3>
+                </div>
 
-        <div class="mt-8 space-y-6 border-b border-slate-200 text-center text-sm font-medium text-gray-700">
-            <ul class="flex flex-wrap">
-                <li class="me-2">
-                    <a class="{{ request()->segment(2) == 'my-profile' ? 'border-indigo-600 p-4 text-indigo-600' : 'border-transparent p-4 hover:border-slate-300 hover:text-gray-600' }} inline-block rounded-t-lg border-b-2"
-                        href="#">Detail Profile</a>
-                </li>
-                <li class="me-2">
-                    <a class="inline-block rounded-t-lg border-b-2 border-transparent p-4 hover:border-slate-300 hover:text-gray-600"
-                        href="{{ route('profile.edit', $profile->id) }}">Pengaturan</a>
-                </li>
-            </ul>
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    <nav
+                        class="[&amp;::-webkit-scrollbar-thumb]:rounded-full [&amp;::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&amp;::-webkit-scrollbar-thumb]:bg-gray-600 [&amp;::-webkit-scrollbar-track]:bg-white dark:[&amp;::-webkit-scrollbar-track]:bg-transparent [&amp;::-webkit-scrollbar]:h-1.5 flex overflow-x-auto rounded-lg bg-gray-100 p-1 dark:bg-gray-900">
+                        <a class="shadow-theme-xs inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-900 transition-colors duration-200 ease-in-out dark:bg-white/[0.03] dark:text-white"
+                            href="#"
+                            {{ request()->segment(2) == 'my-profile'
+                                ? 'bg-white text-gray-900 shadow-theme-xs dark:bg-white/[0.03] dark:text-white'
+                                : 'bg-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200' }}>
+                            Details
+                        </a>
+
+                        <a class="inline-flex items-center rounded-md bg-transparent px-3 py-2 text-sm font-medium text-gray-500 transition-colors duration-200 ease-in-out hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            href="{{ route('profile.edit', $profile->id) }}">
+                            Settings
+                        </a>
+                    </nav>
+
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-center">
+                            <img class="h-20 w-20 rounded-full border border-slate-200"
+                                src="{{ Avatar::create($profile->fullname)->toBase64() }}" alt="Avatar" />
+                        </div>
+
+                        <div>
+                            <x-molecules.input.input name="fullname" label="Nama Lengkap" :type="'text'"
+                                :value="$profile->fullname" readonly />
+                        </div>
+
+                        <div>
+                            <x-molecules.input.input name="username" label="Nama Pengguna" :type="'text'"
+                                :value="$profile->username" readonly />
+                        </div>
+
+                        <div>
+                            <x-molecules.input.input name="email" label="Email" :type="'email'" :value="$profile->email"
+                                readonly />
+                        </div>
+
+                        <div>
+                            <x-molecules.input.input name="role" label="Peran Pengguna" :type="'text'"
+                                :value="$profile->getRoleNames()->first()" readonly />
+                        </div>
+
+                        <div class="flex flex-row justify-center">
+                            <a href="{{ route('dashboard.index') }}">
+                                <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="mt-8 space-y-6 rounded-md border border-slate-200 px-32 py-8">
-            <div class="flex items-center justify-center">
-                <img class="h-20 w-20 rounded-full border border-slate-200"
-                    src="{{ Avatar::create($profile->fullname)->toBase64() }}" alt="Avatar" />
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="fullname">
-                    Nama Lengkap</label>
-                <input class="field-input-slate w-full" name="fullname" type="text" value="{{ $profile->fullname }}"
-                    @disabled(true) @readonly(true)>
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="username">
-                    Nama Pengguna</label>
-                <input class="field-input-slate w-full" name="username" type="text" value="{{ $profile->username }}"
-                    @disabled(true) @readonly(true)>
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="email">
-                    Email</label>
-                <input class="field-input-slate w-full" name="email" type="email" value="{{ $profile->email }}"
-                    @disabled(true) @readonly(true)>
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="role">
-                    Peran Pengguna</label>
-                <input class="field-input-slate w-full capitalize" name="role" type="text"
-                    value="{{ $profile->getRoleNames()->first() }}" @disabled(true) @readonly(true)>
-            </div>
-        </div>
-
     </div>
 
 </x-app-dashboard>

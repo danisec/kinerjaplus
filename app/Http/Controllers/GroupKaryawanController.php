@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GroupKaryawan\StoreGroupKaryawanRequest;
+use App\Http\Requests\GroupKaryawan\UpdateGroupKaryawanRequest;
 use App\Models\Alternatif;
 use App\Models\GroupKaryawan;
 use App\Models\GroupKaryawanDetail;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class GroupKaryawanController extends Controller
@@ -15,9 +16,18 @@ class GroupKaryawanController extends Controller
      */
     public function index()
     {
+        $groupKaryawan = GroupKaryawan::with([
+            'alternatif', 
+            'groupKaryawanDetail'
+        ])
+        ->orderBy('nama_group_karyawan', 'DESC')
+        ->filter(request(['search']))
+        ->paginate(10)
+        ->withQueryString();
+
         return view('pages.superadmin.group-karyawan.index', [
             'title' => 'Group Pegawai',
-            'groupKaryawan' => GroupKaryawan::with(['alternatif', 'groupKaryawanDetail'])->orderBy('nama_group_karyawan', 'DESC')->filter(request(['search']))->paginate(10)->withQueryString(),
+            'groupKaryawan' => $groupKaryawan,
         ]);
     }
 
@@ -26,19 +36,22 @@ class GroupKaryawanController extends Controller
      */
     public function create()
     {
-        // Dapatkan nama karyawan dengan role kepala sekolah di table users yang belum terdaftar di group karyawan
-        $kepalaSekolah = Alternatif::with(['users', 'groupKaryawan'])
-            ->whereHas('users', function($query) {
-                $query->whereHas('roles', function($query) {
-                    $query->where('name', 'kepala sekolah');
-                });
-            })
-            ->whereNotIn('kode_alternatif', function($query) {
-                $query->select('kepala_sekolah')->from('group_karyawan');
-            })
-            ->get();
+        // Get nama karyawan with role kepala sekolah in users table that is not registered in group karyawan
+        $kepalaSekolah = Alternatif::with([
+            'users', 
+            'groupKaryawan'
+        ])
+        ->whereHas('users', function($query) {
+            $query->whereHas('roles', function($query) {
+                $query->where('name', 'kepala sekolah');
+            });
+        })
+        ->whereNotIn('kode_alternatif', function($query) {
+            $query->select('kepala_sekolah')->from('group_karyawan');
+        })
+        ->get();
             
-        // Dapatkan nama karyawan yang belum terdaftar di group karyawan dan jangan tampilkan $kepalaSekolah yang belum terdaftar
+        // Get nama karyawan that is not registered in group karyawan and do not show kepala sekolah that is not registered
         $pimpinan = Alternatif::whereNotIn('kode_alternatif', function($query) {
             $query->select('kepala_sekolah')->from('group_karyawan');
         })
@@ -57,35 +70,21 @@ class GroupKaryawanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreGroupKaryawanRequest $request)
     {
-        $validatedData = $request->validate([
-            'nama_group_karyawan' => 'required',
-            'kepala_sekolah' => 'required',
-        ],[
-            'nama_group_karyawan.required' => 'Nama group karyawan harus diisi',
-            'kepala_sekolah.required' => 'Nama kepala sekolah harus diisi',
-        ]);
-
         DB::beginTransaction();
 
         try {    
-            // Menggunakan insertGetId agar bisa mendapatkan id group karyawan yang baru saja dibuat
+            // Get id group karyawan
             $idGroupKaryawan = GroupKaryawan::insertGetId([
-                'nama_group_karyawan' => $validatedData['nama_group_karyawan'],
-                'kepala_sekolah' => $validatedData['kepala_sekolah'],
+                'nama_group_karyawan' => $request['nama_group_karyawan'],
+                'kepala_sekolah' => $request['kepala_sekolah'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
 
-            $validatedGroupKaryawanDetail = $request->validate([
-                'kode_alternatif.*' => 'required',
-            ], [
-                'kode_alternatif.*.required' => 'Nama karyawan harus diisi',
-            ]);
-
             $groupKaryawanDetail = [];
-            foreach ($validatedGroupKaryawanDetail['kode_alternatif'] as $key => $value) {
+            foreach ($request['kode_alternatif'] as $key => $value) {
                 $groupKaryawanDetail[] = [
                     'id_group_karyawan' => $idGroupKaryawan,
                     'kode_alternatif' => $value,
@@ -112,9 +111,20 @@ class GroupKaryawanController extends Controller
      */
     public function show($id)
     {
+        $groupKaryawan = GroupKaryawan::with([
+            'groupKaryawanDetail', 
+            'groupKaryawanDetail.alternatif', 
+            'groupPenilaian', 
+            'groupPenilaian.alternatifPertama', 
+            'groupPenilaian.groupPenilaianDetail', 
+            'groupPenilaian.groupPenilaianDetail.alternatifKedua'
+        ])
+        ->where('id_group_karyawan', $id)
+        ->first();
+
         return view('pages.superadmin.group-karyawan.show', [
             'title' => 'Detail Group Pegawai',
-            'groupKaryawan' => GroupKaryawan::with(['groupKaryawanDetail', 'groupKaryawanDetail.alternatif', 'groupPenilaian', 'groupPenilaian.alternatifPertama', 'groupPenilaian.groupPenilaianDetail', 'groupPenilaian.groupPenilaianDetail.alternatifKedua'])->where('id_group_karyawan', $id)->first(),
+            'groupKaryawan' => $groupKaryawan,
         ]);
     }
 
@@ -123,22 +133,24 @@ class GroupKaryawanController extends Controller
      */
     public function edit($id)
     {
-        // Dapatkan nama karyawan dengan role kepala sekolah di table users
-        $kepalaSekolah = Alternatif::with(['users'])
-            ->whereHas('users', function($query) {
-                $query->whereHas('roles', function($query) {
-                    $query->where('name', 'kepala sekolah');
-                });
-            })
-            ->whereNotIn('kode_alternatif', function($query) {
-                $query->select('kode_alternatif')->from('group_karyawan_detail');
-            })
-            ->get();
+        // Get nama karyawan with role kepala sekolah
+        $kepalaSekolah = Alternatif::with([
+            'users'
+        ])
+        ->whereHas('users', function($query) {
+            $query->whereHas('roles', function($query) {
+                $query->where('name', 'kepala sekolah');
+            });
+        })
+        ->whereNotIn('kode_alternatif', function($query) {
+            $query->select('kode_alternatif')->from('group_karyawan_detail');
+        })
+        ->get();
         
-        // Dapatkan semua nama karyawan
+        // Get all nama karyawan
         $pimpinan = Alternatif::orderBy('nama_alternatif', 'ASC')->get();
 
-        // Merge data kepala sekolah dengan data karyawan yang belum terdaftar di group karyawan
+        // Merge data kepala sekolah with data kryawan is not registered in group karyawan
         $mergePimpinan = [];
         foreach ($kepalaSekolah as $key => $value) {
             $mergePimpinan[] = $value;
@@ -148,18 +160,25 @@ class GroupKaryawanController extends Controller
             $mergePimpinan[] = $value;
         }
 
-        // Dapatkan semua nama karyawan
+        // Get all nama karyawan
         $namaKaryawan = Alternatif::get();
-
-        // Dapatkan group karyawan yang dipilih
-        $groupKaryawan = GroupKaryawan::with(['alternatif', 'groupKaryawanDetail', 'groupKaryawanDetail.alternatif'])->where('id_group_karyawan', $id)->first();
         
-        // Dapatkan nama karyawan yang belum dipilih (alternatif lainnya)
+        // Get group karyawan by id
+        $groupKaryawan = GroupKaryawan::with([
+            'alternatif', 
+            'groupKaryawanDetail', 
+            'groupKaryawanDetail.alternatif'
+        ])
+        ->where('id_group_karyawan', $id)
+        ->first();
+        
+        // Get nama karyawan is not selected
         $karyawanBelumDipilih = Alternatif::whereNotIn('kode_alternatif', function($query) use ($id) {
             $query->select('kode_alternatif')
                 ->from('group_karyawan_detail')
                 ->where('id_group_karyawan', $id);
-        })->get();
+        })
+        ->get();
 
         return view('pages.superadmin.group-karyawan.edit', [
             'title' => 'Ubah Group Pegawai',
@@ -173,33 +192,19 @@ class GroupKaryawanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UpdateGroupKaryawanRequest $request, $id)
     {
-        $validatedData = $request->validate([
-            'nama_group_karyawan' => 'required',
-            'kepala_sekolah' => 'required',
-        ],[
-            'nama_group_karyawan.required' => 'Nama group karyawan harus diisi',
-            'kepala_sekolah.required' => 'Nama kepala sekolah harus diisi',
-        ]);
-
         DB::beginTransaction();
 
         try {    
             GroupKaryawan::where('id_group_karyawan', $id)->update([
-                'nama_group_karyawan' => $validatedData['nama_group_karyawan'],
-                'kepala_sekolah' => $validatedData['kepala_sekolah'],
+                'nama_group_karyawan' => $request['nama_group_karyawan'],
+                'kepala_sekolah' => $request['kepala_sekolah'],
                 'updated_at' => now(),
             ]);
 
-            $validatedGroupKaryawanDetail = $request->validate([
-                'kode_alternatif.*' => 'required',
-            ], [
-                'kode_alternatif.*.required' => 'Nama karyawan harus diisi',
-            ]);
-
             $groupKaryawanDetail = [];
-            foreach ($validatedGroupKaryawanDetail['kode_alternatif'] as $key => $value) {
+            foreach ($request['kode_alternatif'] as $key => $value) {
                 $groupKaryawanDetail[] = [
                     'id_group_karyawan' => $id,
                     'kode_alternatif' => $value,
@@ -243,16 +248,20 @@ class GroupKaryawanController extends Controller
      */
     public function getAlternatif($idGroupKaryawan)
     {
-        $getRoleKepalaSekolah = Alternatif::with(['users'])
-            ->whereHas('users', function($query) {
-                $query->whereHas('roles', function($query) {
-                    $query->where('name', 'kepala sekolah');
-                });
-            })
-            ->pluck('kode_alternatif');
+        $getRoleKepalaSekolah = Alternatif::with([
+            'users'
+        ])
+        ->whereHas('users', function($query) {
+            $query->whereHas('roles', function($query) {
+                $query->where('name', 'kepala sekolah');
+            });
+        })
+        ->pluck('kode_alternatif');
 
         $alternatif = Alternatif::whereNotIn('kode_alternatif', function($query) use ($idGroupKaryawan) {
-            $query->select('kode_alternatif')->from('group_karyawan_detail')->where('id_group_karyawan', $idGroupKaryawan);
+            $query->select('kode_alternatif')
+            ->from('group_karyawan_detail')
+            ->where('id_group_karyawan', $idGroupKaryawan);
         })
         ->whereNotIn('kode_alternatif', $getRoleKepalaSekolah)
         ->orderBy('nama_alternatif', 'ASC')

@@ -66,8 +66,13 @@ class CatatanKaryawanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($id, $firstYear, $secondYear, $semester)
     {
+        $tahunAjaranBreadcrumbs = [
+            'tahun_ajaran' => $firstYear . '/' . $secondYear,
+            'semester' => $semester,
+        ];
+
         $catatanKaryawan = CatatanKaryawan::with([
             'tanggalPenilaian',
         ])
@@ -77,6 +82,7 @@ class CatatanKaryawanController extends Controller
         return view('pages.kepala-sekolah.catatan-karyawan.show', [
             'title' => 'Detail Catatan Pegawai',
             'catatanKaryawan' => $catatanKaryawan,
+            'tahunAjaranBreadcrumbs' => $tahunAjaranBreadcrumbs,
         ]);
     }
 

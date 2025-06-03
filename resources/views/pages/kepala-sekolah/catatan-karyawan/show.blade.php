@@ -1,54 +1,66 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('catatanKaryawan.index') }}">Catatan Pegawai</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('catatanKaryawan.index') }}">Catatan Pegawai</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Detail Catatan Pegawai</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span class="capitalize">Detail Catatan Pegawai</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-    <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Detail Catatan Pegawai {!! $catatanKaryawan->penilaian->alternatifPertama->alternatifPertama->nama_alternatif !!}
-            Kepada
-            {!! $catatanKaryawan->penilaian->alternatifKedua->alternatifPertama->nama_alternatif !!}</h4>
+    <div class="my-8">
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Detail Catatan Pegawai {!! $catatanKaryawan->penilaian->alternatifPertama->alternatifPertama->nama_alternatif !!}
+                        Kepada {!! $catatanKaryawan->penilaian->alternatifKedua->alternatifPertama->nama_alternatif !!}
+                    </h3>
+                </div>
 
-        <form class="mt-8 space-y-6"
-            action="{{ route('catatanKaryawan.update', $catatanKaryawan->id_catatan_karyawan) }}" method="POST">
-            @method('PUT')
-            @csrf
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    <div>
+                        <x-molecules.input.input name="tahun_ajaran" label="Tahun Ajaran" :type="'text'"
+                            :value="$catatanKaryawan->tanggalPenilaian->tahun_ajaran .
+                                ' - Semester ' .
+                                ucfirst($catatanKaryawan->tanggalPenilaian->semester)" readonly />
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="tahun ajaran">
-                    Tahun Ajaran</label>
-                <input class="@error('tahun_ajaran') border-red-500 @enderror field-input-slate w-full capitalize"
-                    name="tahun_ajaran" type="text"
-                    value="{{ $catatanKaryawan->tanggalPenilaian->tahun_ajaran . ' - Semester ' . $catatanKaryawan->tanggalPenilaian->semester }}"
-                    required @readonly(true) @disabled(true)>
+                    <div>
+                        <x-molecules.textarea.textarea name="catatan" label="Catatan" :placeholder="'Catatan'"
+                            :value="$catatanKaryawan->catatan" rows="6" readonly />
+                    </div>
+
+                    <div class="flex flex-row justify-center gap-4">
+                        @if (Auth::user()->hasRole(['kepala sekolah']))
+                            <a
+                                href="{{ route('catatanKaryawan.showTahun', [
+                                    'firstYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 0, 4),
+                                    'secondYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 5),
+                                    'semester' => $tahunAjaranBreadcrumbs['semester'],
+                                ]) }}">
+                                <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                            </a>
+                        @else
+                            <a
+                                href="{{ route('catatanKaryawan.showTahunPimpinan', [
+                                    $catatanKaryawan->penilaian->alternatifPertama->id_group_karyawan,
+                                    'firstYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 0, 4),
+                                    'secondYear' => substr($tahunAjaranBreadcrumbs['tahun_ajaran'], 5),
+                                    'semester' => $tahunAjaranBreadcrumbs['semester'],
+                                ]) }}">
+                                <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                            </a>
+                        @endif
+                    </div>
+                </div>
             </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="catatan">
-                    Catatan</label>
-                <textarea class="textAreaHeight field-input-slate w-full" name="catatan" rows="3" required @readonly(true)
-                    @disabled(true)>{{ $catatanKaryawan->catatan }}</textarea>
-            </div>
-
-            <div class="flex justify-center">
-                <a href="{{ url()->previous() }}">
-                    <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
 
 </x-app-dashboard>

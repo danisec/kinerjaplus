@@ -164,7 +164,7 @@ class PersetujuanPenilaianController extends Controller
             $idGroupKaryawan = $penilaian->alternatifKedua->id_group_karyawan;
 
             if (Auth::user()->hasAnyRole(['yayasan', 'deputi'])) {
-                $notif = notify()->success('Catatan Karyawan berhasil ditambahkan');
+                $notif = notify()->success('Catatan Pegawai berhasil disimpan');
                 return redirect()->route('persetujuanPenilaian.showTahunPimpinan', [
                     'idGroupKaryawan' => $idGroupKaryawan,
                     'firstYear' => $firstYear,
@@ -174,7 +174,7 @@ class PersetujuanPenilaianController extends Controller
             }
 
             if (Auth::user()->hasAnyRole(['kepala sekolah'])) {
-                $notif = notify()->success('Catatan Karyawan berhasil ditambahkan');
+                $notif = notify()->success('Catatan Pegawai berhasil disimpan');
                 return redirect()->route('persetujuanPenilaian.showTahun', [
                     'firstYear' => $firstYear,
                     'secondYear' => $secondYear,

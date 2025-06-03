@@ -1,93 +1,92 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('subkriteria.index') }}">Data Subkriteria</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('subkriteria.index') }}">Subkriteria</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Detail Subkriteria</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Detail Subkriteria</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-    <div class="mx-auto my-8 w-8/12">
+    <div class="my-8">
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Detail Subkriteria
+                    </h3>
+                </div>
 
-        <div class="mt-8 space-y-6">
-            <h4 class="mb-6 text-2xl font-semibold text-gray-900">Subkriteria</h4>
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    <div>
+                        <x-molecules.input.input name="nama_subkriteria" label="Nama Subkriteria" :type="'text'"
+                            :value="$subkriteria->kriteria->nama_kriteria" readonly />
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama kriteria">
-                    Nama Kriteria</label>
+                    <div>
+                        <x-molecules.input.input name="kode_subkriteria" label="Kode Subkriteria" :type="'text'"
+                            :value="$subkriteria->kode_subkriteria" readonly />
+                    </div>
 
-                <input class="field-input-slate w-full" name="kode_subkriteria" type="text"
-                    value="{{ $subkriteria->kriteria->nama_kriteria }}" @disabled(true) @readonly(true)>
-            </div>
+                    <div>
+                        <x-molecules.input.input name="nama_subkriteria" label="Nama Subkriteria" :type="'text'"
+                            :value="$subkriteria->nama_subkriteria" readonly />
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="kode subkriteria">
-                    Kode Subkriteria</label>
-                <input class="field-input-slate w-full" name="kode_subkriteria" type="text"
-                    value="{{ $subkriteria->kode_subkriteria }}" @disabled(true) @readonly(true)>
-            </div>
+                    <div>
+                        <x-molecules.textarea.textarea name="deskripsi_subkriteria" label="Deskripsi Subkriteria"
+                            :type="'text'" :value="$subkriteria->deskripsi_subkriteria" rows="6" readonly />
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama subkriteria">
-                    Nama Subkriteria</label>
-                <input class="field-input-slate w-full" name="nama_subkriteria" type="text"
-                    value="{{ $subkriteria->nama_subkriteria }}" @disabled(true) @readonly(true)>
-            </div>
+                    <div class="flex flex-row items-center justify-between gap-4">
+                        <div class="w-full">
+                            <x-molecules.input.input name="bobot_subkriteria" label="Bobot Subkriteria"
+                                :type="'number'" min="1" maxlength="3" minlength="1" max="100"
+                                :value="$subkriteria->bobot_subkriteria" readonly />
+                        </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="deskripsi subkriteria">
-                    Deskripsi Subkriteria</label>
-                <textarea class="textAreaHeight field-input-slate w-full" name="deskripsi_subkriteria" type="text" rows="3"
-                    @disabled(true) @readonly(true)>{{ $subkriteria->deskripsi_subkriteria }}</textarea>
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="bobot kriteria">
-                    Bobot Subkriteria</label>
-
-                <div class="flex flex-row justify-between gap-4">
-                    <input class="field-input-slate w-full" name="bobot_subkriteria" type="number"
-                        value="{{ $subkriteria->bobot_subkriteria }}" @disabled(true) @readonly(true)>
-
-                    <input class="field-input-slate w-10 text-center" type="text" value="%"
-                        @disabled(true) @readonly(true)>
+                        <div class="mt-5 w-14">
+                            <x-molecules.input.input name="" label="" :type="'text'" :value="'%'"
+                                readonly />
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
 
-        <div class="mt-12 space-y-6">
-            <h4 class="text-2xl font-semibold text-gray-900">Indikator</h4>
+        <div class="my-8">
+            <div class="space-y-6">
+                <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                    <div class="px-5 py-4 sm:px-6 sm:py-5">
+                        <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                            Indikator Subkriteria
+                        </h3>
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="indikator subkriteria">
-                    Indikator Subkriteria</label>
+                    <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                        <div id="kolom-subkriteria">
+                            <div class="flex flex-col gap-6">
+                                @foreach ($subkriteria->indikatorSubkriteria as $item)
+                                    <textarea
+                                        class="textAreaHeight dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 focus:ring-3 focus:outline-hidden w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 disabled:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:disabled:bg-white/[0.03]"
+                                        name="indikator_subkriteria[]" placeholder="Indikator Subkriteria" rows="6" readonly>{{ $item->indikator_subkriteria }}</textarea>
+                                @endforeach
+                            </div>
+                        </div>
 
-                <div id="kolom-subkriteria">
-                    @foreach ($subkriteria->indikatorSubkriteria as $item)
-                        <textarea class="textAreaHeight field-input-slate mb-4 w-full" name="indikator_subkriteria[]" rows="3"
-                            @disabled(true) @readonly(true)>{{ $item->indikator_subkriteria }}</textarea>
-                    @endforeach
+                        <div class="flex flex-row justify-center">
+                            <a href="{{ route('subkriteria.index') }}">
+                                <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                            </a>
+                        </div>
+                    </div>
                 </div>
-
             </div>
-
-            <div class="flex justify-center">
-                <a href="{{ route('subkriteria.index') }}">
-                    <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                </a>
-            </div>
-
         </div>
     </div>
 

@@ -1,25 +1,22 @@
-// Self Rank Chart Yayasan, Deputi, Kepala Sekolah
 if (
     window.currentUser &&
     window.currentUser.roles.some((role) =>
         ["yayasan", "deputi", "kepala sekolah"].includes(role),
     )
 ) {
-    // Periksa apakah pengguna berada di dashboard
     if (
         window.location.pathname === "/dashboard" ||
         window.location.pathname === "/dashboard/"
     ) {
         // Mengimpor selfRankChart
-        import("./selfRankChart")
+        import("./self-rank-chart")
             .then((module) => {})
             .catch((error) => {
-                console.error("Gagal mengimpor selfRankChart");
+                console.error("Gagal mengimpor self rank chart");
             });
     }
 }
 
-// Self Rank Chart Guru, Tata Usaha Tenaga Pendidikan, Tata Usaha Non Tenaga Pendidikan, Kerohanian Tenaga Pendidikan, Kerohanian Non Tenaga Pendidikan
 if (
     window.currentUser &&
     window.currentUser.roles.some((role) =>
@@ -32,63 +29,54 @@ if (
         ].includes(role),
     )
 ) {
-    // Periksa apakah pengguna berada di dashboard
     if (
         window.location.pathname === "/dashboard" ||
         window.location.pathname === "/dashboard/"
     ) {
-        // Mengimpor selfRankChart
-        import("./selfRankChartGuru")
+        import("./self-rank-chart-guru")
             .then((module) => {})
             .catch((error) => {
-                console.error("Gagal mengimpor selfRankChartGuru");
+                console.error("Gagal mengimpor self rank chart guru");
             });
     }
 }
 
-// Rank Chart & Rank Table Kepala Sekolah
 if (
     window.currentUser &&
     window.currentUser.roles.some((role) => ["kepala sekolah"].includes(role))
 ) {
-    // Memeriksa apakah pengguna berada di dashboard
     if (
         window.location.pathname === "/dashboard" ||
         window.location.pathname === "/dashboard/"
     ) {
-        // Mengimpor rankChart
-        import("./rankChart")
+        import("./rank-chart")
             .then((module) => {})
             .catch((error) => {
-                console.error("Gagal mengimpor rankChart");
+                console.error("Gagal mengimpor rank chart");
             });
 
-        // Mengimpor rankTable
-        import("./rankTable")
+        import("./rank-table")
             .then((module) => {})
             .catch((error) => {
-                console.error("Gagal mengimpor rankTable");
+                console.error("Gagal mengimpor rank table");
             });
     }
 }
 
-// Rank Group Chart Yayasan, Deputi
 if (
     window.currentUser &&
     window.currentUser.roles.some((role) =>
         ["yayasan", "deputi"].includes(role),
     )
 ) {
-    // Memeriksa apakah pengguna berada di dashboard
     if (
         window.location.pathname === "/dashboard" ||
         window.location.pathname === "/dashboard/"
     ) {
-        // Mengimpor rankGroupChart
-        import("./rankGroupChart")
+        import("./rank-group-chart")
             .then((module) => {})
             .catch((error) => {
-                console.error("Gagal mengimpor rankGroupChart");
+                console.error("Gagal mengimpor rank group chart");
             });
     }
 }

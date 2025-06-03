@@ -1,13 +1,13 @@
 if (window.location.pathname === "/dashboard/penilaian/tambah-penilaian") {
-    import("./getKriteria")
+    import("./get-kriteria")
         .then((module) => {})
         .catch((error) => {
-            console.error("Gagal mengimpor getKriteria");
+            console.error("Gagal mengimpor get kriteria");
         });
 
-    import("./paginationPenilaian")
+    import("./pagination-penilaian")
         .then((module) => {})
         .catch((error) => {
-            console.error("Gagal mengimpor paginationPenilaian");
+            console.error("Gagal mengimpor pagination penilaian");
         });
 }

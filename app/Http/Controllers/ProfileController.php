@@ -12,10 +12,12 @@ class ProfileController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {      
+    {
+        $profile = Auth::user();
+
         return view('pages.dashboard.profile.index', [
             'title' => 'My Profile',
-            'profile' => Auth::user(),
+            'profile' => $profile,
         ]);
     }
 
@@ -48,9 +50,11 @@ class ProfileController extends Controller
      */
     public function edit(string $id)
     {
+        $profile = Auth::user();
+        
         return view('pages.dashboard.profile.settings', [
             'title' => 'My Profile',
-            'profile' => Auth::user(),
+            'profile' => $profile,
         ]);
     }
 

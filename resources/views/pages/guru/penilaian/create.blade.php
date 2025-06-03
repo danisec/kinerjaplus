@@ -1,61 +1,63 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                @if ($checkTanggalPenilaian != null)
-                    <span class="mx-2 text-base font-medium capitalize text-gray-500">Penilaian Tahun Ajaran
-                        {!! $checkTanggalPenilaian->tahun_ajaran !!} - Semester {!! $checkTanggalPenilaian->semester !!}</span>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 capitalize text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('penilaian.welcome') }}">
+                @if ($checkTanggalPenilaian !== null)
+                    Penilaian Tahun Ajaran
+                    {!! $checkTanggalPenilaian->tahun_ajaran !!} - Semester {!! $checkTanggalPenilaian->semester !!}
                 @else
-                    <span class="mx-2 text-base font-medium text-gray-500">Penilaian Tahun Ajaran
-                        {!! $tahunAjaran !!}</span>
+                    Penilaian Tahun Ajaran
+                    {!! $tahunAjaran !!}
                 @endif
-            </div>
+            </a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Tambah Penilaian</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Tambah Penilaian</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
     <div class="mx-auto my-8 w-full">
 
-        @if ($alternatifPenilaianArray == null)
-            <div class="my-6 w-full rounded-md bg-slate-100 p-8">
+        @if ($alternatifPenilaianArray === null)
+            <div class="my-6 w-full rounded-md bg-slate-100 p-4">
                 <h2 class="text-center font-normal text-gray-900">Terima kasih Anda telah menyelesaikan penilaian untuk
                     semua pegawai.
                 </h2>
             </div>
         @else
-            <div class="my-6 w-full rounded-md bg-slate-100 p-8">
+            <div class="xs:bg-slate-100 my-6 w-full rounded-md p-4 lg:bg-white">
                 <p class="text-base font-bold uppercase tracking-wider text-gray-900">Petunjuk Pengisian</p>
-                <p class="my-6 text-base font-normal text-gray-900">Pada setiap pernyataan di masing-masing
+                <p class="xs:text-sm mt-4 font-normal text-gray-900 lg:text-base">Pada setiap pernyataan di
+                    masing-masing
                     kriteria,
-                    pilihlah salah satu jawaban yang paling sesuai dengan penilaian Anda terhadap diri Anda dan pegawai
+                    pilih salah satu jawaban yang paling sesuai dengan penilaian Anda terhadap diri Anda dan pegawai
                     yang
                     bersangkutan.
                 </p>
             </div>
 
-            <form class="mt-12 space-y-6" action="{{ route('penilaian.store') }}" method="POST">
+            <form
+                class="my-8 space-y-6 overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 sm:px-6 dark:border-gray-800 dark:bg-white/[0.03]"
+                action="{{ route('penilaian.store') }}" method="POST">
                 @csrf
 
                 <input name="id_tanggal_penilaian" type="hidden"
                     value="{{ $checkTanggalPenilaian->id_tanggal_penilaian }}" @required(true)>
-                <div class="flex flex-row items-center gap-4">
-                    <h4 class="text-2xl font-semibold text-gray-900">Berikan Penilaian Kepada</h4>
+                <div class="xs:flex-col flex gap-4 lg:flex-row lg:items-center">
+                    <h4 class="xs:text-lg font-semibold text-gray-900 lg:text-xl">Berikan Penilaian Kepada</h4>
 
-                    <div class="w-96">
+                    <div class="xs:w-full lg:w-96">
                         <input name="alternatif_pertama" type="hidden"
                             value="{{ Auth::user()->alternatif->kode_alternatif }}">
                         <input name="status" type="hidden" value="">
 
                         <select
-                            class="@error('alternatif_kedua') border-red-500 @enderror field-input-slate w-full font-semibold"
+                            class="@error('alternatif_kedua') border-red-500 @enderror shadow-theme-xs focus:ring-3 focus:outline-hidden h-11 w-full rounded-lg border border-gray-300 px-4 py-2.5 pr-11 text-sm capitalize text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                             id="alternatif_kedua" name="alternatif_kedua" autofocus required>
 
                             <option selected disabled hidden>Pilih Nama Pegawai</option>
@@ -85,24 +87,24 @@
                                 $item->kode_kriteria != 'K2')
                             <div class="kriteria-page mb-6 rounded-md bg-slate-50 p-4" data-page="{{ $index + 1 }}"
                                 style="{{ $index > 0 ? 'display: none;' : '' }}">
-                                <h4 class="block text-xl font-semibold text-gray-900">
+                                <h4 class="xs:lg block font-semibold text-gray-900 lg:text-xl">
                                     {{ chr(64 + $index + 1) . '.' }} {{ $item->nama_kriteria }}
                                 </h4>
 
                                 @foreach ($item->subkriteria as $subkriteria)
-                                    <h6 class="ml-5 pb-2 pt-5 text-lg font-semibold text-gray-900">
+                                    <h6 class="xs:text-base ml-5 pb-2 pt-5 font-medium text-gray-900 lg:text-lg">
                                         {{ $loop->iteration . '.' }} {{ $subkriteria->nama_subkriteria }}
                                     </h6>
 
                                     @foreach ($subkriteria->indikatorSubkriteria as $indikator)
                                         <div class="mb-3">
-                                            <p class="ml-10 text-base font-medium text-gray-900">
+                                            <p class="xs:text-sm ml-10 font-normal text-gray-900 lg:text-base">
                                                 {{ $loop->iteration . ')' }} {{ $indikator->indikator_subkriteria }}
                                             </p>
                                         </div>
 
                                         @foreach ($indikator->skalaIndikator as $skalaIndikator)
-                                            <div class="my-8 ml-10 flex flex-row gap-4">
+                                            <div class="my-8 ml-10 flex flex-row gap-4 overflow-x-auto">
                                                 @foreach ($skalaIndikator->skalaIndikatorDetail as $skalaIndikatorDetail)
                                                     <div
                                                         class="flex h-max w-auto flex-col items-center justify-center gap-3 rounded-md bg-white p-3 shadow-slate-50 hover:shadow-md">
@@ -116,7 +118,7 @@
                                                             required>
 
                                                         <label
-                                                            class="text-left text-base font-normal leading-normal text-gray-900"
+                                                            class="xs:text-sm text-left font-normal leading-normal text-gray-900 md:text-base"
                                                             for="{{ $skalaIndikatorDetail->skala }}">
                                                             {{ $skalaIndikatorDetail->skala == 1 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
                                                             {{ $skalaIndikatorDetail->skala == 2 ? $skalaIndikatorDetail->deskripsi_skala : '' }}
@@ -145,14 +147,12 @@
 
                 <div class="flex flex-row items-center justify-center gap-4 py-8">
                     <a href="{{ route('penilaian.welcome') }}">
-                        <x-atoms.button.button-gray :customClass="'w-80 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
+                        <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
                     </a>
 
                     <div x-data="{ isOpen: false }">
-                        <x-atoms.button.button-primary :customClass="'h-12 w-64 rounded-md'" :type="'button'" :name="'Simpan'"
-                            @click="isOpen = true" />
-
-                        <x-molecules.modal-confirm :title="'Apakah Anda yakin ingin menyimpan penilaian ini?'" />
+                        <x-atoms.button.button-primary :type="'button'" :name="'Simpan'" @click="isOpen = true" />
+                        <x-molecules.modal.modal-confirm :title="'Apakah Anda yakin ingin menyimpan penilaian ini?'" />
                     </div>
                 </div>
 

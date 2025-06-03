@@ -92,7 +92,8 @@ class RankingController extends Controller
             $tanggalPenilaian = TanggalPenilaian::with(['groupKaryawan'])
             ->orderBy('tahun_ajaran', 'desc')
             ->filter(request(['search']))
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
             return view('pages.pimpinan.ranking.index', [
                 'title' => 'Perankingan',

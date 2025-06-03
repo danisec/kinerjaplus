@@ -1,80 +1,71 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('alternatif.index') }}">Data Pegawai</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('alternatif.index') }}">Pegawai</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Detail Pegawai</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Detail Pegawai</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-    <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Detail Pegawai</h4>
+    <div class="my-8">
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Detail Pegawai
+                    </h3>
+                </div>
 
-        <div class="mt-8 space-y-6">
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="kode_alternatif">
-                    Kode Alternatif</label>
-                <input class="field-input-slate w-full" name="kode_alternatif" type="text"
-                    value="{{ $alternatif->kode_alternatif }}" @disabled(true) @readonly(true)>
-            </div>
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    <div>
+                        <x-molecules.input.input name="kode_alternatif" label="Kode Alternatif" :type="'text'"
+                            :value="$alternatif->kode_alternatif" readonly />
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama_alternatif">
-                    Nama Pegawai</label>
-                <input class="field-input-slate w-full capitalize" name="nama_alternatif" type="text"
-                    value="{{ $alternatif->nama_alternatif . ' - ' . $alternatif->users->getRoleNames()->first() }}"
-                    @disabled(true) @readonly(true)>
-            </div>
+                    <div>
+                        <x-molecules.input.input name="nama_alternatif" label="Nama Pegawai" :type="'text'"
+                            :value="$alternatif->nama_alternatif .
+                                ' - ' .
+                                $alternatif->users->getRoleNames()->first()" readonly />
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="jenis_kelamin">
-                    Jenis Kelamin</label>
-                <input class="field-input-slate w-full" name="jenis_kelamin" value="{{ $alternatif->jenis_kelamin }}"
-                    @disabled(true) @readonly(true)>
-            </div>
+                    <div>
+                        <x-molecules.input.input name="jenis_kelamin" label="Jenis Kelamin" :type="'text'"
+                            :value="$alternatif->jenis_kelamin" readonly />
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="tanggal_masuk_kerja">
-                    Tanggal Masuk Kerja</label>
-                <input class="field-input-slate w-full" name="tanggal_masuk_kerja" type="date"
-                    value="{{ $alternatif->tanggal_masuk_kerja }}" @disabled(true) @readonly(true)>
-            </div>
+                    <div>
+                        <x-molecules.input.input name="tanggal_masuk_kerja" label="Tanggal Masuk Kerja"
+                            :type="'text'" :value="$alternatif->tanggal_masuk_kerja" readonly />
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nip">
-                    Nomor Induk Pegawai</label>
-                <input class="field-input-slate w-full" name="nip" type="number" value="{{ $alternatif->nip }}"
-                    @disabled(true) @readonly(true)>
-            </div>
+                    <div>
+                        <x-molecules.input.input name="nip" label="Nomor Induk Pegawai" :type="'text'"
+                            :value="$alternatif->nip" readonly />
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="jabatan">
-                    Jabatan</label>
-                <input class="field-input-slate w-full" name="jabatan" type="text" value="{{ $alternatif->jabatan }}"
-                    @disabled(true) @readonly(true)>
-            </div>
+                    <div>
+                        <x-molecules.input.input name="jabatan" label="Jabatan" :type="'text'" :value="$alternatif->jabatan"
+                            readonly />
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="pendidikan">
-                    Pendidikan Terakhir</label>
-                <input class="field-input-slate w-full" name="pendidikan" type="text"
-                    value="{{ $alternatif->pendidikan }}" @disabled(true) @readonly(true)>
-            </div>
+                    <div>
+                        <x-molecules.input.input name="pendidikan" label="Pendidikan Terakhir" :type="'text'"
+                            :value="$alternatif->pendidikan" readonly />
+                    </div>
 
-            <div class="flex justify-center">
-                <a href="{{ route('alternatif.index') }}">
-                    <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                </a>
+                    <div class="flex justify-center">
+                        <a href="{{ route('alternatif.index') }}">
+                            <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

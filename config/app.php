@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'KinerjaPlus'),
+    'name' => env('APP_NAME', 'KinerjaMetrik'),
 
     /*
     |--------------------------------------------------------------------------

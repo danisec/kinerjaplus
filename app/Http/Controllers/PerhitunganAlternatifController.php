@@ -123,6 +123,45 @@ class PerhitunganAlternatifController extends Controller
      */
     public function index()
     {
+        $intensitasKepentingan = [
+            [
+                'key' => '1',
+                'value' => '1 - Sama penting',
+            ],
+            [
+                'key' => '2',
+                'value' => '2 - Mendekati sedikit lebih penting (Grey Area)',
+            ],
+            [
+                'key' => '3',
+                'value' => '3 - Sedikit lebih penting',
+            ],
+            [
+                'key' => '4',
+                'value' => '4 - Mendekati lebih penting (Grey Area)',
+            ],
+            [
+                'key' => '5',
+                'value' => '5 - Lebih penting',
+            ],
+            [
+                'key' => '6',
+                'value' => '6 - Mendekati jelas lebih penting (Grey Area)',
+            ],
+            [
+                'key' => '7',
+                'value' => '7 - Jelas lebih penting',
+            ],
+            [
+                'key' => '8',
+                'value' => '8 - Mendekati mutlak penting (Grey Area)',
+            ],
+            [
+                'key' => '9',
+                'value' => '9 - Mutlak penting',
+            ],
+        ];
+
         $tahunAjaran = $this->tahunAjaran;
 
         $checkTanggalPenilaian = $this->initializeAuth();
@@ -169,6 +208,7 @@ class PerhitunganAlternatifController extends Controller
         
         return view('pages.kepala-sekolah.perhitungan-alternatif.index', [
             'title' => 'Perbandingan Karyawan',
+            'intensitasKepentingan' => $intensitasKepentingan,
             'tahunAjaran' => $tahunAjaran,
             'checkTanggalPenilaian' => $checkTanggalPenilaian,
             'idTanggalPenilaian' => $idTanggalPenilaian,

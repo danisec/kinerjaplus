@@ -10,13 +10,19 @@ class IndexPersetujuanPenilaianYayasanOrDeputiHandler
     public function handle(): array
     {
         $penilaianGroupedByTahunAjaran = Penilaian::with([
-            'tanggalPenilaian','alternatifPertama'
+            'tanggalPenilaian',
+            'alternatifPertama'
         ])
         ->join('tanggal_penilaian', 'penilaian.id_tanggal_penilaian', '=', 'tanggal_penilaian.id_tanggal_penilaian')
         ->orderBy('tanggal_penilaian.tahun_ajaran', 'DESC')
-        ->when(request()->has('search'), function ($query) {
-            $query->where('tanggal_penilaian.tahun_ajaran', 'like', '%' . request('search') . '%')
-                ->orWhere('tanggal_penilaian.semester', 'like', '%' . request('search') . '%');
+        ->when(!empty(request('search')), function ($query) {
+            $query->where(function ($q) {
+                $q->where('tanggal_penilaian.tahun_ajaran', 'like', '%' . request('search') . '%')
+                    ->orWhere('tanggal_penilaian.semester', 'like', '%' . request('search') . '%')
+                    ->orWhereHas('tanggalPenilaian.groupKaryawan', function ($subQuery) {
+                        $subQuery->where('nama_group_karyawan', 'like', '%' . request('search') . '%');
+                    });
+            });
         })
         ->get()
         ->unique('id_tanggal_penilaian');

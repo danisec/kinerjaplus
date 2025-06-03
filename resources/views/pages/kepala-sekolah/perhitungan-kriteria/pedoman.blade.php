@@ -1,68 +1,83 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('perhitunganKriteria.index') }}">Perbandingan Kriteria</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('perhitunganKriteria.index') }}">Perbandingan Kriteria</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Pedoman Pengisian Matriks Perbandingan
-                    Berpasangan</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Pedoman Pengisian Matriks Perbandingan
+                Berpasangan</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-    <div class="relative my-8 overflow-x-auto">
-        <ul class="list-inside text-gray-900">
-            <li class="text-lg font-bold">A. Pedoman Pengisian Matriks Perbandingan Berpasangan
-                <p class="mt-2 text-base font-normal leading-normal">Instrumen pengisian evaluasi kinerja pegawai
-                    menggunakan metode
-                    Analytical
-                    Hierarchy Process (AHP)
-                    yaitu berbentuk matriks perbandingan berpasangan, skala yang digunakan yaitu 1 — 9. Nilai dan
-                    definisi pendapat kualitatif dalam skala perbandingan Saaty ada pada Tabel di bawah ini.</p>
-            </li>
-        </ul>
+    <div
+        class="relative my-8 overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 sm:px-6 dark:border-gray-800 dark:bg-white/[0.03]">
+        <h1 class="text-base font-bold leading-normal text-gray-700 dark:text-gray-400">A. Pedoman Pengisian
+            Matriks Perbandingan Berpasangan</h1>
+        <p class="mb-6 mt-6 text-sm font-normal leading-normal text-gray-700 sm:text-base dark:text-gray-400">
+            Instrumen pengisian evaluasi kinerja pegawai
+            menggunakan metode
+            Analytical
+            Hierarchy Process (AHP)
+            yaitu berbentuk matriks perbandingan berpasangan, skala yang digunakan yaitu 1 — 9. Nilai dan
+            definisi pendapat kualitatif dalam skala perbandingan Saaty terdapat pada Tabel di bawah ini.</p>
 
-        <table class="mt-8 w-full text-left text-base text-gray-900">
-            <thead class="bg-slate-100 text-sm uppercase text-gray-900">
-                <tr>
-                    <th class="px-6 py-3" scope="col">
-                        Intensitas Kepentingan
-                    </th>
-                    <th class="px-6 py-3" scope="col">
-                        Definisi
-                    </th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach ($intensitasKepentingan as $itemIntensitasKepentingan)
-                    <tr class="border-b bg-white hover:bg-slate-100">
-                        <th class="whitespace-nowrap px-6 py-4 font-medium text-gray-900" scope="row">
-                            {{ $itemIntensitasKepentingan['nilai'] }}
+        <div>
+            <table class="min-w-full">
+                <thead>
+                    <tr class="border-y border-gray-100 dark:border-gray-800">
+                        <th class="py-3">
+                            <div class="flex items-center">
+                                <p class="xs:text-xs sm:text-theme-md font-medium text-gray-800">Intensitas Kepentingan
+                                </p>
+                            </div>
                         </th>
-                        <td class="px-6 py-4">
-                            {{ $itemIntensitasKepentingan['definisi'] }}
-                        </td>
+                        <th class="flex justify-center px-6 py-3">
+                            <div class="flex items-center">
+                                <p class="xs:text-xs sm:text-theme-md text-center font-medium text-gray-800">Definisi
+                                </p>
+                            </div>
+                        </th>
                     </tr>
+                </thead>
+
+                @foreach ($intensitasKepentingan as $itemIntensitasKepentingan)
+                    <tbody>
+                        <tr>
+                            <td class="py-3">
+                                <div class="flex items-center justify-center text-center">
+                                    <p class="xs:text-sm sm:text-theme-md text-gray-700 dark:text-gray-400">
+                                        {{ $itemIntensitasKepentingan['nilai'] }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="py-3">
+                                <div class="flex items-center">
+                                    <p class="xs:text-sm sm:text-theme-md text-gray-700 dark:text-gray-400">
+                                        {{ $itemIntensitasKepentingan['definisi'] }}
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
                 @endforeach
-            </tbody>
-        </table>
+            </table>
+        </div>
 
         <div class="mt-8">
-            <h2 class="mb-2 text-lg font-bold">Contoh Pengisian Matriks Perbandingan Berpasangan Kriteria</h2>
-            <img src="https://raw.githubusercontent.com/danisec/assets/refs/heads/main/images/kinerjaplus/images/pedoman-pengisian-matriks-perbandingan-berpasangan-kriteria.png"
+            <h2 class="mb-2 text-base font-bold leading-normal text-gray-700 dark:text-gray-400">B. Cara Mengisi Tingkat
+                Kepentingan Skala Saaty</h2>
+
+            <img class="h-auto w-full"
+                src="https://raw.githubusercontent.com/danisec/assets/refs/heads/main/images/kinerjaplus/images/pedoman-pengisian-matriks-perbandingan-berpasangan-kriteria.png"
                 alt="Pedoman Pengisian Matriks Perbandingan Berpasangan Kriteria">
 
-            <h4 class="mb-2 text-lg font-semibold">Cara Mengisi Tingkat Kepentingan Skala Saaty:</h4>
-            <ul class="list-inside list-decimal text-gray-900">
+            <ul
+                class="list-inside list-decimal text-sm font-normal leading-normal text-gray-700 sm:text-base dark:text-gray-400">
                 <li class="my-4 list-decimal">
                     <span class="font-semibold">Baris 1 (Kompetensi)</span>
                     <ul class="ml-5 list-inside list-disc">

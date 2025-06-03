@@ -32,7 +32,8 @@ class ShowReviewPenilaianHandler
             'alternatifPertama.alternatifPertama', 
             'alternatifKedua', 
             'penilaianIndikator', 
-            'penilaianIndikator.skalaIndikatorDetail'
+            'penilaianIndikator.skalaIndikatorDetail',
+            'penilaianIndikator.skalaIndikatorDetail.nilaiSkala'
         ])->where('id_penilaian', $id)
         ->first();
 

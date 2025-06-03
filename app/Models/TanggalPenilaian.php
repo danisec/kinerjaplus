@@ -18,6 +18,9 @@ class TanggalPenilaian extends Model
         $query->when($filters['search'] ?? false, fn($query, $search) =>
             $query->where('tahun_ajaran', 'like', '%'. $search . '%')
                 ->orWhere('semester', 'like', '%' . $search . '%')
+                ->orWhereHas('groupKaryawan', function ($subQuery) {
+                    $subQuery->where('nama_group_karyawan', 'like', '%' . request('search') . '%');
+                })
         );
     }
 

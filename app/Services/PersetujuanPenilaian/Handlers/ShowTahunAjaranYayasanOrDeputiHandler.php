@@ -14,7 +14,7 @@ class ShowTahunAjaranYayasanOrDeputiHandler
         $tahunAjaranBreadcrumbs = [
             'nama_group_karyawan' => $namaGroupKaryawan->nama_group_karyawan,
             'tahun_ajaran' => $firstYear . '/' . $secondYear,
-            'semester' => $semester,
+            'semester' => ucfirst($semester),
         ];
 
         $penilaianQuery = Penilaian::with([

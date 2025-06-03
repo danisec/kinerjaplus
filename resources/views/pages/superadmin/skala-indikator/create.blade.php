@@ -1,108 +1,97 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('skalaIndikator.index') }}">Data Skala Indikator</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('skalaIndikator.index') }}">Skala Indikator</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Tambah Skala Indikator</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Tambah Skala Indikator</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-    <form class="mx-auto my-8 w-8/12" action="{{ route('skalaIndikator.store') }}" method="POST">
+    <form class="my-8" action="{{ route('skalaIndikator.store') }}" method="POST">
         @csrf
-
-        <div class="mt-8 space-y-6">
-            <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Skala Indikator</h4>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama subkriteria">
-                    Nama Subkriteria</label>
-
-                <select class="@error('nama_subkriteria') border-red-500 @enderror field-input-slate w-full"
-                    id="subkriteria" name="kode_subkriteria" autofocus required>
-
-                    <option selected disabled hidden>Pilih Subkriteria</option>
-                    @foreach ($subkriteria as $item)
-                        <option value="{{ $item->kode_subkriteria }}"
-                            {{ old('nama_subkriteria') == $item->nama_subkriteria ? 'selected' : '' }}>
-                            {{ $item->kriteria->nama_kriteria . ' — ' . $item->nama_subkriteria }}
-                        </option>
-                    @endforeach
-                </select>
-
-                @error('kode_subkriteria')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="indikator subkriteria">
-                    Indikator Subkriteria</label>
-
-                <select class="@error('id_indikator_subkriteria') border-red-500 @enderror field-input-slate w-full"
-                    id="indikatorSubkriteria" name="id_indikator_subkriteria" autofocus required>
-
-                    <option selected disabled hidden>Pilih Indikator Subkriteria</option>
-                </select>
-
-                @error('id_indikator_subkriteria')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-        </div>
-
-        <div class="mt-12 space-y-6">
-            <div class="flex flex-row items-center justify-end">
-                <x-atoms.button.button-emerald id="add-skala-indikator-btn" :customClass="'w-auto text-center rounded-lg px-5 py-3 add-skala-indikator-btn'" :type="'button'"
-                    :name="'Tambah Kolom Skala Indikator'" />
-
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="skala indikator">
-                    Skala Indikator</label>
-
-                <div id="kolom-skala-indikator">
-                    <div class="kolom-skala-indikator my-4 flex flex-row items-center justify-between gap-4">
-                        <input name="skala[]" type="hidden" value="1">
-                        <textarea class="field-input-slate w-full" name="deskripsi_skala[]" placeholder="Deskripsi Skala 1" rows="3"
-                            required></textarea>
-
-                        @error('deskripsi_skala')
-                            <p class="invalid-feedback">
-                                {{ $message }}
-                            </p>
-                        @enderror
-
-                        <button class="delete-skala-indikator-btn text-red-600 focus:outline-none" type="button">
-                            <x-atoms.svg.trash />
-                        </button>
-                    </div>
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Tambah Skala Indikator
+                    </h3>
                 </div>
 
-            </div>
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    <div>
+                        <x-molecules.select.select id="subkriteria" name="kode_subkriteria" label="Nama Subkriteria"
+                            :options="$subkriteria->mapWithKeys(function ($item) {
+                                return [$item->kode_subkriteria => $item->nama_subkriteria];
+                            })" required />
+                    </div>
 
-            <div class="flex flex-row gap-4">
-                <a href="{{ route('skalaIndikator.index') }}">
-                    <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                </a>
-                <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Simpan'" />
+                    <div>
+                        <x-molecules.select.select id="indikatorSubkriteria" name="id_indikator_subkriteria"
+                            label="Indikator Subkriteria" required />
+                    </div>
+                </div>
             </div>
+        </div>
 
+        <div class="my-8">
+            <div class="space-y-6">
+                <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                    <div class="px-5 py-4 sm:px-6 sm:py-5">
+                        <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                            Skala Indikator
+                        </h3>
+                    </div>
+
+                    <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                        <div class="flex flex-row items-center justify-end">
+                            <x-atoms.button.button-secondary id="add-skala-indikator-btn" :type="'button'"
+                                :name="'Tambah Kolom Skala Indikator'" />
+                        </div>
+
+                        <div id="kolom-skala-indikator">
+                            <div class="kolom-skala-indikator my-4 flex flex-row items-center justify-between gap-4">
+                                <input name="skala[]" type="hidden" value="1">
+                                <textarea
+                                    class="@error('indikator_subkriteria') border-red-500 @enderror dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 focus:ring-3 focus:outline-hidden w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                                    name="deskripsi_skala[]" placeholder="Deskripsi Skala 1" rows="6" required></textarea>
+
+                                @error('indikator_subkriteria')
+                                    <p class="invalid-feedback">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+
+                                <div x-data="{ showTooltip: false, isOpen: false }">
+                                    <button
+                                        class="delete-subkriteria-btn focus:outline-hidden text-gray-600 hover:text-red-600"
+                                        type="button" @mouseenter="showTooltip = true"
+                                        @mouseleave="showTooltip = false" @click="isOpen = true">
+                                        <x-atoms.svg.trash />
+                                    </button>
+
+                                    <div class="xs:text-xs absolute z-10 -ml-2.5 mt-1 rounded-sm bg-gray-100 px-2 py-1 text-gray-900 sm:text-sm"
+                                        x-show="showTooltip" x-transition>
+                                        <span>Hapus</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-row justify-center gap-4">
+                            <a href="{{ route('skalaIndikator.index') }}">
+                                <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                            </a>
+                            <x-atoms.button.button-primary :type="'submit'" :name="'Simpan'" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 

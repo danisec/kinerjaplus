@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\KelolaAkun\StoreKelolaAkunRequest;
+use App\Http\Requests\KelolaAkun\UpdateKelolaAkunRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
 
 class KelolaAkunController extends Controller
 {
     /* 
      * Constructor
      */
-    private $role;
+    private $roles;
 
     public function __construct()
     {
@@ -23,16 +25,30 @@ class KelolaAkunController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {      
+    {
+        $user = User::join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+        ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+        ->select('users.*', 'roles.name as role')
+        ->orderBy('users.created_at', 'ASC')
+        ->filter(request(['search']))
+        ->paginate(10)
+        ->withQueryString();
+
+        $roleColors = [
+            'superadmin' => 'bg-rose-100 text-rose-600',
+            'admin' => 'bg-rose-100 text-rose-600',
+            'yayasan' => 'bg-emerald-100 text-emerald-600',
+            'deputi' => 'bg-indigo-100 text-indigo-600',
+            'kepala sekolah' => 'bg-lime-100 text-lime-600',
+            'guru' => 'bg-fuchsia-100 text-fuchsia-600',
+            'IT' => 'bg-sky-100 text-sky-600',
+            'default' => 'bg-zinc-100 text-zinc-600',
+        ];
+
         return view('pages.it.kelola-akun.index', [
             'title' => 'Kelola Akun',
-            'user' => User::join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
-                ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-                ->select('users.*', 'roles.name as role')
-                ->orderBy('users.created_at', 'ASC')
-                ->filter(request(['search']))
-                ->paginate(10)
-                ->withQueryString(),
+            'user' => $user,
+            'roleColors' => $roleColors,
         ]);
     }
 
@@ -41,49 +57,31 @@ class KelolaAkunController extends Controller
      */
     public function create()
     {
+        // Generate a random password
+        $randomPassword = Str::password(16, true, true, true, false);
+
         return view('pages.it.kelola-akun.create', [
             'title' => 'Tambah Akun',
             'roles' => $this->roles,
+            'randomPassword' => $randomPassword,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreKelolaAkunRequest $request)
     {
-        $validatedData = $request->validate([
-            'fullname' => 'required|max:255',
-            'username' => 'required', 'min:4', 'max:255', 'unique:users',
-            'email' => 'required|email:dns|unique:users',
-            'role' => 'required|exists:roles,name',
-            'password' => 'required|min:8|max:255',
-        ],[
-            'fullname.required' => 'Nama lengkap harus diisi',
-            'fullname.max' => 'Nama lengkap maksimal 255 karakter',
-            'username.required' => 'Nama pengguna harus diisi',
-            'username.min' => 'Nama pengguna minimal 4 karakter',
-            'username.max' => 'Nama pengguna maksimal 255 karakter',
-            'username.unique' => 'Nama pengguna sudah digunakan',
-            'email.required' => 'Email harus diisi',
-            'email.email' => 'Email tidak valid',
-            'email.unique' => 'Email sudah digunakan',
-            'role.required' => 'Peran pengguna harus diisi',
-            'password.required' => 'Password harus diisi',
-            'password.min' => 'Password minimal 8 karakter',
-            'password.max' => 'Password maksimal 255 karakter',
-        ]);
-
         try {
             $user = User::create([
-                'fullname' => $validatedData['fullname'],
-                'username' => $validatedData['username'],
-                'email' => $validatedData['email'],
-                'password' => bcrypt($validatedData['password']),
+                'fullname' => $request['fullname'],
+                'username' => $request['username'],
+                'email' => $request['email'],
+                'password' => bcrypt($request['password']),
             ]);
 
             // Assign role using spatie/laravel-permission
-            $user->assignRole($validatedData['role']);
+            $user->assignRole($request['role']);
 
             $notif = notify()->success('Akun berhasil ditambahkan');
             return redirect()->route('kelolaAkun.index')->withInput()->with('notif', $notif);
@@ -98,13 +96,13 @@ class KelolaAkunController extends Controller
      */
     public function show(string $id)
     {
-        // Temukan user berdasarkan ID
+        // Get user by id
         $user = User::findOrFail($id);
 
-        // Ambil permissions langsung dari model_has_permissions
+        // Get permssion from model_has_permissions
         $directPermissions = $user->getDirectPermissions();
 
-        // Jika tidak ada permission langsung, ambil permissions dari role
+        // If there are no direct permissions, get permissions from roles
         if ($directPermissions->isEmpty()) {
             $permissions = $user->getPermissionsViaRoles();
         } else {
@@ -113,7 +111,7 @@ class KelolaAkunController extends Controller
 
         return view('pages.it.kelola-akun.show', [
             'title' => 'Detail Akun',
-            'user' => User::findOrFail($id),
+            'user' => $user,
             'permission' => $permissions,
         ]);
     }
@@ -123,19 +121,19 @@ class KelolaAkunController extends Controller
      */
     public function edit(string $id)
     {
-        // Temukan user berdasarkan ID
+        // Get user by id
         $user = User::findOrFail($id);
 
-        // Ambil semua permissions
+        // Get all permissions
         $allPermissions = Permission::all();
 
-        // Ambil permissions langsung dari model_has_permissions
+        // Get permssion from model_has_permissions
         $directPermissions = $user->getDirectPermissions()->pluck('id')->toArray();
 
-        // Ambil permissions dari role_has_permissions jika tidak ada directPermissions
+        // Get permissions from role_has_permissions if no directPermissions
         $rolePermissions = $directPermissions ? [] : $user->getPermissionsViaRoles()->pluck('id')->toArray();
 
-        // Gabungkan directPermissions dan rolePermissions
+        // Merge directPermissions and rolePermissions
         $selectedPermissions = array_merge($directPermissions, $rolePermissions);
         
         return view('pages.it.kelola-akun.edit', [
@@ -150,50 +148,31 @@ class KelolaAkunController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        $validatedData = $request->validate([
-            'fullname' => 'max:255',
-            'username' => 'min:4', 'max:255',
-            'email' => 'email:dns',
-            'role' => 'required|exists:roles,name',
-            'permission' => 'required|array',
-            'permission.*' => 'exists:permissions,id',
-            'password' => 'nullable|min:8|max:255',
-        ],[
-            'fullname.max' => 'Nama lengkap maksimal 255 karakter',
-            'username.min' => 'Nama pengguna minimal 4 karakter',
-            'username.max' => 'Nama pengguna maksimal 255 karakter',
-            'email.email' => 'Email tidak valid',
-            'permission.required' => 'Permission harus dipilih',
-            'permission.*.exists' => 'Permission yang dipilih tidak valid',
-            'password.min' => 'Password minimal 8 karakter',
-            'password.max' => 'Password maksimal 255 karakter',
-        ]);
-        
+    public function update(UpdateKelolaAkunRequest $request, string $id)
+    {        
         try {
             $user = User::findOrFail($id);
 
-            if ($validatedData['password']) {
+            if ($request['password']) {
                 $user->update([
-                    'fullname' => $validatedData['fullname'],
-                    'username' => $validatedData['username'],
-                    'email' => $validatedData['email'],
-                    'password' => bcrypt($validatedData['password']),
+                    'fullname' => $request['fullname'],
+                    'username' => $request['username'],
+                    'email' => $request['email'],
+                    'password' => bcrypt($request['password']),
                 ]);
             } else {
                 $user->update([
-                    'fullname' => $validatedData['fullname'],
-                    'username' => $validatedData['username'],
-                    'email' => $validatedData['email'],
+                    'fullname' => $request['fullname'],
+                    'username' => $request['username'],
+                    'email' => $request['email'],
                 ]);
             }
 
             // Sync role user
-            $user->syncRoles($validatedData['role']);
+            $user->syncRoles($request['role']);
 
             // Update permissions for the role
-            $permissions = Permission::whereIn('id', $validatedData['permission'])->pluck('name')->toArray();
+            $permissions = Permission::whereIn('id', $request['permission'])->pluck('name')->toArray();
             $user->syncPermissions($permissions);
 
             // Clear any relevant caches (optional)
