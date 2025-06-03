@@ -76,7 +76,8 @@
 
         </div>
     @else
-        <div class="my-6 w-full rounded-md bg-slate-100 p-4">
+        <div
+            class="my-8 overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 sm:px-6 dark:border-gray-800 dark:bg-white/[0.03]">
             <h2 class="xs:text-sm font-normal text-gray-800 sm:text-base dark:text-white/90">Anda belum terdaftar di
                 group pegawai. Hubungi admin untuk
                 mendaftarkan diri Anda ke dalam
