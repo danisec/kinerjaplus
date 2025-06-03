@@ -1,143 +1,97 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('subkriteria.index') }}">Data Subkriteria</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('subkriteria.index') }}">Subkriteria</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Ubah Subkriteria</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Ubah Subkriteria</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-    <form class="mx-auto my-8 w-8/12" action="{{ route('subkriteria.update', $subkriteria->id_subkriteria) }}"
-        method="POST">
+    <form class="my-8" action="{{ route('subkriteria.update', $subkriteria->id_subkriteria) }}" method="POST">
         @method('PUT')
         @csrf
-
-        <div class="mt-8 space-y-6">
-            <h4 class="mb-6 text-2xl font-semibold text-gray-900">Ubah Subkriteria</h4>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama kriteria">
-                    Nama Kriteria</label>
-
-                <select class="@error('nama_kriteria') border-red-500 @enderror field-input-slate w-full"
-                    name="kode_kriteria" required>
-
-                    <option selected disabled hidden>Pilih Kriteria</option>
-                    @foreach ($kriteria as $item)
-                        <option value="{{ $item->kode_kriteria }}"
-                            {{ $subkriteria->kriteria->nama_kriteria == $item->nama_kriteria ? 'selected' : '' }}>
-                            {{ $item->nama_kriteria }}
-                        </option>
-                    @endforeach
-                </select>
-
-                @error('kode_kriteria')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="kode subkriteria">
-                    Kode Subkriteria</label>
-                <input class="@error('kode_subkriteria') border-red-500 @enderror field-input-slate w-full"
-                    name="kode_subkriteria" type="text" value="{{ $subkriteria->kode_subkriteria }}" required>
-
-                @error('kode_subkriteria')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama subkriteria">
-                    Nama Subkriteria</label>
-                <input class="@error('nama_subkriteria') border-red-500 @enderror field-input-slate w-full"
-                    name="nama_subkriteria" type="text" value="{{ $subkriteria->nama_subkriteria }}" required>
-
-                @error('nama_subkriteria')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="deskripsi subkriteria">
-                    Deskripsi Subkriteria</label>
-                <textarea class="@error('deskripsi_subkriteria') border-red-500 @enderror textAreaHeight field-input-slate w-full"
-                    name="deskripsi_subkriteria" type="text" rows="3">{{ $subkriteria->deskripsi_subkriteria }}</textarea>
-
-                @error('deskripsi_subkriteria')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="bobot subkriteria">
-                    Bobot Subkriteria</label>
-
-                <div class="flex flex-row justify-between gap-4">
-                    <input class="@error('bobot_subkriteria') border-red-500 @enderror field-input-slate w-full"
-                        name="bobot_subkriteria" type="number" value="{{ $subkriteria->bobot_subkriteria }}"
-                        min="1" maxlength="3" minlength="1" max="100" required>
-
-                    <input class="field-input-slate w-10 text-center" type="text" value="%"
-                        @disabled(true) @readonly(true)>
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Ubah Subkriteria
+                    </h3>
                 </div>
 
-                @error('bobot_subkriteria')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    <div>
+                        <x-molecules.select.select name="kode_kriteria" label="Nama Kriteria" :options="$kriteria->mapWithKeys(function ($item) {
+                            return [$item->kode_kriteria => $item->nama_kriteria];
+                        })"
+                            :value="$subkriteria->kode_kriteria" required />
+                    </div>
 
+                    <div>
+                        <x-molecules.input.input name="kode_subkriteria" label="Kode Subkriteria" :type="'text'"
+                            :value="$subkriteria->kode_subkriteria" required />
+                    </div>
+
+                    <div>
+                        <x-molecules.input.input name="nama_subkriteria" label="Nama Subkriteria" :type="'text'"
+                            :value="$subkriteria->nama_subkriteria" required />
+                    </div>
+
+                    <div>
+                        <x-molecules.textarea.textarea name="deskripsi_subkriteria" label="Deskripsi Subkriteria"
+                            :type="'text'" :value="$subkriteria->deskripsi_subkriteria" rows="6" />
+                    </div>
+
+                    <div class="flex flex-row items-center justify-between gap-4">
+                        <div class="w-full">
+                            <x-molecules.input.input name="bobot_subkriteria" label="Bobot Subkriteria"
+                                :type="'number'" min="1" maxlength="3" minlength="1" max="100"
+                                :value="$subkriteria->bobot_subkriteria" required />
+                        </div>
+
+                        <div class="mt-5 w-14">
+                            <x-molecules.input.input name="" label="" :type="'text'" :value="'%'"
+                                readonly disabled />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="mt-12 space-y-6">
-            <h4 class="text-2xl font-semibold text-gray-900">Ubah Indikator</h4>
+        <div class="my-8">
+            <div class="space-y-6">
+                <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                    <div class="px-5 py-4 sm:px-6 sm:py-5">
+                        <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                            Indikator Subkriteria
+                        </h3>
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="indikator subkriteria">
-                    Indikator Subkriteria</label>
+                    <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                        <div id="kolom-subkriteria">
+                            <div class="flex flex-col gap-6">
+                                @foreach ($subkriteria->indikatorSubkriteria as $item)
+                                    <textarea
+                                        class="textAreaHeight dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 focus:ring-3 focus:outline-hidden w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                                        name="indikator_subkriteria[]" placeholder="Indikator Subkriteria" rows="6" required>{{ $item->indikator_subkriteria }}</textarea>
+                                @endforeach
+                            </div>
+                        </div>
 
-                <div id="kolom-subkriteria">
-                    @foreach ($subkriteria->indikatorSubkriteria as $item)
-                        <textarea class="textAreaHeight field-input-slate mb-4 w-full" name="indikator_subkriteria[]"
-                            placeholder="Indikator Subkriteria" rows="auto" required>{{ $item->indikator_subkriteria }}</textarea>
-
-                        @error('indikator_subkriteria')
-                            <p class="invalid-feedback">
-                                {{ $message }}
-                            </p>
-                        @enderror
-                    @endforeach
+                        <div class="flex flex-row justify-center gap-4">
+                            <a href="{{ route('subkriteria.index') }}">
+                                <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                            </a>
+                            <x-atoms.button.button-primary :type="'submit'" :name="'Ubah'" />
+                        </div>
+                    </div>
                 </div>
-
             </div>
-
-            <div class="flex flex-row gap-4">
-                <a href="{{ route('subkriteria.index') }}">
-                    <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                </a>
-                <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Ubah'" />
-            </div>
-
         </div>
     </form>
 
