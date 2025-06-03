@@ -61,11 +61,12 @@ Route::controller(RiwayatPenilaianController::class)->name('riwayatPenilaian.')-
 
 Route::controller(PerhitunganKriteriaController::class)->name('perhitunganKriteria.')->middleware('auth')->group(function () {
     // Route permission 'perbandingan kriteria'
-    Route::middleware('role_or_permission:superadmin|perbandingan kriteria')->group(function () {
+    Route::middleware('role_or_permission:superadmin|yayasan|deputi|perbandingan kriteria')->group(function () {
         Route::get('/dashboard/perbandingan-kriteria', 'index')->name('index');
         Route::get('/dashboard/perbandingan-kriteria/pedoman', 'pedoman')->name('pedoman');
         
         Route::post('/dashboard/perbandingan-kriteria', 'store')->name('store');
+        Route::delete('/dashboard/perbandingan-kriteria', 'destroy')->name('destroy');
     });
 
     // Route permission 'view perbandingan kriteria|perbandingan kriteria'
@@ -76,11 +77,12 @@ Route::controller(PerhitunganKriteriaController::class)->name('perhitunganKriter
 
 Route::controller(PerhitunganSubkriteriaController::class)->name('perhitunganSubkriteria.')->middleware('auth')->group(function () {
     // Route permission 'perbandingan subkriteria'
-    Route::middleware('role_or_permission:superadmin|perbandingan subkriteria')->group(function () {
+    Route::middleware('role_or_permission:superadmin|yayasan|deputi|perbandingan subkriteria')->group(function () {
         Route::get('/dashboard/perbandingan-subkriteria', 'index')->name('index');
-        Route::get('/dashboard/perbandingan-subkkriteria/pedoman', 'pedoman')->name('pedoman');
+        Route::get('/dashboard/perbandingan-subkriteria/pedoman', 'pedoman')->name('pedoman');
 
         Route::post('/dashboard/perbandingan-subkriteria', 'store')->name('store');
+        Route::delete('/dashboard/perbandingan-subkriteria', 'destroy')->name('destroy');
     });
 
     // Route permission 'view perbandingan subkriteria|perbandingan subkriteria'
