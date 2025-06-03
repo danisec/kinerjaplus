@@ -1,104 +1,62 @@
 <x-app-dashboard title="{{ $title }}">
 
     <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('penilaian.welcome') }}">Penilaian Tahun Ajaran {!! $tahunAjaran !!}</a>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('penilaian.welcome') }}">Penilaian Tahun Ajaran {!! $tahunAjaran !!}</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Buat Tanggal Penilaian</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Buat Tanggal Penilaian</span>
         </li>
     </x-molecules.breadcrumb>
 
-    <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Buat Tanggal Penilaian Tahun Ajaran {!! $tahunAjaran !!}
-        </h4>
-
-        <form class="mt-8 space-y-6" action="{{ route('tanggalPenilaian.store') }}" method="POST">
-            @csrf
-
-            <input name="id_group_karyawan" type="hidden" value="{{ $alternatifGroupKaryawan->id_group_karyawan }}"
-                readonly>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="tahun ajaran">
-                    Tahun Ajaran</label>
-                <input class="@error('tahun_ajaran') border-red-500 @enderror field-input-slate w-full"
-                    name="tahun_ajaran" type="text" value="{{ $tahunAjaran }}" required @readonly(true)>
-
-                @error('tahun_ajaran')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="semester">
-                    Semester</label>
-                <select class="@error('semester') border-red-500 @enderror field-input-slate w-full" name="semester"
-                    required autofocus>
-
-                    <option selected disabled hidden>Pilih Semester</option>
-                    @foreach ($semester as $item)
-                        <option value="{{ $item }}" {{ old('semester') == $item ? 'selected' : '' }}>
-                            {{ $item }}
-                        </option>
-                    @endforeach
-                </select>
-
-                @error('semester')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div class="flex flex-row items-center justify-between">
-                <div>
-                    <label class="mb-2 block text-base font-medium text-gray-900" for="awal tanggal penilaian">
-                        Awal Tanggal Penilaian</label>
-                    <input class="@error('awal_tanggal_penilaian') border-red-500 @enderror field-input-slate w-72"
-                        name="awal_tanggal_penilaian" type="date" value="{{ old('awal_tanggal_penilaian') }}"
-                        required>
-
-                    @error('awal_tanggal_penilaian')
-                        <p class="invalid-feedback">
-                            {{ $message }}
-                        </p>
-                    @enderror
+    <form class="my-8" action="{{ route('tanggalPenilaian.store') }}" method="POST">
+        @csrf
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Buat Tanggal Penilaian Tahun Ajaran {!! $tahunAjaran !!}
+                    </h3>
                 </div>
 
-                <div>
-                    <label class="mb-2 block text-base font-medium text-gray-900" for="akhir tanggal penilaian">
-                        Akhir Tanggal Penilaian</label>
-                    <input class="@error('akhir_tanggal_penilaian') border-red-500 @enderror field-input-slate w-72"
-                        name="akhir_tanggal_penilaian" type="date" value="{{ old('akhir_tanggal_penilaian') }}"
-                        required>
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    <input name="id_group_karyawan" type="hidden"
+                        value="{{ $alternatifGroupKaryawan->id_group_karyawan }}" readonly>
 
-                    @error('akhir_tanggal_penilaian')
-                        <p class="invalid-feedback">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                    <div>
+                        <x-molecules.input.input name="tahun_ajaran" label="Tahun Ajaran" :type="'text'"
+                            :value="$tahunAjaran" required readonly />
+                    </div>
+
+                    <div>
+                        <x-molecules.select.select name="semester" label="Semester" :options="collect($semester)->mapWithKeys(fn($item) => [$item => $item])->toArray()" :value="old('semester')"
+                            required />
+                    </div>
+
+                    <div class="xs:flex-col flex items-center justify-between gap-4 sm:flex-row">
+                        <div class="w-full">
+                            <x-molecules.input.input name="awal_tanggal_penilaian" label="Awal Tanggal Penilaian"
+                                :type="'date'" :value="old('awal_tanggal_penilaian')" required />
+                        </div>
+                        <div class="w-full">
+                            <x-molecules.input.input name="akhir_tanggal_penilaian" label="Akhir Tanggal Penilaian"
+                                :type="'date'" :value="old('akhir_tanggal_penilaian')" required />
+                        </div>
+                    </div>
+
+                    <div class="flex flex-row justify-center gap-4">
+                        <a href="{{ route('penilaian.welcome') }}">
+                            <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                        </a>
+                        <x-atoms.button.button-primary :type="'submit'" :name="'Simpan'" />
+                    </div>
                 </div>
             </div>
-
-            <div class="flex flex-row gap-4">
-                <a href="{{ route('penilaian.welcome') }}">
-                    <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                </a>
-
-                <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Simpan'" />
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
 
 </x-app-dashboard>
