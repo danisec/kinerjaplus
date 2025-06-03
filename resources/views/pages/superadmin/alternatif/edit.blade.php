@@ -1,145 +1,79 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('alternatif.index') }}">Data Pegawai</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('alternatif.index') }}">Pegawai</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Ubah Pegawai</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Ubah Pegawai</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-    <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Ubah Pegawai</h4>
+    <form class="my-8" action="{{ route('alternatif.update', $alternatif->id_alternatif) }}" method="POST">
+        @method('PUT')
+        @csrf
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Ubah Pegawai
+                    </h3>
+                </div>
 
-        <form class="mt-8 space-y-6" action="{{ route('alternatif.update', $alternatif->id_alternatif) }}"
-            method="POST">
-            @method('PUT')
-            @csrf
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    <div>
+                        <x-molecules.input.input name="kode_alternatif" label="Kode Alternatif" :type="'text'"
+                            :value="$alternatif->kode_alternatif" required />
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="kode_alternatif">
-                    Kode Alternatif</label>
-                <input class="@error('kode_alternatif') border-red-500 @enderror field-input-slate w-full"
-                    name="kode_alternatif" type="text" value="{{ $alternatif->kode_alternatif }}" required>
+                    <div>
+                        <x-molecules.select.select name="nama_alternatif" label="Nama Pegawai" :options="$namaKaryawan
+                            ->pluck('fullname', 'fullname')
+                            ->map(function ($name, $key) use ($namaKaryawan) {
+                                $role = $namaKaryawan->firstWhere('fullname', $key)?->getRoleNames()?->first();
+                                return $name . ' - ' . $role;
+                            })"
+                            :value="$alternatif->nama_alternatif" required />
+                    </div>
 
-                @error('kode_alternatif')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
+                    <div>
+                        <x-molecules.select.select name="jenis_kelamin" label="Jenis Kelamin" :options="collect($jenisKelamin)->mapWithKeys(fn($item) => [$item => $item])"
+                            :value="$alternatif->jenis_kelamin" required />
+                    </div>
+
+                    <div>
+                        <x-molecules.input.input name="tanggal_masuk_kerja" label="Tanggal Masuk Kerja"
+                            :type="'date'" :value="$alternatif->tanggal_masuk_kerja" required />
+                    </div>
+
+                    <div>
+                        <x-molecules.input.input name="nip" label="Nomor Induk Pegawai" :type="'number'"
+                            inputmode="numeric" :value="$alternatif->nip" required />
+                    </div>
+
+                    <div>
+                        <x-molecules.input.input name="jabatan" label="Jabatan" :type="'text'" :value="$alternatif->jabatan"
+                            required />
+                    </div>
+
+                    <div>
+                        <x-molecules.input.input name="pendidikan" label="Pendidikan Terakhir" :type="'text'"
+                            :value="$alternatif->pendidikan" required />
+                    </div>
+
+                    <div class="flex flex-row justify-center gap-4">
+                        <a href="{{ route('alternatif.index') }}">
+                            <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                        </a>
+                        <x-atoms.button.button-primary :type="'submit'" :name="'Ubah'" />
+                    </div>
+                </div>
             </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama karyawan">
-                    Nama Pegawai</label>
-                <select class="@error('nama_alternatif') border-red-500 @enderror field-input-slate w-full capitalize"
-                    name="nama_alternatif" required>
-
-                    @foreach ($namaKaryawan as $item)
-                        <option class="capitalize" value="{{ $item->fullname }}"
-                            {{ $alternatif->nama_alternatif == $item->fullname ? 'selected' : '' }}>
-                            {{ $item->fullname . ' - ' . $item->getRoleNames()->first() }}
-                        </option>
-                    @endforeach
-                </select>
-
-                @error('nama_alternatif')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="jenis_kelamin">
-                    Jenis Kelamin</label>
-                <select class="@error('jenis_kelamin') border-red-500 @enderror field-input-slate w-full"
-                    name="jenis_kelamin" required>
-
-                    <option selected disabled hidden>Pilih Jenis Kelamin</option>
-                    @foreach ($jenisKelamin as $item)
-                        <option value="{{ $item }}"
-                            {{ $alternatif->jenis_kelamin == $item ? 'selected' : '' }}>
-                            {{ $item }}
-                        </option>
-                    @endforeach
-                </select>
-
-                @error('jenis_kelamin')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="tanggal_masuk_kerja">
-                    Tanggal Masuk Kerja</label>
-                <input class="@error('tanggal_masuk_kerja') border-red-500 @enderror field-input-slate w-full"
-                    name="tanggal_masuk_kerja" type="date" value="{{ $alternatif->tanggal_masuk_kerja }}" required>
-
-                @error('tanggal_masuk_kerja')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nip">
-                    Nomor Induk Pegawai</label>
-                <input class="@error('nip') border-red-500 @enderror field-input-slate w-full" name="nip"
-                    type="number" value="{{ $alternatif->nip }}" required>
-
-                @error('nip')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="jabatan">
-                    Jabatan</label>
-                <input class="@error('jabatan') border-red-500 @enderror field-input-slate w-full" name="jabatan"
-                    type="text" value="{{ $alternatif->jabatan }}" required>
-
-                @error('jabatan')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="pendidikan">
-                    Pendidikan Terakhir</label>
-                <input class="@error('pendidikan') border-red-500 @enderror field-input-slate w-full" name="pendidikan"
-                    type="text" value="{{ $alternatif->pendidikan }}" required>
-
-                @error('pendidikan')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div class="flex flex-row gap-4">
-                <a href="{{ route('alternatif.index') }}">
-                    <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                </a>
-                <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Ubah'" />
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
 
 </x-app-dashboard>
