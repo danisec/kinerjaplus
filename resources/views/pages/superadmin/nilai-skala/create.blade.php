@@ -1,54 +1,49 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('skalaIndikator.index') }}">Data Skala Indikator</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('skalaIndikator.index') }}">Skala Indikator</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Tambah Nilai Skala</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Tambah Nilai Skala</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-    <form class="mx-auto my-8 w-8/12" action="{{ route('nilaiSkala.store') }}" method="POST">
+    <form class="my-8" action="{{ route('nilaiSkala.store') }}" method="POST">
         @csrf
-
-        <div class="mt-8 space-y-6">
-            <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Nilai Skala</h4>
-
-            @for ($i = 0; $i < 4; $i++)
-                <div>
-                    <label class="mb-2 block text-base font-medium text-gray-900" for="nama subkriteria">Skala
-                        {{ $i + 1 }}</label>
-
-                    <input name="skala[]" type="hidden" value="{{ $i + 1 }}">
-                    <input class="@error('nilai_skala[]') border-red-500 @enderror field-input-slate w-full"
-                        name="nilai_skala[]" type="number" value="{{ old('nilai_skala[]') }}" autofocus
-                        placeholder="1 - 100" min="1" max="100" required>
-
-                    @error('nilai_skala')
-                        <p class="invalid-feedback">
-                            {{ $message }}
-                        </p>
-                    @enderror
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Tambah Nilai Skala
+                    </h3>
                 </div>
-            @endfor
 
-            <div class="flex flex-row gap-4">
-                <a href="{{ route('skalaIndikator.index') }}">
-                    <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                </a>
-                <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Simpan'" />
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    @for ($i = 0; $i < 4; $i++)
+                        @php $skala = $i + 1; @endphp
+                        <input name="skala[]" type="hidden" value="{{ $skala }}">
+
+                        <div>
+                            <x-molecules.input.input name="nilai_skala[]" label="Skala {{ $skala }}"
+                                :type="'number'" min="1" maxlength="3" minlength="1" max="100"
+                                :value="old('nilai_skala[]')" required />
+                        </div>
+                    @endfor
+
+                    <div class="flex flex-row justify-center gap-4">
+                        <a href="{{ route('skalaIndikator.index') }}">
+                            <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                        </a>
+                        <x-atoms.button.button-primary :type="'submit'" :name="'Simpan'" />
+                    </div>
+                </div>
             </div>
         </div>
-
     </form>
 
-    </x-layouts.app-dashboard>
+</x-app-dashboard>
