@@ -1,91 +1,87 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('persetujuanPenilaian.index') }}">Persetujuan Penilaian</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('persetujuanPenilaian.index') }}">Persetujuan Penilaian</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('persetujuanPenilaian.showTahun', ['firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5), 'semester' => $tahunAjaran['semester']]) }}">Tahun
-                    Ajaran {!! $tahunAjaran['tahun_ajaran'] !!}</a>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 capitalize text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('persetujuanPenilaian.showTahun', [
+                    'firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4),
+                    'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5),
+                    'semester' => $tahunAjaran['semester'],
+                ]) }}">Tahun
+                Ajaran {!! $tahunAjaran['tahun_ajaran'] !!}</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Tambah Catatan Pegawai</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span class="capitalize">Tambah Catatan Pegawai</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-    <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 flex flex-col text-2xl font-semibold text-gray-900">Tambah Catatan Penilaian
-            {!! $penilaian->alternatifPertama->alternatifPertama->nama_alternatif !!}
-            Kepada
-            {!! $penilaian->alternatifKedua->alternatifPertama->nama_alternatif !!}
-        </h4>
+    <form class="my-8"
+        action="{{ route('persetujuanPenilaian.storeCatatan', [
+            $penilaian->id_penilaian,
+            'firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4),
+            'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5),
+            'semester' => $tahunAjaran['semester'],
+        ]) }}"
+        method="POST">
+        @csrf
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Tambah Catatan Penilaian {!! $penilaian->alternatifPertama->alternatifPertama->nama_alternatif !!} Kepada {!! $penilaian->alternatifKedua->alternatifPertama->nama_alternatif !!}
+                    </h3>
+                </div>
 
-        <form class="mt-8 space-y-6"
-            action="{{ route('persetujuanPenilaian.storeCatatan', [$penilaian->id_penilaian, 'firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5), 'semester' => $tahunAjaran['semester']]) }}"
-            method="POST">
-            @csrf
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    <input name="id_penilaian" type="hidden" value="{{ $penilaian->id_penilaian }}">
+                    <input name="id_tanggal_penilaian" type="hidden" value="{{ $penilaian->id_tanggal_penilaian }}">
 
-            <input name="id_penilaian" type="hidden" value="{{ $penilaian->id_penilaian }}">
-            <input name="id_tanggal_penilaian" type="hidden" value="{{ $penilaian->id_tanggal_penilaian }}">
+                    <div>
+                        <x-molecules.input.input name="tahun_ajaran" label="Tahun Ajaran" :type="'text'"
+                            :value="$tahunAjaran['tahun_ajaran'] . ' - Semester ' . $tahunAjaran['semester']" required readonly disabled />
+                    </div>
 
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="tahun ajaran">
-                    Tahun Ajaran</label>
-                <input name="tahun_ajaran" type="hidden" value="{{ $tahunAjaran['tahun_ajaran'] }}">
+                    <div>
+                        <x-molecules.textarea.textarea name="catatan" label="Catatan" :placeholder="'Catatan'"
+                            :value="old('catatan')" rows="6" />
+                    </div>
 
-                <input class="@error('tahun_ajaran') border-red-500 @enderror field-input-slate w-full capitalize"
-                    type="text"
-                    value="{{ $tahunAjaran['tahun_ajaran'] . ' - Semester ' . $tahunAjaran['semester'] }}" required
-                    @readonly(true)>
+                    <div class="flex flex-row justify-center gap-4">
+                        @if (Auth::user()->hasRole(['kepala sekolah']))
+                            <a
+                                href="{{ route('persetujuanPenilaian.showTahun', [
+                                    'firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4),
+                                    'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5),
+                                    'semester' => $tahunAjaran['semester'],
+                                ]) }}">
+                                <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                            </a>
+                        @else
+                            <a
+                                href="{{ route('persetujuanPenilaian.showTahunPimpinan', [
+                                    $penilaian->alternatifPertama->id_group_karyawan,
+                                    'firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4),
+                                    'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5),
+                                    'semester' => $tahunAjaran['semester'],
+                                ]) }}">
+                                <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                            </a>
+                        @endif
 
-                @error('tahun_ajaran')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
+                        <x-atoms.button.button-primary :type="'submit'" :name="'Simpan'" />
+                    </div>
+                </div>
             </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="catatan">
-                    Catatan</label>
-                <textarea class="field-input-slate w-full" name="catatan" placeholder="Catatan" rows="3" autofocus required>{{ old('catatan') }}</textarea>
-
-                @error('catatan')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div class="flex flex-row gap-4">
-                @if (Auth::user()->hasRole(['kepala sekolah']))
-                    <a
-                        href="{{ route('persetujuanPenilaian.showTahun', ['firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5), 'semester' => $tahunAjaran['semester']]) }}">
-                        <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                    </a>
-                @else
-                    <a
-                        href="{{ route('persetujuanPenilaian.showTahunPimpinan', [$penilaian->alternatifPertama->id_group_karyawan, 'firstYear' => substr($tahunAjaran['tahun_ajaran'], 0, 4), 'secondYear' => substr($tahunAjaran['tahun_ajaran'], 5), 'semester' => $tahunAjaran['semester']]) }}">
-                        <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                    </a>
-                @endif
-
-                <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Simpan'" />
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
 
 </x-app-dashboard>
