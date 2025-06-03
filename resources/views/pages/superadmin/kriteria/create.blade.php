@@ -1,86 +1,61 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('kriteria.index') }}">Data Kriteria</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('kriteria.index') }}">Kriteria</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Tambah Kriteria</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Tambah Kriteria</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-
-    <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Tambah Kriteria</h4>
-
-        <form class="mt-8 space-y-6" action="{{ route('kriteria.store') }}" method="POST">
-            @csrf
-
-            <div class="hidden">
-                <label class="mb-2 block text-base font-medium text-gray-900" for="kode kriteria">
-                    Kode Kriteria</label>
-                <input class="@error('kode_kriteria') border-red-500 @enderror field-input-slate w-full"
-                    name="kode_kriteria" type="hidden" type="text" value="{{ $newKodeKriteria }}"
-                    placeholder="Contoh: K1" required @readonly(true)>
-
-                @error('kode_kriteria')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama kriteria">
-                    Nama Kriteria</label>
-                <input class="@error('nama_kriteria') border-red-500 @enderror field-input-slate w-full"
-                    name="nama_kriteria" type="text" value="{{ old('nama_kriteria') }}" placeholder="Nama Kriteria"
-                    required autofocus>
-
-                @error('nama_kriteria')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="bobot kriteria">
-                    Bobot Kriteria</label>
-
-                <div class="flex flex-row justify-between gap-4">
-                    <input class="@error('bobot_kriteria') border-red-500 @enderror field-input-slate w-full"
-                        name="bobot_kriteria" type="number" value="{{ old('bobot_kriteria') }}" min="1"
-                        maxlength="3" minlength="1" max="100" placeholder="1 - 100">
-
-                    <input class="field-input-slate w-10 text-center" type="text" value="%"
-                        @disabled(true) @readonly(true)>
+    <form class="my-8" action="{{ route('kriteria.store') }}" method="POST">
+        @csrf
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Tambah Kriteria
+                    </h3>
                 </div>
 
-                @error('bobot_kriteria')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    <div class="hidden">
+                        <x-molecules.input.input name="kode_kriteria" label="" :type="'hidden'" :value="encrypt($newKodeKriteria)"
+                            required />
+                    </div>
+
+                    <div>
+                        <x-molecules.input.input name="nama_kriteria" label="Nama Kriteria" :type="'text'"
+                            :placeholder="'Nama Kriteria'" required />
+                    </div>
+
+                    <div class="flex flex-row items-center justify-between gap-4">
+                        <div class="w-full">
+                            <x-molecules.input.input name="bobot_kriteria" label="Bobot Kriteria" :type="'number'"
+                                min="1" maxlength="3" minlength="1" max="100" :placeholder="'1 - 100'"
+                                required />
+                        </div>
+
+                        <div class="mt-5 w-14">
+                            <x-molecules.input.input name="" label="" :type="'text'" :value="'%'"
+                                readonly disabled />
+                        </div>
+                    </div>
+
+                    <div class="flex flex-row justify-center gap-4">
+                        <a href="{{ route('kriteria.index') }}">
+                            <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                        </a>
+                        <x-atoms.button.button-primary :type="'submit'" :name="'Simpan'" />
+                    </div>
+                </div>
             </div>
-
-            <div class="flex flex-row gap-4">
-                <a href="{{ route('kriteria.index') }}">
-                    <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                </a>
-                <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Simpan'" />
-            </div>
-
-        </form>
-    </div>
-
+        </div>
+    </form>
 
 </x-app-dashboard>
