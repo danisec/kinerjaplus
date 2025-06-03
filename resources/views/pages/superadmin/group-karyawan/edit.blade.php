@@ -1,119 +1,81 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('groupKaryawan.index') }}">Data Group Pegawai</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('groupKaryawan.index') }}">Group Pegawai</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <span class="mx-2 text-base font-medium text-gray-500">Ubah Group Pegawai</span>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span>Ubah Group Pegawai</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
-    <div class="mx-auto my-8 w-8/12">
-        <h4 class="mb-6 text-2xl font-semibold text-gray-900">Ubah Group Pegawai</h4>
-
-        <form class="mt-8 space-y-6" action="{{ route('groupKaryawan.update', $groupKaryawan->id_group_karyawan) }}"
-            method="POST">
-            @method('PUT')
-            @csrf
-
-            <div>
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama group karyawan">
-                    Nama Group Karyawan</label>
-                <input
-                    class="@error('nama_group_karyawan') border-red-500 @enderror field-input-slate w-full capitalize"
-                    name="nama_group_karyawan" type="text" value="{{ $groupKaryawan->nama_group_karyawan }}"
-                    required>
-
-                @error('nama_group_karyawan')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div>
-                <div class="mb-2 flex flex-row items-center gap-2">
-                    <label class="block text-base font-medium text-gray-900" for="nama kepala sekolah">
-                        Nama Kepala Sekolah / Pimpinan</label>
-
-                    <div class="cursor-pointer pt-0.5" x-data="{ showTooltip: false }">
-                        <div @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
-                            <x-atoms.svg.help-circle width='18' height='18' />
-                        </div>
-
-                        <div class="absolute z-10 w-96 rounded bg-slate-50 px-2 py-1 text-base text-gray-900"
-                            x-show="showTooltip">
-                            Pilih kepala sekolah / pimpinan untuk validasi status penilaian, perbandingan pegawai,
-                            dan
-                            perankingan.
-                        </div>
-                    </div>
+    <form class="my-8" action="{{ route('groupKaryawan.update', $groupKaryawan->id_group_karyawan) }}" method="POST">
+        @method('PUT')
+        @csrf
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                        Ubah Group Pegawai
+                    </h3>
                 </div>
 
-                <select class="@error('kepala_sekolah') border-red-500 @enderror field-input-slate w-full"
-                    name="kepala_sekolah" required>
+                <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
+                    <div>
+                        <x-molecules.input.input name="nama_group_karyawan" label="Nama Group Pegawai" :type="'text'"
+                            :value="$groupKaryawan->nama_group_karyawan" required />
+                    </div>
 
-                    @foreach ($kepalaSekolah as $item)
-                        <option value="{{ $item->kode_alternatif }}"
-                            {{ $groupKaryawan->kepala_sekolah == $item->kode_alternatif ? 'selected' : '' }}>
-                            {{ $item->nama_alternatif . ' - ' . $item->jabatan }}
-                        </option>
-                    @endforeach
-                </select>
+                    <div>
+                        <x-molecules.select.select name="kepala_sekolah" label="Kepala Sekolah / Pimpinan"
+                            :options="collect($kepalaSekolah)->pluck('nama_alternatif', 'kode_alternatif')->toArray()" :value="$groupKaryawan->kepala_sekolah" required />
+                    </div>
 
-                @error('kepala_sekolah')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                            for="nama karyawan">
+                            Nama Pegawai
+                        </label>
+                        <input id="idGroupKaryawan" type="hidden" value="{{ $groupKaryawan->id_group_karyawan }}">
+                        <select
+                            class="@error('nama_alternatif') border-red-500 @enderror shadow-theme-xs focus:ring-3 focus:outline-hidden h-11 w-full appearance-none rounded-lg border border-gray-300 px-4 py-2.5 pr-11 text-sm capitalize text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                            id="namaKaryawan" name="kode_alternatif[]" multiple required>
+
+                            @foreach ($groupKaryawan->groupKaryawanDetail as $item)
+                                <option value="{{ $item->kode_alternatif }}"
+                                    {{ in_array($item->kode_alternatif, old('kode_alternatif', $groupKaryawan->groupKaryawanDetail->pluck('kode_alternatif')->toArray())) ? 'selected' : '' }}>
+                                    {{ $item->alternatif->nama_alternatif . ' - ' . $item->alternatif->jabatan }}
+                                </option>
+                            @endforeach
+
+                            {{-- Karyan is not selected --}}
+                            @foreach ($karyawanBelumDipilih as $karyawan)
+                                <option value="{{ $karyawan->kode_alternatif }}">
+                                    {{ $karyawan->nama_alternatif . ' - ' . $karyawan->jabatan }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        @error('kode_alternatif')
+                            <p class="invalid-feedback">
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
+                    <div class="flex flex-row justify-center gap-4">
+                        <a href="{{ route('groupKaryawan.index') }}">
+                            <x-atoms.button.button-secondary :type="'button'" :name="'Kembali'" />
+                        </a>
+                        <x-atoms.button.button-primary :type="'submit'" :name="'Selanjutnya'" />
+                    </div>
+                </div>
             </div>
-
-            <div>
-                <input id="idGroupKaryawan" type="hidden" value="{{ $groupKaryawan->id_group_karyawan }}">
-
-                <label class="mb-2 block text-base font-medium text-gray-900" for="nama karyawan">
-                    Nama Pegawai</label>
-                <select class="@error('nama_alternatif') border-red-500 @enderror field-input-slate w-full"
-                    id="namaKaryawan" name="kode_alternatif[]" multiple required>
-
-                    @foreach ($groupKaryawan->groupKaryawanDetail as $item)
-                        <option value="{{ $item->kode_alternatif }}"
-                            {{ in_array($item->kode_alternatif, old('kode_alternatif', $groupKaryawan->groupKaryawanDetail->pluck('kode_alternatif')->toArray())) ? 'selected' : '' }}>
-                            {{ $item->alternatif->nama_alternatif . ' - ' . $item->alternatif->jabatan }}
-                        </option>
-                    @endforeach
-
-                    <!-- Karyawan yang belum dipilih -->
-                    @foreach ($karyawanBelumDipilih as $karyawan)
-                        <option value="{{ $karyawan->kode_alternatif }}">
-                            {{ $karyawan->nama_alternatif . ' - ' . $karyawan->jabatan }}
-                        </option>
-                    @endforeach
-                </select>
-
-                @error('kode_alternatif')
-                    <p class="invalid-feedback">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-
-            <div class="flex flex-row gap-4">
-                <a href="{{ route('groupKaryawan.index') }}">
-                    <x-atoms.button.button-gray :customClass="'w-52 text-center rounded-lg px-5 py-3'" :type="'button'" :name="'Kembali'" />
-                </a>
-                <x-atoms.button.button-primary :customClass="'w-full text-center rounded-lg px-5 py-3'" :type="'submit'" :name="'Selanjutnya'" />
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
 
 </x-app-dashboard>
