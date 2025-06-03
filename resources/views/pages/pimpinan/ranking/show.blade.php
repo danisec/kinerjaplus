@@ -29,7 +29,7 @@
                 <table class="w-full">
                     <thead>
                         <tr>
-                            <th class="border-b py-2 text-left" colspan="{{ $kriteria->count() + 2 }}">
+                            <th class="border-b py-2 text-center" colspan="{{ $kriteria->count() + 2 }}">
                                 <p class="xs:text-xs sm:text-theme-md font-medium text-gray-800">Bobot Prioritas
                                     Kriteria</p>
                             </th>
@@ -59,7 +59,7 @@
                             @foreach ($bobotPrioritasSubkriteria as $bobotSubkriteria)
                                 <td class="px-3 py-3 text-center">
                                     <input
-                                        class="xs:text-xs sm:text-theme-md flex h-12 w-28 flex-row items-center justify-center gap-0.5 rounded-md border-none bg-slate-50 text-center font-medium text-gray-800 focus:ring-slate-100"
+                                        class="xs:text-xs sm:text-theme-md h-12 w-28 rounded-md border-none bg-slate-50 text-center focus:ring-slate-100"
                                         type="text" value="{{ $bobotSubkriteria->bobot_prioritas }}" readonly>
                                 </td>
                             @endforeach
