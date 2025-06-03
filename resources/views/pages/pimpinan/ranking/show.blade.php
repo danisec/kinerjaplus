@@ -1,40 +1,37 @@
 <x-app-dashboard title="{{ $title }}">
 
-    <x-molecules.breadcrumb>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-                <a class="ml-1 text-base font-medium text-gray-900 hover:text-blue-600"
-                    href="{{ route('ranking.index') }}">Perankingan</a>
-            </div>
+    <x-molecules.breadcrumb.breadcrumb>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <a class="hover:text-brand-500 dark:hover:text-brand-400 xs:text-xs flex items-center gap-1 text-gray-500 sm:text-sm dark:text-gray-400"
+                href="{{ route('ranking.index') }}">Perankingan</a>
         </li>
 
-        <li aria-current="page">
-            <div class="flex items-center">
-                <x-atoms.svg.arrow-right />
-
-                <p class="mx-2 text-base font-medium capitalize text-gray-500">Perankingan Kinerja Pegawai
-                    {!! $tahunAjaran['name_employee'] !!} Tahun
-                    Ajaran
-                    {!! $tahunAjaran['tahun_ajaran'] !!} - Semester {!! $tahunAjaran['semester'] !!}</p>
-            </div>
+        <li class="xs:text-xs flex items-center gap-0.5 text-gray-800 sm:text-sm dark:text-white/90">
+            <x-atoms.svg.arrow-right />
+            <span class="capitalize">Perankingan Kinerja Pegawai
+                {!! $tahunAjaran['name_employee'] !!} Tahun
+                Ajaran
+                {!! $tahunAjaran['tahun_ajaran'] !!} - Semester {!! $tahunAjaran['semester'] !!}</span>
         </li>
-    </x-molecules.breadcrumb>
+    </x-molecules.breadcrumb.breadcrumb>
 
     <div class="my-8">
-        <h4 class="mb-6 text-2xl font-semibold capitalize text-gray-900">Hasil Ranking Kinerja Pegawai
+        <h4 class="xs:text-base mb-6 font-semibold capitalize text-gray-800 sm:text-lg dark:text-white/90">Hasil Ranking
+            Kinerja Pegawai
             {!! $tahunAjaran['name_employee'] !!} Tahun
             Ajaran
             {!! $tahunAjaran['tahun_ajaran'] !!} - Semester {!! $tahunAjaran['semester'] !!}</h4>
 
-        <div class="relative my-8 overflow-x-auto rounded-lg shadow-sm">
+        <div
+            class="overflow-x-auto rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 sm:px-6 dark:border-gray-800 dark:bg-white/[0.03]">
             @if ($checkPerhitunganAlternatif->isEmpty())
-                <table class="w-full text-left text-base text-gray-900">
-                    <thead class="bg-slate-100 text-base capitalize text-gray-900">
+                <table class="w-full">
+                    <thead>
                         <tr>
-                            <th class="border-b bg-slate-100 py-2 text-center font-bold text-gray-900"
-                                colspan="{{ $kriteria->count() + 2 }}">
-                                Bobot Prioritas Kriteria
+                            <th class="border-b py-2 text-left" colspan="{{ $kriteria->count() + 2 }}">
+                                <p class="xs:text-xs sm:text-theme-md font-medium text-gray-800">Bobot Prioritas
+                                    Kriteria</p>
                             </th>
                         </tr>
 
@@ -44,7 +41,8 @@
 
                             @foreach ($kriteria as $dataKriteria)
                                 <th class="px-3 py-3 text-center" scope="col">
-                                    {{ $dataKriteria->nama_kriteria }}
+                                    <p class="xs:text-xs sm:text-theme-md font-medium text-gray-800">
+                                        {{ $dataKriteria->nama_kriteria }}</p>
                                 </th>
                             @endforeach
                         </tr>
@@ -52,29 +50,31 @@
 
                     <tbody>
                         <tr class="border-b bg-white">
-                            <th class="w-12 whitespace-nowrap bg-emerald-100 px-6 py-4 font-medium text-gray-900"
-                                scope="row">
-                                Bobot Prioritas Kriteria
+                            <th class="h-12 w-28 whitespace-nowrap px-6 py-4 font-medium text-gray-900" scope="row">
+                                <p
+                                    class="xs:text-sm sm:text-theme-md flex flex-row items-center justify-center gap-0.5 font-medium text-gray-800">
+                                    Bobot Prioritas Kriteria</p>
                             </th>
 
                             @foreach ($bobotPrioritasSubkriteria as $bobotSubkriteria)
-                                <td class="bg-emerald-100 px-3 py-3 text-center">
+                                <td class="px-3 py-3 text-center">
                                     <input
-                                        class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                        class="xs:text-xs sm:text-theme-md flex h-12 w-28 flex-row items-center justify-center gap-0.5 rounded-md border-none bg-slate-50 text-center font-medium text-gray-800 focus:ring-slate-100"
                                         type="text" value="{{ $bobotSubkriteria->bobot_prioritas }}" readonly>
                                 </td>
                             @endforeach
                         </tr>
                     </tbody>
-
                 </table>
             @else
-                <table class="w-full text-left text-base text-gray-900">
-                    <thead class="bg-slate-100 text-base capitalize text-gray-900">
+                <table class="w-full">
+                    <thead class="text-base capitalize text-gray-900">
                         <tr>
-                            <th class="border-b bg-slate-100 py-2 text-center font-bold text-gray-900"
+                            <th class="border-b py-2 text-center font-bold text-gray-900"
                                 colspan="{{ $kriteria->count() + 2 }}">
-                                Perhitungan Bobot Prioritas Pegawai Terhadap Bobot Prioritas Kriteria
+                                <p
+                                    class="xs:text-sm sm:text-theme-md font-semibold capitalize text-gray-700 dark:text-gray-400">
+                                    Perhitungan Bobot Prioritas Pegawai Terhadap Bobot Prioritas Kriteria</p>
                             </th>
                         </tr>
 
@@ -84,27 +84,30 @@
 
                             @foreach ($kriteria as $dataKriteria)
                                 <th class="px-3 py-3 text-center" scope="col">
-                                    {{ $dataKriteria->nama_kriteria }}
+                                    <p class="xs:text-sm sm:text-theme-md capitalize text-gray-700 dark:text-gray-400">
+                                        {{ $dataKriteria->nama_kriteria }}</p>
                                 </th>
                             @endforeach
 
                             <th class="px-3 py-3 text-center" scope="col">
-                                Total Bobot
+                                <p class="xs:text-sm sm:text-theme-md capitalize text-gray-700 dark:text-gray-400">
+                                    Total Bobot</p>
                             </th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr class="border-b bg-white">
-                            <th class="w-12 whitespace-nowrap bg-emerald-100 px-6 py-4 font-medium text-gray-900"
-                                scope="row">
-                                Bobot Prioritas Kriteria
+                            <th class="h-12 w-28 whitespace-nowrap px-6 py-4 font-medium text-gray-900" scope="row">
+                                <p
+                                    class="xs:text-sm sm:text-theme-md flex flex-row items-center justify-center gap-0.5 font-medium text-gray-800">
+                                    Bobot Prioritas Kriteria</p>
                             </th>
 
                             @foreach ($bobotPrioritasSubkriteria as $bobotSubkriteria)
-                                <td class="bg-emerald-100 px-3 py-3 text-center">
+                                <td class="px-3 py-3 text-center">
                                     <input
-                                        class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                        class="xs:text-xs sm:text-theme-md h-12 w-28 rounded-md border-none bg-slate-50 text-center capitalize text-gray-700 focus:ring-slate-100 dark:text-gray-400"
                                         type="text" value="{{ $bobotSubkriteria->bobot_prioritas }}" readonly>
                                 </td>
                             @endforeach
@@ -112,16 +115,19 @@
 
                         @foreach ($alternatifPenilaian as $dataAlternatif)
                             <tr class="border-b bg-white">
-                                <th class="w-12 whitespace-nowrap bg-slate-100 px-6 py-4 font-medium text-gray-900"
+                                <th class="h-12 w-28 whitespace-nowrap bg-slate-50 px-6 py-4 font-medium text-gray-900"
                                     scope="row">
-                                    {{ $dataAlternatif->alternatifKedua->alternatifPertama->nama_alternatif }}
+                                    <p
+                                        class="xs:text-sm sm:text-theme-md text-left font-medium capitalize text-gray-700 dark:text-gray-400">
+                                        {{ $dataAlternatif->alternatifKedua->alternatifPertama->nama_alternatif }}
+                                    </p>
                                 </th>
 
                                 @foreach ($bobotAlternatif as $bobot)
                                     @if ($bobot->kode_alternatif == $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif)
                                         <td class="px-3 py-3 text-center">
                                             <input
-                                                class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                class="xs:text-xs sm:text-theme-md h-12 w-28 rounded-md border-none bg-slate-50 text-center capitalize text-gray-700 focus:ring-slate-100 dark:text-gray-400"
                                                 type="text" value="{{ $bobot->bobot_prioritas }}" readonly>
                                         </td>
                                     @endif
@@ -131,7 +137,7 @@
                                     @if ($keyAlternatif == $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif)
                                         <td class="px-3 py-3 text-center">
                                             <input
-                                                class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                                class="xs:text-xs sm:text-theme-md h-12 w-28 rounded-md border-none bg-slate-50 text-center capitalize text-gray-700 focus:ring-slate-100 dark:text-gray-400"
                                                 type="text" value="{{ $totalBobot }}" readonly>
                                         </td>
                                     @endif
@@ -139,18 +145,20 @@
                             </tr>
                         @endforeach
                     </tbody>
-
                 </table>
             @endif
         </div>
 
-        <div class="relative my-8 overflow-x-auto rounded-lg shadow-sm">
-            <table class="w-full text-left text-base text-gray-900">
-                <thead class="bg-slate-100 text-base capitalize text-gray-900">
+        <div
+            class="my-8 overflow-x-auto rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 sm:px-6 dark:border-gray-800 dark:bg-white/[0.03]">
+            <table class="w-full">
+                <thead>
                     <tr>
-                        <th class="border-b bg-slate-100 py-2 text-center font-bold text-gray-900"
+                        <th class="border-b py-2 text-center font-bold text-gray-900"
                             colspan="{{ $kriteria->count() + 2 }}">
-                            Rata-rata Nilai Pegawai Terhadap Kriteria
+                            <p
+                                class="xs:text-sm sm:text-theme-md font-semibold capitalize text-gray-700 dark:text-gray-400">
+                                Rata-rata Nilai Pegawai Terhadap Kriteria</p>
                         </th>
                     </tr>
 
@@ -160,7 +168,9 @@
 
                         @foreach ($kriteria as $dataKriteria)
                             <th class="px-3 py-3 text-center" scope="col">
-                                {{ $dataKriteria->nama_kriteria }}
+                                <p
+                                    class="xs:text-sm sm:text-theme-md font-bold capitalize text-gray-700 dark:text-gray-400">
+                                    {{ $dataKriteria->nama_kriteria }}</p>
                             </th>
                         @endforeach
                     </tr>
@@ -169,32 +179,36 @@
                 <tbody>
                     @foreach ($alternatifPenilaian as $dataAlternatif)
                         <tr class="border-b bg-white">
-                            <th class="w-12 whitespace-nowrap bg-slate-100 px-6 py-4 font-medium text-gray-900"
+                            <th class="h-12 w-28 whitespace-nowrap bg-slate-50 px-6 py-4 font-medium text-gray-900"
                                 scope="row">
-                                {{ $dataAlternatif->alternatifKedua->alternatifPertama->nama_alternatif }}
+                                <p
+                                    class="xs:text-sm sm:text-theme-md text-left font-medium capitalize text-gray-700 dark:text-gray-400">
+                                    {{ $dataAlternatif->alternatifKedua->alternatifPertama->nama_alternatif }}</p>
                             </th>
 
                             @foreach ($avgNilaiKriteria[$dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif] as $kodeSubkriteria => $nilai)
                                 <td class="px-3 py-3 text-center">
                                     <input
-                                        class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                        class="xs:text-xs sm:text-theme-md h-12 w-28 rounded-md border-none bg-slate-50 text-center focus:ring-slate-100"
                                         type="text" value="{{ substr($nilai, 0, 8) }}" readonly>
                                 </td>
                             @endforeach
                         </tr>
                     @endforeach
                 </tbody>
-
             </table>
         </div>
 
-        <div class="relative my-8 overflow-x-auto rounded-lg shadow-sm">
-            <table class="w-full text-left text-base text-gray-900">
-                <thead class="bg-slate-100 text-base capitalize text-gray-900">
+        <div
+            class="my-8 overflow-x-auto rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 sm:px-6 dark:border-gray-800 dark:bg-white/[0.03]">
+            <table class="w-full">
+                <thead>
                     <tr>
-                        <th class="border-b bg-slate-100 py-2 text-center font-bold text-gray-900"
+                        <th class="border-b py-2 text-center font-bold text-gray-900"
                             colspan="{{ $kriteria->count() + 2 }}">
-                            Ranking Kinerja Pegawai
+                            <p
+                                class="xs:text-sm sm:text-theme-md font-semibold capitalize text-gray-700 dark:text-gray-400">
+                                Ranking Kinerja Pegawai</p>
                         </th>
                     </tr>
 
@@ -203,11 +217,15 @@
                         </th>
 
                         <th class="px-3 py-3 text-center" scope="col">
-                            Total Nilai
+                            <p
+                                class="xs:text-sm sm:text-theme-md font-semibold capitalize text-gray-700 dark:text-gray-400">
+                                Total Nilai</p>
                         </th>
 
                         <th class="px-3 py-3 text-center" scope="col">
-                            Rank
+                            <p
+                                class="xs:text-sm sm:text-theme-md font-semibold capitalize text-gray-700 dark:text-gray-400">
+                                Rank</p>
                         </th>
                     </tr>
                 </thead>
@@ -215,16 +233,17 @@
                 <tbody>
                     @foreach ($alternatifPenilaian as $dataAlternatif)
                         <tr class="border-b bg-white">
-                            <th class="w-12 whitespace-nowrap bg-slate-100 px-6 py-4 font-medium text-gray-900"
-                                scope="row">
-                                {{ $dataAlternatif->alternatifKedua->alternatifPertama->nama_alternatif }}
+                            <th class="h-12 w-28 whitespace-nowrap bg-slate-50 px-6 py-4" scope="row">
+                                <p
+                                    class="xs:text-sm sm:text-theme-md text-left font-medium capitalize text-gray-700 dark:text-gray-400">
+                                    {{ $dataAlternatif->alternatifKedua->alternatifPertama->nama_alternatif }}</p>
                             </th>
 
                             @foreach ($nilaiAlternatif as $keyAlternatif => $nilai)
                                 @if ($keyAlternatif == $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif)
                                     <td class="px-3 py-3 text-center">
                                         <input
-                                            class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                            class="xs:text-xs sm:text-theme-md h-12 w-28 rounded-md border-none bg-slate-50 text-center focus:ring-slate-100"
                                             type="text" value="{{ substr($nilai, 0, 8) }}" readonly>
                                     </td>
                                 @endif
@@ -234,7 +253,7 @@
                                 @if ($keyAlternatif == $dataAlternatif->alternatifKedua->alternatifPertama->kode_alternatif)
                                     <td class="px-3 py-3 text-center">
                                         <input
-                                            class="w-24 rounded-md border-none bg-slate-100 text-center focus:ring-slate-100"
+                                            class="xs:text-xs sm:text-theme-md h-12 w-28 rounded-md border-none bg-slate-50 text-center focus:ring-slate-100"
                                             type="text" value="{{ $rank }}" readonly>
                                     </td>
                                 @endif
@@ -242,7 +261,6 @@
                         </tr>
                     @endforeach
                 </tbody>
-
             </table>
         </div>
     </div>
