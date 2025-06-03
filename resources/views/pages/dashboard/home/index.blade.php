@@ -1,7 +1,7 @@
 <x-app-dashboard title="{{ $title }}">
 
     <div class="my-2">
-        @if ($checkGroupKaryawan != null)
+        @if ($checkGroupKaryawan !== null)
             @if (Auth::user()->hasAnyRole([
                     'kepala sekolah',
                     'guru',
@@ -14,7 +14,7 @@
                     <div class="flex flex-row items-center gap-4">
                         <input id="kodeAlternatif" name="kode_alternatif" type="hidden"
                             value="{{ $checkGroupKaryawan->alternatif->kode_alternatif }}">
-                        <h4 class="text-xl font-bold text-gray-700" id="namaGroup"
+                        <h4 class="xs:text-base font-semibold text-gray-800 sm:text-lg dark:text-white/90" id="namaGroup"
                             data-nama-group="{{ $checkGroupKaryawan->alternatif->nama_alternatif }}">Kinerja
                             {!! $checkGroupKaryawan->alternatif->nama_alternatif !!} Per Tahun Ajaran
                         </h4>
@@ -23,117 +23,130 @@
                     <div class="container mt-6">
                         <div class="rounded-md bg-white p-4 shadow-md shadow-slate-100">
                             <div id="selfRanking"></div>
-
                             <div class="animate-pulse" id="loadingSelfChart" role="status">
-                                <div class="mb-2.5 h-2 w-48 rounded-full bg-slate-100"></div>
-                                <div class="mt-4 flex items-baseline">
-                                    <div class="ms-6 h-56 w-full rounded-t-lg bg-slate-100"></div>
-                                    <div class="ms-6 h-72 w-full rounded-t-lg bg-slate-100"></div>
-                                    <div class="ms-6 h-64 w-full rounded-t-lg bg-slate-100"></div>
-                                    <div class="ms-6 h-80 w-full rounded-t-lg bg-slate-100"></div>
-                                    <div class="ms-6 h-72 w-full rounded-t-lg bg-slate-100"></div>
-                                </div>
-                                <span class="sr-only">Loading...</span>
+                                <x-atoms.skeleton.skeleton-chart />
                             </div>
                         </div>
-
                     </div>
                 </div>
 
-                <div class="relative overflow-x-auto rounded-lg shadow-sm">
-                    <table class="w-full text-left text-base text-gray-900">
-                        <thead class="bg-slate-100 text-sm uppercase text-gray-900">
-                            <tr>
-                                <th class="px-6 py-3" scope="col">
-                                    No.
-                                </th>
-                                <th class="px-6 py-3" scope="col">
-                                    <div class="flex flex-row items-center gap-0.5">
-                                        @sortablelink('id_tanggal_penilaian', 'Tahun Ajaran')
-
-                                        <x-atoms.svg.arrow-down @class(['mt-0.5 h-4 w-4']) />
-                                    </div>
-                                </th>
-                                <th class="px-6 py-3" scope="col">
-                                    Semester
-                                </th>
-                                <th class="px-6 py-3" scope="col">
-                                    Nama Pegawai
-                                </th>
-                                <th class="px-6 py-3" scope="col">
-                                    <div class="flex flex-row items-center gap-0.5">
-                                        @sortablelink('nilai', 'Nilai Kinerja')
-
-                                        <x-atoms.svg.arrow-down @class(['mt-0.5 h-4 w-4']) />
-                                    </div>
-                                </th>
-                                @if (Auth::user()->hasRole(['kepala sekolah']))
-                                    <th class="px-6 py-3 text-center" scope="colgroup">
-                                        <div class="flex flex-row items-center justify-center gap-0.5">
-                                            @sortablelink('rank', 'Rank')
-
-                                            <x-atoms.svg.arrow-down @class(['mt-0.5 h-4 w-4']) />
+                <div
+                    class="overflow-x-auto rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 sm:px-6 dark:border-gray-800 dark:bg-white/[0.03]">
+                    <div class="min-w-full table-auto">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr class="border-y border-gray-100 dark:border-gray-800">
+                                    <th class="min-w-40 whitespace-nowrap py-3 text-left">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="xs:text-xs sm:text-theme-md flex flex-row items-center gap-0.5 font-medium text-gray-800">
+                                                @sortablelink('id_tanggal_penilaian', 'Tahun Ajaran')
+                                                <x-atoms.svg.arrow-down @class(['mt-0.5 h-4 w-4']) />
+                                            </div>
                                         </div>
                                     </th>
-                                @endif
-                            </tr>
-                        </thead>
-
-                        @if ($selfRankings != null && $selfRankings->count() > 0)
-                            @foreach ($selfRankings as $item)
-                                <tbody>
-                                    <tr class="border-b bg-white hover:bg-slate-100">
-                                        <th class="whitespace-nowrap px-6 py-4 font-medium text-gray-900"
-                                            scope="row">
-                                            {{ ($selfRankings->currentPage() - 1) * $selfRankings->perPage() + $loop->iteration }}
+                                    <th class="min-w-48 whitespace-nowrap py-3 text-left">
+                                        <div class="flex items-center">
+                                            <p class="xs:text-xs sm:text-theme-md font-medium text-gray-800">Nama
+                                                Pegawai</p>
+                                        </div>
+                                    </th>
+                                    <th class="min-w-28 whitespace-nowrap py-3 text-left">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="xs:text-xs sm:text-theme-md flex flex-row items-center gap-0.5 font-medium text-gray-800">
+                                                @sortablelink('nilai', 'Nilai Kinerja')
+                                                <x-atoms.svg.arrow-down @class(['mt-0.5 h-4 w-4']) />
+                                            </div>
+                                        </div>
+                                    </th>
+                                    @if (Auth::user()->hasRole(['kepala sekolah']))
+                                        <th class="whitespace-nowrap py-3 text-left">
+                                            <div class="flex items-center">
+                                                <div
+                                                    class="xs:text-xs sm:text-theme-md flex flex-row items-center justify-center gap-0.5 font-medium text-gray-800">
+                                                    @sortablelink('rank', 'Rank')
+                                                    <x-atoms.svg.arrow-down @class(['mt-0.5 h-4 w-4']) />
+                                                </div>
+                                            </div>
                                         </th>
-                                        <td class="whitespace-nowrap px-6 py-4">
-                                            {{ $item->tanggalPenilaian->tahun_ajaran }}
-                                        </td>
-                                        <td class="whitespace-nowrap px-6 py-4 capitalize">
-                                            {{ $item->tanggalPenilaian->semester }}
-                                        </td>
-                                        <td class="whitespace-nowrap px-6 py-4">
-                                            {{ $item->alternatif->alternatifPertama->nama_alternatif }}
-                                        </td>
-                                        <td class="whitespace-nowrap px-6 py-4">
-                                            {{ substr($item->nilai, 0, 9) }}
-                                        </td>
-                                        @if (Auth::user()->hasRole(['kepala sekolah']))
-                                            <td class="flex justify-center gap-4 px-6 py-4">
-                                                {{ $item->rank }}
-                                        @endif
+                                    @endif
+                                </tr>
+                            </thead>
+
+                            @if ($selfRankings != null && $selfRankings->count() > 0)
+                                @foreach ($selfRankings as $item)
+                                    <tbody>
+                                        <tr>
+                                            <td class="py-3">
+                                                <div class="flex items-center">
+                                                    <p
+                                                        class="xs:text-sm sm:text-theme-md capitalize text-gray-700 dark:text-gray-400">
+                                                        {{ $item->tanggalPenilaian->tahun_ajaran }} -
+                                                        {{ $item->tanggalPenilaian->semester }}
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td class="py-3">
+                                                <div class="flex items-center">
+                                                    <p
+                                                        class="xs:text-sm sm:text-theme-md text-gray-700 dark:text-gray-400">
+                                                        {{ $item->alternatif->alternatifPertama->nama_alternatif }}
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td class="py-3">
+                                                <div class="flex items-center">
+                                                    <p
+                                                        class="xs:text-sm sm:text-theme-md text-gray-700 dark:text-gray-400">
+                                                        {{ substr($item->nilai, 0, 9) }}
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            @if (Auth::user()->hasRole(['kepala sekolah']))
+                                                <td class="py-3">
+                                                    <div class="flex items-center">
+                                                        <p
+                                                            class="xs:text-sm sm:text-theme-md text-gray-700 dark:text-gray-400">
+                                                            {{ $item->rank }}
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                            @endif
+                                        </tr>
+                                    </tbody>
+                                @endforeach
+                            @else
+                                <tbody>
+                                    <tr class="border-b bg-white">
+                                        <td class="px-6 py-4 text-center font-medium text-gray-600" colspan="6">
+                                            Data belum ada.
                                         </td>
                                     </tr>
                                 </tbody>
-                            @endforeach
-                        @else
-                            <tbody>
-                                <tr class="border-b bg-white">
-                                    <td class="px-6 py-4 text-center font-medium text-gray-600" colspan="6">
-                                        Data belum ada.
-                                    </td>
-                                </tr>
-                            </tbody>
-                        @endif
-                    </table>
+                            @endif
+                        </table>
+                    </div>
                 </div>
 
-                <div class="bg-white p-6">
+                <div class="border-t border-gray-200 px-6 py-4 dark:border-gray-800">
                     {{ $selfRankings->links('vendor.pagination.tailwind') }}
                 </div>
             @endif
 
             @if (Auth::user()->hasRole(['kepala sekolah']))
                 <div class="my-12">
-                    <div class="flex flex-row items-center gap-4">
-                        <h4 class="text-xl font-bold text-gray-700" id="namaGroup"
-                            data-nama-group="{{ $checkGroupKaryawan->nama_group_karyawan }}">Ranking Kinerja
+                    <div class="xs:flex-col flex justify-between gap-4 lg:flex-row lg:items-center">
+                        <h4 class="xs:text-base font-semibold text-gray-800 sm:text-lg dark:text-white/90"
+                            id="namaGroup" data-nama-group="{{ $checkGroupKaryawan->nama_group_karyawan }}">Ranking
+                            Kinerja
                             {!! $checkGroupKaryawan->nama_group_karyawan !!} Tahun Ajaran
                         </h4>
 
-                        <div class="w-52">
-                            <select class="field-input-slate w-full capitalize" id="selectTahun" name="tahun_ajaran"
+                        <div class="xs:w-full lg:w-96">
+                            <select
+                                class="shadow-theme-xs focus:ring-3 focus:outline-hidden h-11 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-11 text-sm capitalize text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                                id="selectTahun" name="tahun_ajaran"
                                 data-current-tahun="{{ $firstTanggalPenilaian->id_tanggal_penilaian ?? '' }}"
                                 data-current-text="{{ $firstTanggalPenilaian ? $firstTanggalPenilaian->tahun_ajaran . ' - ' . $firstTanggalPenilaian->semester : '' }}">
 
@@ -154,67 +167,60 @@
                     <div class="container mt-6">
                         <div class="rounded-md bg-white p-4 shadow-md shadow-slate-100">
                             <div id="topRanking"></div>
-
                             <div class="animate-pulse" id="loadingRankChart" role="status">
-                                <div class="mb-2.5 h-2 w-48 rounded-full bg-slate-100"></div>
-                                <div class="mt-4 flex items-baseline">
-                                    <div class="ms-6 h-56 w-full rounded-t-lg bg-slate-100"></div>
-                                    <div class="ms-6 h-72 w-full rounded-t-lg bg-slate-100"></div>
-                                    <div class="ms-6 h-64 w-full rounded-t-lg bg-slate-100"></div>
-                                    <div class="ms-6 h-80 w-full rounded-t-lg bg-slate-100"></div>
-                                    <div class="ms-6 h-72 w-full rounded-t-lg bg-slate-100"></div>
-                                </div>
-                                <span class="sr-only">Loading...</span>
+                                <x-atoms.skeleton.skeleton-chart />
                             </div>
                         </div>
-
                     </div>
                 </div>
             @endif
 
             @if (Auth::user()->hasRole(['kepala sekolah']))
-                <div class="relative overflow-x-auto rounded-lg shadow-sm">
-                    <table class="w-full text-left text-base text-gray-900" id="tableRank">
-                        <thead class="bg-slate-100 text-sm uppercase text-gray-900">
-                            <tr>
-                                <th class="px-6 py-3" scope="col">
-                                    No.
-                                </th>
-                                <th class="px-6 py-3" scope="col">
-                                    Tahun Ajaran
-                                </th>
-                                <th class="px-6 py-3" scope="col">
-                                    Semester
-                                </th>
-                                <th class="px-6 py-3" scope="col">
-                                    Nama Pegawai
-                                </th>
-                                <th class="px-6 py-3" scope="col">
-                                    Nilai Kinerja
-                                </th>
-                                <th class="px-6 py-3 text-center" scope="col">
-                                    Rank
-                                </th>
-                            </tr>
-                        </thead>
+                <div
+                    class="overflow-x-auto rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 sm:px-6 dark:border-gray-800 dark:bg-white/[0.03]">
+                    <div class="min-w-full table-auto">
+                        <table class="min-w-full" id="tableRank">
+                            <thead>
+                                <tr class="border-y border-gray-100 dark:border-gray-800">
+                                    <th class="min-w-28 whitespace-nowrap py-3 text-left">
+                                        <div class="flex items-center">
+                                            <p class="xs:text-xs sm:text-theme-md font-medium text-gray-800">Tahun
+                                                Ajaran</p>
+                                        </div>
+                                    </th>
+                                    <th class="min-w-48 whitespace-nowrap py-3 text-left">
+                                        <div class="flex items-center">
+                                            <p class="xs:text-xs sm:text-theme-md font-medium text-gray-800">Nama
+                                                Pegawai</p>
+                                        </div>
+                                    </th>
+                                    <th class="min-w-40 whitespace-nowrap py-3 text-left">
+                                        <div class="flex items-center">
+                                            <p class="xs:text-xs sm:text-theme-md font-medium text-gray-800">Nilai
+                                                Kinerja</p>
+                                        </div>
+                                    </th>
+                                    <th class="whitespace-nowrap py-3 text-left">
+                                        <div class="flex items-center">
+                                            <p class="xs:text-xs sm:text-theme-md font-medium text-gray-800">Rank</p>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
 
-                        <tbody>
-                            <tr class="animate-pulse" id="loadingRow" role="status">
-                                <td colspan="5">
-                                    <div class="mb-4 h-2.5 w-full rounded-full bg-slate-100"></div>
-                                    <div class="mb-4 h-2.5 w-full rounded-full bg-slate-100"></div>
-                                    <div class="mb-4 h-2.5 w-full rounded-full bg-slate-100"></div>
-                                    <div class="mb-4 h-2.5 w-full rounded-full bg-slate-100"></div>
-                                    <div class="mb-4 h-2.5 w-full rounded-full bg-slate-100"></div>
-                                    <span class="sr-only">Loading...</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                            <tbody>
+                                <tr class="animate-pulse" id="loadingRow" role="status">
+                                    <td colspan="5">
+                                        <x-atoms.skeleton.skeleton-table />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                <div class="my-4 flex flex-row items-center justify-center">
-                    <div class="rounded-md bg-white p-4 shadow-sm shadow-slate-100" id="paginationLinks">
+                    <div class="my-4 flex flex-row items-center justify-center">
+                        <div class="shadow-xs rounded-md bg-white p-4 shadow-slate-100" id="paginationLinks">
+                        </div>
                     </div>
                 </div>
             @endif
