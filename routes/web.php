@@ -108,5 +108,6 @@ Route::controller(KelolaAkunController::class)->name('kelolaAkun.')->middleware(
 
         Route::get('/dashboard/kelola-akun/ubah-akun/{id}/edit', 'edit')->name('edit');
         Route::put('/dashboard/kelola-akun/{id}', 'update')->name('update');
+        Route::post('/dashboard/kelola-akun/{id}/reset-password', 'resetPassword')->name('resetPassword');
     });
 });

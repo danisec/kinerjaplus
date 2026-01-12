@@ -48,7 +48,7 @@
                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                             Password
                         </label>
-                        <div class="relative" x-data="{ showPassword: false }">
+                        <div class="relative" x-data="{ showPassword: true }">
                             <button
                                 class="absolute right-0 top-1/2 inline-flex -translate-y-1/2 cursor-pointer items-center gap-1 border-l border-gray-200 py-3 pl-3.5 pr-3 text-sm font-medium text-gray-700 dark:border-gray-800 dark:text-gray-400"
                                 id="copy-button">

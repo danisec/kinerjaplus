@@ -7,6 +7,7 @@ use App\Http\Requests\KelolaAkun\UpdateKelolaAkunRequest;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class KelolaAkunController extends Controller
@@ -200,6 +201,39 @@ class KelolaAkunController extends Controller
         } catch (\Throwable $th) {
             $notif = notify()->error('Terjadi kesalahan saat menghapus akun');
             return back();
+        }
+    }
+
+    public function resetPassword(Request $request, string $id)
+    {
+        $validated = $request->validate([
+            'password' => ['nullable', 'string', 'min:8', 'max:255'],
+        ], [
+            'password.min' => 'Password minimal 8 karakter',
+            'password.max' => 'Password maksimal 255 karakter',
+        ]);
+
+        try {
+            $user = User::findOrFail($id);
+
+            $newPassword = filled($validated['password'] ?? null)
+                ? $validated['password']
+                : Str::password(16, true, true, true, false);
+
+            $user->update([
+                'password' => bcrypt($newPassword),
+            ]);
+
+            $notif = notify()->success('Password berhasil direset');
+
+            return redirect()
+                ->route('kelolaAkun.index')
+                ->with('notif', $notif)
+                ->with('reset_password_fullname', $user->fullname)
+                ->with('reset_password_value', $newPassword);
+        } catch (\Throwable $th) {
+            $notif = notify()->error('Terjadi kesalahan saat reset password');
+            return back()->with('notif', $notif);
         }
     }
 }
