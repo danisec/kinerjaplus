@@ -55,7 +55,7 @@
                     <td class="py-3">
                         <div class="flex items-center">
                             <p class="xs:text-sm sm:text-theme-md text-gray-700 dark:text-gray-400">
-                                {{ $item->alternatif->nama_alternatif }}
+                                {{ $item->alternatif?->nama_alternatif ?? '-' }}
                             </p>
                         </div>
                     </td>
